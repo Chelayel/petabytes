@@ -9,6 +9,7 @@
         <b>Shelly</b> the sea turtle, <b>Bloop</b> the jellyfish, <b>Inky</b> the octopus, <b>Pinchy</b> the crab,
         <b>Puff</b> the pufferfish, <b>Blue</b> the whale, <b>Clem</b> the clownfish, <b>Sandy</b> the seahorse
         or <b>Finn</b> the shark.</p>
+        <p><img src="https://raw.githubusercontent.com/Chelayel/tide-pets/main/docs/intellij-pet.png" alt="Shelly the sea turtle floating at the bottom of the editor in IntelliJ IDEA, asking for food" width="640"/></p>
         <p><img src="https://raw.githubusercontent.com/Chelayel/tide-pets/main/docs/pets.png" alt="The nine pets" width="620"/></p>
         <ul>
             <li><b>Typing</b> — swims faster</li>
@@ -39,6 +40,8 @@
     ]]></description>
 
     <change-notes><![CDATA[
+        <p><b>0.2.1</b> — Fix: the pet could end up underneath the editor and disappear (its layer was set as a
+        list position). New screenshot of the pet in IntelliJ IDEA.</p>
         <p><b>0.2.0</b> — Eight new pets: Bloop the jellyfish, Inky the octopus, Pinchy the crab, Puff the
         pufferfish, Blue the whale, Clem the clownfish, Sandy the seahorse and Finn the shark. Feed your pet
         curly braces; it reacts to AI assistants, the terminal, runs, branches, undo sprees and the time of day. The pet now floats at the bottom of the editor instead of living in a tool window: drag it where

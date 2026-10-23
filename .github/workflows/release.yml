@@ -124,6 +124,7 @@ jobs:
           echo "jb=$jb" >> "$GITHUB_OUTPUT"; echo "ms=$ms" >> "$GITHUB_OUTPUT"
           echo "Releasing $version (JetBrains Marketplace has ${jb:-nothing}; VS Code Marketplace has ${ms:-nothing})"
 
+      # Not skipped when the listing shows nothing: a plugin in review isn't listed but takes updates.
       - name: JetBrains Marketplace
         if: steps.v.outputs.version != steps.v.outputs.jb
         working-directory: intellij
@@ -134,12 +135,6 @@ jobs:
             echo "::warning::JETBRAINS_MARKETPLACE_TOKEN is not set; skipping the JetBrains Marketplace upload."
             exit 0
           fi
-          # A new plugin's first version is uploaded by hand on the Marketplace site;
-          # the API only accepts updates to a plugin that already exists.
-          if [ -z "${{ steps.v.outputs.jb }}" ]; then
-            echo "::warning::Tide Pets isn't on the JetBrains Marketplace yet. Upload the first version by hand from the run's pets artifact: https://plugins.jetbrains.com/plugin/add"
-            exit 0
-          fi
           # A version the Marketplace already holds is done, not a failure: the
           # listing above can lag an upload.
           set -o pipefail
@@ -147,6 +142,10 @@ jobs:
             echo "Published the JetBrains plugin ${{ steps.v.outputs.version }}."
           elif grep -q "already contains version" publish.log; then
             echo "::notice::The JetBrains Marketplace already has ${{ steps.v.outputs.version }}."
+          elif grep -qiE "not found|does not exist|No plugin" publish.log; then
+            # A new plugin's first version is uploaded by hand on the Marketplace site; after that
+            # the API takes updates, even while the first one is still in review (and unlisted).
+            echo "::warning::Tide Pets isn't on the JetBrains Marketplace yet. Upload the first version by hand from the run's pets artifact: https://plugins.jetbrains.com/plugin/add"
           else
             exit 1
           fi

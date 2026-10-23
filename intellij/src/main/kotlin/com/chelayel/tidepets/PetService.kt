@@ -107,7 +107,9 @@ class PetService(private val project: Project) : Disposable {
         if (editor == null || target == null || !editor.component.isShowing) { o.isVisible = false; return }
         if (layer !== target) {
             layer?.remove(o)
-            target.add(o, JLayeredPane.PALETTE_LAYER)
+            // As Any: from Kotlin the Integer unboxes to the add(Component, int) overload, which
+            // takes it as a list index, not a layer, and the pet can end up under the editor.
+            target.add(o, JLayeredPane.PALETTE_LAYER as Any)
             layer = target
         }
         // The bottom strip of the editor, clear of the scrollbars.

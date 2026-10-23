@@ -30,6 +30,10 @@ Sea creatures that keep you company while you code, in VS Code and JetBrains IDE
 
 Made to go with the [Midnight Tide](https://github.com/Chelayel/Midnight-Tide) theme, and works with any theme.
 
+In IntelliJ IDEA, the pet floats at the bottom of the editor:
+
+![Shelly floating at the bottom of the editor in IntelliJ IDEA, asking for food](docs/intellij-pet.png)
+
 | Editor | Folder | Where the pet lives | Choose, show or hide |
 | --- | --- | --- | --- |
 | VS Code | [`vscode/`](vscode/) | A **Tide Pets** panel in the Explorer (VS Code doesn't let extensions draw over the editor) | **Tide Pets: Choose Pet** / **Toggle Pet**, or the `tidePets.*` settings |
