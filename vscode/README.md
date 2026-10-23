@@ -1,5 +1,7 @@
 # Tide Pets
 
+![Shelly the sea turtle saying hi](https://raw.githubusercontent.com/Chelayel/tide-pets/main/docs/shelly.png)
+
 Shelly the sea turtle lives in a **Tide Pets** panel in your Explorer and reacts to what you're doing:
 
 - **Typing:** swims faster
@@ -11,6 +13,8 @@ Shelly the sea turtle lives in a **Tide Pets** panel in your Explorer and reacts
 - **Switching files:** looks around
 - **Away for 3 minutes:** naps on the sand
 - **Clicked:** does a spin
+
+![Shelly reacting to typing, fixed errors, a new error, failed tests, debugging and being left alone](https://raw.githubusercontent.com/Chelayel/tide-pets/main/docs/shelly-moods.png)
 
 ## Turn her on or off
 

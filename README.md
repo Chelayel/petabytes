@@ -1,5 +1,7 @@
 # Tide Pets
 
+![Shelly the sea turtle saying hi](docs/shelly.png)
+
 Shelly the sea turtle keeps you company while you code, in VS Code and JetBrains IDEs, and reacts to what you're doing:
 
 | You | Shelly |
@@ -13,6 +15,8 @@ Shelly the sea turtle keeps you company while you code, in VS Code and JetBrains
 | Switch files | Looks around |
 | Step away for 3 minutes | Naps on the sand |
 | Click her | Does a spin |
+
+![Shelly reacting to typing, fixed errors, a new error, failed tests, debugging and being left alone](docs/shelly-moods.png)
 
 Made to go with the [Midnight Tide](https://github.com/Chelayel/Midnight-Tide) theme, and works with any theme.
 

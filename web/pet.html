@@ -375,7 +375,8 @@
   }
   newDepth();
   requestAnimationFrame(frame);
-  setTimeout(() => say("Hi! I'm here.", 2200), 600);
+  // Say hi, unless she's already reacting to something.
+  setTimeout(() => { if (!sayEl.classList.contains("on")) say("Hi! I'm here.", 2200); }, 600);
 })();
 </script>
 </body>
