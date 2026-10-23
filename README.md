@@ -2,9 +2,9 @@
 
 # Tide Pets
 
-Sea creatures that keep you company while you code, in VS Code and JetBrains IDEs, and react to what you're doing. Pick one: **Shelly** the sea turtle, **Bloop** the jellyfish, **Inky** the octopus, **Pinchy** the crab or **Puff** the pufferfish.
+Sea creatures that keep you company while you code, in VS Code and JetBrains IDEs, and react to what you're doing. Pick one: **Shelly** the sea turtle, **Bloop** the jellyfish, **Inky** the octopus, **Pinchy** the crab, **Puff** the pufferfish, **Blue** the whale, **Clem** the clownfish, **Sandy** the seahorse or **Finn** the shark.
 
-![The five pets](docs/pets.png)
+![The nine pets](docs/pets.png)
 
 | You | Your pet |
 | --- | --- |
@@ -13,10 +13,18 @@ Sea creatures that keep you company while you code, in VS Code and JetBrains IDE
 | Add errors to the open file | Looks worried; hides when several appear at once (Inky inks, Puff puffs up) |
 | Fix all the errors | Celebrates |
 | Run a task or run configuration | Cheers when it passes, hides when it fails |
+| Run the app | Spins: "It's alive!" |
 | Debug | Brings out a magnifying glass |
+| Open your AI assistant, or a big block of code appears at once | "Did an AI write that? I won't tell." |
+| Open the terminal; run `git push`, tests, installs, `rm -rf` (VS Code) | "Command line time!", "Ship it!", "Fingers crossed!", hides |
+| Commit, switch branches | Celebrates, or notices the new branch |
+| Undo several times in a row | "Rewinding time?" |
 | Switch files | Looks around |
+| Code late at night, early in the morning, or for hours | "It's late. The tide's out.", "Stretch break?" |
 | Step away for 3 minutes | Naps |
-| Click it | Does a spin |
+| Click it / double-click it | Does a spin / shows hearts |
+
+**Feed it.** Use **Feed Pet** (the ♥ on the VS Code panel, or right-click the pet in IntelliJ) and a snack sinks down: `{ }`, `[ ]`, `( )`, `< >` or `;`. Your pet swims over and eats it. Every 20th `{` you type drops a crumb too, and a pet that hasn't eaten in an hour asks for one.
 
 ![Pets reacting to typing, fixed errors, a new error, failed tests, debugging and being left alone](docs/moods.png)
 
@@ -25,7 +33,7 @@ Made to go with the [Midnight Tide](https://github.com/Chelayel/Midnight-Tide) t
 | Editor | Folder | Where the pet lives | Choose, show or hide |
 | --- | --- | --- | --- |
 | VS Code | [`vscode/`](vscode/) | A **Tide Pets** panel in the Explorer (VS Code doesn't let extensions draw over the editor) | **Tide Pets: Choose Pet** / **Toggle Pet**, or the `tidePets.*` settings |
-| JetBrains (2024.2+) | [`intellij/`](intellij/) | Floating along the bottom of the editor; it only takes clicks on itself | **Tools → Tide Pets**; rename in **Settings → Tools → Tide Pets** |
+| JetBrains (2024.2+) | [`intellij/`](intellij/) | Floating at the bottom of the editor: drag it where you want it, or turn on **Swim Around**. It fades and lets clicks through while you work on a line it covers | Right-click the pet or **Tools → Tide Pets**; size and name in **Settings → Tools → Tide Pets** |
 
 ## How it's built
 

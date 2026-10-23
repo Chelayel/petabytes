@@ -20,7 +20,8 @@ class BubbleStyle(val text: Color, val background: Color, val border: Color, val
  * Paints a [PetBrain]'s pet into an area: the pet sits [bottomInset] above the bottom edge
  * (plus its drift), at [scale] pixels per art unit, with its speech above it.
  */
-class PetPainter(private val scale: Double, private val bottomInset: Double = 4.0) {
+class PetPainter(var scale: Double, private val bottomInset: Double = 4.0) {
+    private var fade = 1f
     val spriteWidth get() = 120 * scale
     val spriteHeight get() = 80 * scale
 
@@ -28,13 +29,17 @@ class PetPainter(private val scale: Double, private val bottomInset: Double = 4.
     fun origin(brain: PetBrain, height: Double): Pair<Double, Double> =
         brain.x to height - bottomInset - brain.depth - spriteHeight
 
-    fun paint(g0: Graphics2D, brain: PetBrain, width: Double, height: Double, style: BubbleStyle) {
+    /** [fade] multiplies every opacity: 1 normally, low while the pet stays out of the way. */
+    fun paint(g0: Graphics2D, brain: PetBrain, width: Double, height: Double, style: BubbleStyle, fade: Float = 1f) {
         val g = g0.create() as Graphics2D
+        this.fade = fade
         try {
             g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
             g.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE)
             g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON)
             val (ox, oy) = origin(brain, height)
+            brain.spriteMouthTop = oy
+            paintFood(g, brain, style)
             paintPet(g, brain, ox, oy)
             paintBubbles(g, brain, ox, oy)
             paintZzz(g, brain, ox, oy, style)
@@ -79,7 +84,7 @@ class PetPainter(private val scale: Double, private val bottomInset: Double = 4.
             }
             part.rot?.let { at.rotate(Math.toRadians(it.at(t)), part.pivotX, part.pivotY) }
             val shape = at.createTransformedShape(part.shape)
-            val alpha = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, part.opacity)
+            val alpha = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, part.opacity * fade)
             g.composite = alpha
             part.fill?.let { g.color = it; g.fill(shape) }
             part.stroke?.let {
@@ -97,15 +102,42 @@ class PetPainter(private val scale: Double, private val bottomInset: Double = 4.
         val now = brain.now()
         val mouthX = if (pet.flip && brain.dir < 0) 120 - pet.mouthX else pet.mouthX
         g.stroke = BasicStroke(1.5f)
+        val headX = if (pet.flip && brain.dir < 0) 120 - pet.headX else pet.headX
         for (b in brain.bubbles) {
             val age = (now - b.born) / 1800.0
             if (age < 0) continue
             val p = 1 - (1 - age) * (1 - age) // ease-out
+            val alpha = (0.85 * (1 - age) * fade).coerceIn(0.0, 1.0)
+            if (b.heart) {
+                val x = ox + headX * scale + b.x + b.dx * p
+                val y = oy + pet.headY * scale - 50 * p
+                g.color = withAlpha(Color(0xF472B6), alpha)
+                g.fill(heart(x, y, 9.0))
+                continue
+            }
             val x = ox + mouthX * scale + b.x + b.dx * p
             val y = oy + pet.mouthY * scale - 6 - 70 * p
-            g.color = withAlpha(pet.accent, (0.85 * (1 - age)).coerceIn(0.0, 1.0))
+            g.color = withAlpha(pet.accent, alpha)
             g.draw(Ellipse2D.Double(x - b.size / 2, y - b.size / 2, b.size, b.size))
         }
+    }
+
+    private fun heart(cx: Double, cy: Double, size: Double): java.awt.Shape {
+        val s = size / 2
+        return java.awt.geom.Path2D.Double().apply {
+            moveTo(cx, cy + s)
+            curveTo(cx - 2.2 * s, cy - 0.2 * s, cx - 1.0 * s, cy - 1.7 * s, cx, cy - 0.6 * s)
+            curveTo(cx + 1.0 * s, cy - 1.7 * s, cx + 2.2 * s, cy - 0.2 * s, cx, cy + s)
+            closePath()
+        }
+    }
+
+    private fun paintFood(g: Graphics2D, brain: PetBrain, style: BubbleStyle) {
+        val food = brain.food ?: return
+        g.font = Font(Font.MONOSPACED, Font.BOLD, (style.font.size2D + 1).toInt())
+        g.color = withAlpha(brain.pet.accent, fade.toDouble())
+        val w = g.fontMetrics.stringWidth(food.snack.text)
+        g.drawString(food.snack.text, (food.x - w / 2).toFloat(), (food.y + g.fontMetrics.ascent).toFloat())
     }
 
     private fun paintZzz(g: Graphics2D, brain: PetBrain, ox: Double, oy: Double, style: BubbleStyle) {

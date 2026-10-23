@@ -42,6 +42,11 @@
     opacity: 0.85; pointer-events: none; animation: rise 1.8s ease-out forwards;
   }
   @keyframes rise { to { transform: translate(var(--dx, 0px), -70px); opacity: 0; } }
+  .heart { position: absolute; color: #F472B6; font-size: 13px; pointer-events: none; animation: rise 1.8s ease-out forwards; }
+  .food {
+    position: absolute; font: 700 13px/1 var(--vscode-editor-font-family, ui-monospace, Menlo, monospace);
+    color: var(--bubble); pointer-events: none; text-shadow: 0 0 6px var(--glow); white-space: nowrap;
+  }
   .say {
     position: absolute; max-width: 220px; padding: 4px 8px; border-radius: 8px;
     background: var(--widget); border: 1px solid var(--border); color: var(--fg);
@@ -79,6 +84,7 @@
     x: 20, dir: 1, speed: 0.4, clock: 0, errors: 0, debugging: false, sleeping: false,
     until: { excited: 0, happy: 0, curious: 0, hiding: 0, spin: 0 }, happyAt: 0, spinAt: 0,
     lastActivity: now(), lastTypingLine: 0, sayTimer: 0, poses: {},
+    lastReact: {}, sessionMark: now(), lastFed: now(), eaten: 0, food: null, foodEl: null,
   };
 
   // ---- Building the pet from pets.json ---------------------------------
@@ -169,8 +175,11 @@
   // ---- Talking -----------------------------------------------------------
   function lines(key) { return pet.lines?.[key] || DATA.lines[key] || [""]; }
   function fill(line, extra = {}) {
-    return line.replace("{name}", name).replace("{task}", extra.task || "The task")
-      .replace("{errors}", `${state.errors} error${state.errors === 1 ? "" : "s"}`);
+    const vars = {
+      name, kind: (pet.label || "pet").toLowerCase(), task: "The task", branch: "a new branch",
+      errors: `${state.errors} error${state.errors === 1 ? "" : "s"}`, ...extra,
+    };
+    return line.replace(/\{(\w+)\}/g, (m, k) => (vars[k] != null ? vars[k] : m));
   }
   function say(text, ms = 2600) {
     sayEl.textContent = text;
@@ -199,7 +208,63 @@
     }
   }
 
+  function hearts(count = 4) {
+    if (reduced) return;
+    const box = petEl.getBoundingClientRect(), seaBox = sea.getBoundingClientRect();
+    const [hx, hy] = pet.head;
+    const localX = pet.flip && state.dir < 0 ? 120 - hx : hx;
+    for (let i = 0; i < count; i++) {
+      const h = document.createElement("div");
+      h.className = "heart";
+      h.textContent = "\u2665";
+      h.style.left = box.left - seaBox.left + localX * SCALE - 10 + Math.random() * 20 + "px";
+      h.style.top = box.top - seaBox.top + hy * SCALE + "px";
+      h.style.setProperty("--dx", (Math.random() * 30 - 15) + "px");
+      h.style.animationDelay = i * 0.2 + "s";
+      sea.appendChild(h);
+      setTimeout(() => h.remove(), 2400 + i * 200);
+    }
+  }
+
   // ---- Reacting ------------------------------------------------------------
+
+  /** An event the IDE reports by key; pets.json's reactions say what the pet does. */
+  function react(key, vars = {}) {
+    const r = DATA.reactions?.[key];
+    if (!r) return;
+    if (now() - (state.lastReact[key] || 0) < (r.cooldown || 0) * 1000) return;
+    state.lastReact[key] = now();
+    wake();
+    if (r.mood) flash(r.mood, r.ms || 1200);
+    if (r.bubbles) bubbles(r.bubbles);
+    if (r.hearts) hearts(r.hearts);
+    if (Math.random() < (r.chance ?? 1)) sayLine(key, 2600, vars);
+  }
+
+  /** Drop a snack from above; the pet swims over and eats it. */
+  function feed(text) {
+    if (state.food) return;
+    const snacks = DATA.snacks || [{ text: "{ }", key: "eatCurly" }];
+    const snack = (text && snacks.find((s) => s.text === text)) || pick(snacks);
+    const width = sea.clientWidth;
+    const el = document.createElement("div");
+    el.className = "food";
+    el.textContent = snack.text;
+    sea.appendChild(el);
+    state.food = { ...snack, x: 20 + Math.random() * Math.max(0, width - 60), y: -16, el };
+    wake();
+  }
+
+  function eat() {
+    const food = state.food;
+    food.el.remove();
+    state.food = null;
+    state.lastFed = now();
+    state.eaten++;
+    flash("happy", 1100);
+    bubbles(3);
+    if (state.eaten % 5 === 0) react("full"); else sayLine(food.key, 2200);
+  }
   function active(mood) { return state.until[mood] > now(); }
   function flash(mood, ms) {
     if (mood === "happy" && !active("happy")) state.happyAt = now();
@@ -225,6 +290,8 @@
       for (const [k, v] of Object.entries(msg.vars || {})) document.documentElement.style.setProperty(k, v);
       return;
     }
+    if (msg.type === "react") { react(msg.key, msg.vars || {}); return; }
+    if (msg.type === "feed") { feed(msg.snack); if (msg.key) react(msg.key); return; }
     const woke = wake();
     switch (msg.type) {
       case "typing":
@@ -259,6 +326,7 @@
     }
   }
 
+  petEl.addEventListener("dblclick", () => react("pet"));
   petEl.addEventListener("click", () => {
     const woke = wake();
     flash("spin", 800);
@@ -268,6 +336,9 @@
 
   setInterval(() => {
     if (!state.sleeping && !state.debugging && now() - state.lastActivity > SLEEP_AFTER) { state.sleeping = true; sayLine("sleep", 2000); }
+    if (state.sleeping) state.sessionMark = now(); // a break resets the long-session clock
+    if (!state.sleeping && now() - state.sessionMark > 90 * 60 * 1000) { state.sessionMark = now(); react("longSession"); }
+    if (!state.sleeping && !state.food && now() - state.lastFed > 60 * 60 * 1000) react("hungry");
   }, 5000);
 
   // Drift up and down every few seconds; floor pets and sleepers stay on the sand.
@@ -286,7 +357,21 @@
     const width = sea.clientWidth;
     const excited = active("excited") && !state.sleeping;
     let target = 0.4 * pet.speed;
-    if (state.sleeping || f.hiding || f.curious || active("spin")) target = 0;
+    const food = state.food;
+    if (food) {
+      // The snack sinks to the pet's swimming line; the pet swims over to it.
+      const petTop = sea.clientHeight - parseFloat(getComputedStyle(petEl).bottom) - H;
+      const mouthY = petTop + pet.mouth[1] * SCALE;
+      food.y = Math.min(food.y + 0.9 * dt, mouthY - 8);
+      const mouthX = state.x + (pet.flip && state.dir < 0 ? 120 - pet.mouth[0] : pet.mouth[0]) * SCALE;
+      food.el.style.left = food.x + "px";
+      food.el.style.top = food.y + "px";
+      const gap = food.x + 8 - mouthX;
+      if (Math.abs(gap) < 14 && food.y >= mouthY - 20) eat();
+      else if (Math.abs(gap) > 6) state.dir = gap > 0 ? 1 : -1;
+    }
+    if (food) target = 2.0 * pet.speed;
+    else if (state.sleeping || f.hiding || f.curious || active("spin")) target = 0;
     else if (excited) target = 1.7 * pet.speed;
     else if (state.debugging) target = 0.8 * pet.speed;
     else if (f.worried) target = 0.22 * pet.speed;
@@ -326,7 +411,11 @@
   newDepth();
   requestAnimationFrame(frame);
   // Say hi, unless already reacting to something.
-  setTimeout(() => { if (!sayEl.classList.contains("on")) sayLine("hello", 2200); }, 600);
+  setTimeout(() => {
+    if (sayEl.classList.contains("on")) return;
+    const h = new Date().getHours();
+    if (h >= 23 || h < 5) react("lateNight"); else if (h >= 5 && h < 10) react("morning"); else sayLine("hello", 2200);
+  }, 600);
 })();
 </script>
 </body>

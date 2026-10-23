@@ -6,6 +6,7 @@ import com.intellij.openapi.actionSystem.ActionUpdateThread
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.Separator
+import com.intellij.openapi.components.service
 import com.intellij.openapi.options.ShowSettingsUtil
 import com.intellij.openapi.project.DumbAwareAction
 import com.intellij.openapi.project.DumbAwareToggleAction
@@ -14,10 +15,17 @@ import com.intellij.openapi.project.DumbAwareToggleAction
 class PetMenu : ActionGroup() {
     private val children: Array<AnAction> by lazy {
         val pets = PetCatalog.load().pets.values.map { ChoosePet(it.id, "${it.label} (${it.name})") }
-        arrayOf(ShowPet(), Separator.create("Pet"), *pets.toTypedArray(), Separator.create(), OpenSettings())
+        arrayOf(FeedPet(), ShowPet(), Roam(), Separator.create("Pet"), *pets.toTypedArray(), Separator.create(), OpenSettings())
     }
 
     override fun getChildren(e: AnActionEvent?) = children
+}
+
+/** Drops a snack ({ }, [ ], ( ), < > or ;) for the pet to swim over and eat. */
+class FeedPet : DumbAwareAction("Feed Pet") {
+    override fun getActionUpdateThread() = ActionUpdateThread.BGT
+    override fun update(e: AnActionEvent) { e.presentation.isEnabled = e.project != null && PetSettings.get().state.enabled }
+    override fun actionPerformed(e: AnActionEvent) { e.project?.service<PetService>()?.feed() }
 }
 
 class ShowPet : DumbAwareToggleAction("Show Pet") {
@@ -25,6 +33,16 @@ class ShowPet : DumbAwareToggleAction("Show Pet") {
     override fun isSelected(e: AnActionEvent) = PetSettings.get().state.enabled
     override fun setSelected(e: AnActionEvent, state: Boolean) {
         PetSettings.get().state.enabled = state
+        PetService.refreshAll()
+    }
+}
+
+/** On: swims the width of the editor. Off: stays where it was dropped (dragging it turns this off). */
+class Roam : DumbAwareToggleAction("Swim Around") {
+    override fun getActionUpdateThread() = ActionUpdateThread.BGT
+    override fun isSelected(e: AnActionEvent) = PetSettings.get().state.roam
+    override fun setSelected(e: AnActionEvent, state: Boolean) {
+        PetSettings.get().state.roam = state
         PetService.refreshAll()
     }
 }

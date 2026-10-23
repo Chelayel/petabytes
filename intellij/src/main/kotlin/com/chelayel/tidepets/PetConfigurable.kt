@@ -20,6 +20,12 @@ class PetConfigurable : BoundConfigurable("Tide Pets") {
                 comboBox(pets.map { it.id }, textListCellRenderer { id -> pets.find { it.id == id }?.let { "${it.label} (${it.name})" } })
                     .bindItem({ settings.pet ?: "turtle" }, { settings.pet = it ?: "turtle" })
             }
+            row { checkBox("Swim along the editor (off: stay where it was dropped)").bindSelected(settings::roam) }
+                .rowComment("Drag the pet to move it; dropping it turns swimming off. It fades and lets clicks through while you work on a line it covers.")
+            row("Size:") {
+                comboBox(listOf("small", "medium", "large"), textListCellRenderer { it?.replaceFirstChar(Char::uppercase) })
+                    .bindItem({ settings.size ?: "medium" }, { settings.size = it ?: "medium" })
+            }
             row("Name:") {
                 textField().bindText({ settings.name ?: "" }, { settings.name = it.trim() })
                     .comment("Leave empty for the pet's own name.")

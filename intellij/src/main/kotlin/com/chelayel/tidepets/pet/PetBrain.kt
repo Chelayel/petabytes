@@ -16,7 +16,10 @@ class PetBrain(
     private val clock: () -> Long = System::currentTimeMillis,
     private val random: Random = Random.Default,
 ) {
-    class Bubble(val x: Double, val y: Double, val size: Double, val dx: Double, val born: Long)
+    class Bubble(val x: Double, val y: Double, val size: Double, val dx: Double, val born: Long, val heart: Boolean = false)
+
+    /** A snack sinking toward the pet: [x] in pixels across the area, [y] pixels from its top. */
+    class Food(val snack: Snack, val x: Double, var y: Double)
 
     // Position, in pixels from the left of the area the pet swims in.
     var x = 20.0; private set
@@ -37,6 +40,22 @@ class PetBrain(
     var spinAt = 0L; private set
     private var lastActivity = clock()
     private var lastTypingLine = 0L
+
+    /** False: the pet stays near [home] instead of swimming the whole width. */
+    var roam = false
+    /** Where the pet stays when it isn't roaming, as a fraction of the width. */
+    var home = 0.95
+    /** Held by the mouse: it follows the pointer and doesn't swim. */
+    var dragging = false
+    /** The caret is on a line the pet covers: it fades and swims clear of [avoidX]. */
+    var dodging = false; private set
+    private var avoidX = 0.0
+
+    private val lastReact = HashMap<String, Long>()
+    private var sessionMark = clock()
+    private var lastFed = clock()
+    private var eaten = 0
+    var food: Food? = null; private set
 
     var speech: String? = null; private set
     var speechUntil = 0L; private set
@@ -75,19 +94,19 @@ class PetBrain(
 
     fun say(text: String, ms: Long = 2600) { speech = text; speechUntil = now() + ms }
 
-    private fun sayLine(key: String, ms: Long = 2600, task: String? = null) {
+    private fun sayLine(key: String, ms: Long = 2600, task: String? = null, vars: Map<String, String> = emptyMap()) {
         val line = catalog.lines(pet, key).random(random)
-        say(
-            line.replace("{name}", name).replace("{task}", task ?: "The task")
-                .replace("{errors}", "$errors error${if (errors == 1) "" else "s"}"),
-            ms,
-        )
+        val all = mapOf(
+            "name" to name, "kind" to pet.label.lowercase(), "task" to (task ?: "The task"), "branch" to "a new branch",
+            "errors" to "$errors error${if (errors == 1) "" else "s"}",
+        ) + vars
+        say(Regex("\\{(\\w+)}").replace(line) { all[it.groupValues[1]] ?: it.value }, ms)
     }
 
-    private fun blow(count: Int) {
+    private fun blow(count: Int, heart: Boolean = false) {
         val t = now()
         repeat(count) { i ->
-            bubbles.add(Bubble(random.nextDouble(-5.0, 5.0), 0.0, 4 + random.nextDouble() * 6, random.nextDouble(-12.0, 12.0), t + i * 180L))
+            bubbles.add(Bubble(random.nextDouble(-8.0, 8.0), 0.0, 4 + random.nextDouble() * 6, random.nextDouble(-14.0, 14.0), t + i * (if (heart) 200L else 180L), heart))
         }
     }
 
@@ -104,7 +123,35 @@ class PetBrain(
 
     // ---- Events from the IDE -----------------------------------------------
 
-    fun hello() { if (now() > speechUntil) sayLine("hello", 2200) }
+    /** Hello, or good morning / it's late, by the clock. */
+    fun hello(hour: Int = java.time.LocalTime.now().hour) {
+        if (now() <= speechUntil) return
+        when {
+            hour >= 23 || hour < 5 -> react("lateNight")
+            hour in 5..9 -> react("morning")
+            else -> sayLine("hello", 2200)
+        }
+    }
+
+    /** An event the IDE reports by key; pets.json's reactions say what the pet does. */
+    fun react(key: String, vars: Map<String, String> = emptyMap()) {
+        val r = catalog.reactions[key] ?: return
+        if (now() - (lastReact[key] ?: Long.MIN_VALUE / 2) < r.cooldownMs) return
+        lastReact[key] = now()
+        wake()
+        r.mood?.let { flash(it, r.ms) }
+        if (r.bubbles > 0) blow(r.bubbles)
+        if (r.hearts > 0) blow(r.hearts, heart = true)
+        if (random.nextDouble() < r.chance) sayLine(key, vars = vars)
+    }
+
+    /** Drop a snack (a random one unless [text] names it) somewhere across an area [width] wide. */
+    fun feed(width: Double, text: String? = null) {
+        if (food != null) return
+        val snack = catalog.snacks.find { it.text == text } ?: catalog.snacks.random(random)
+        food = Food(snack, 20 + random.nextDouble() * max(1.0, width - 60), -14.0)
+        wake()
+    }
 
     fun typing() {
         val woke = wake()
@@ -145,6 +192,29 @@ class PetBrain(
         sayLine(if (active) "debugOn" else "debugOff")
     }
 
+    /** Follow the mouse while it drags the pet; [x] is the art box's left edge. */
+    fun dragTo(x: Double, width: Double, spriteWidth: Double) {
+        val clamped = x.coerceIn(4.0, max(4.0, width - spriteWidth - 4))
+        if (clamped != this.x) dir = if (clamped > this.x) 1 else -1
+        this.x = clamped
+        speed = 0.0
+        lastActivity = now()
+        sleeping = false
+    }
+
+    /** Dropped: stay here from now on. */
+    fun dropped(width: Double, spriteWidth: Double) {
+        dragging = false
+        roam = false
+        home = if (width > spriteWidth) (x / (width - spriteWidth)).coerceIn(0.0, 1.0) else 0.0
+    }
+
+    /** The caret's x if it's on a line the pet covers, or null. */
+    fun avoid(caretX: Double?) {
+        dodging = caretX != null
+        if (caretX != null) avoidX = caretX
+    }
+
     fun clicked() {
         val woke = wake()
         flash("spin", 800)
@@ -159,21 +229,55 @@ class PetBrain(
         val t = now()
         val dt = min(64.0, dtMs) / 16.7
         if (!sleeping && !debugging && t - lastActivity > 3 * 60_000) { sleeping = true; sayLine("sleep", 2000) }
+        if (sleeping) sessionMark = t // a break resets the long-session clock
+        if (!sleeping && t - sessionMark > 90 * 60_000) { sessionMark = t; react("longSession") }
+        if (!sleeping && food == null && t - lastFed > 60 * 60_000) react("hungry")
 
         val f = flags()
         val excited = active("excited") && !sleeping
-        var target = 0.4 * pet.speed
-        if (sleeping || "hiding" in f || "curious" in f || active("spin")) target = 0.0
-        else if (excited) target = 1.7 * pet.speed
-        else if (debugging) target = 0.8 * pet.speed
-        else if ("worried" in f) target = 0.22 * pet.speed
-        speed += (target - speed) * 0.06 * dt
-
-        x += speed * dir * dt
         val maxX = max(0.0, width - spriteWidth - 4)
+        val snack = food
+        if (snack != null && !dragging) {
+            // The snack sinks to the pet's mouth line; the pet swims over to it.
+            val scale = spriteWidth / 120
+            val mouthLocal = if (pet.flip && dir < 0) 120 - pet.mouthX else pet.mouthX
+            val mouthX = x + mouthLocal * scale
+            val mouthY = spriteMouthTop + pet.mouthY * scale
+            snack.y = min(snack.y + 0.9 * dt, mouthY - 8)
+            val gap = snack.x - mouthX
+            if (kotlin.math.abs(gap) < 14 && snack.y >= mouthY - 20) eat()
+            else {
+                if (kotlin.math.abs(gap) > 6) dir = if (gap > 0) 1 else -1
+                speed += (2.0 * pet.speed - speed) * 0.1 * dt
+                x += speed * dir * dt
+            }
+        } else if (dragging) {
+            speed = 0.0
+        } else if (dodging && roam) {
+            // Swim clear of the caret, toward whichever side has more room.
+            val center = x + spriteWidth / 2
+            val clear = kotlin.math.abs(center - avoidX) > spriteWidth
+            dir = if (avoidX > width / 2) -1 else 1
+            speed += ((if (clear) 0.0 else 2.2) - speed) * 0.1 * dt
+            x += speed * dir * dt
+        } else if (!roam) {
+            // Stay near home: drift a little either side of it, face where it's going.
+            val target = home * maxX + 12 * kotlin.math.sin(t / 2600.0)
+            val step = (target - x) * 0.04 * dt
+            if (kotlin.math.abs(step) > 0.05) dir = if (step > 0) 1 else -1
+            x += step
+        } else {
+            var target = 0.4 * pet.speed
+            if (sleeping || "hiding" in f || "curious" in f || active("spin")) target = 0.0
+            else if (excited) target = 1.7 * pet.speed
+            else if (debugging) target = 0.8 * pet.speed
+            else if ("worried" in f) target = 0.22 * pet.speed
+            speed += (target - speed) * 0.06 * dt
+            x += speed * dir * dt
+            if (speed > 0.1 && random.nextDouble() < 0.0015 * dt) dir = -dir
+        }
         if (x > maxX) { x = maxX; dir = -1 }
         if (x < 4) { x = 4.0; dir = 1 }
-        if (speed > 0.1 && random.nextDouble() < 0.0015 * dt) dir = -dir
 
         if (t >= nextDepthAt) {
             depthTarget = if (sleeping || pet.floor) 0.0 else random.nextDouble() * room
@@ -202,6 +306,19 @@ class PetBrain(
         }
 
         bubbles.removeAll { t - it.born > 1800 }
+    }
+
+    /** Where the art box's top is (pixels from the area's top), set by the painter each frame for feeding. */
+    var spriteMouthTop = 0.0
+
+    private fun eat() {
+        val snack = food ?: return
+        food = null
+        lastFed = now()
+        eaten++
+        flash("happy", 1100)
+        blow(3)
+        if (eaten % 5 == 0) react("full") else sayLine(snack.snack.key, 2200)
     }
 
     /** Switch to another pet in place, keeping position and mood. */

@@ -16,9 +16,18 @@ class PetSettings : SimplePersistentStateComponent<PetSettings.Options>(Options(
         var pet by string("turtle")
         /** Empty: the pet's own name (Shelly, Bloop, ...). */
         var name by string("")
+        /** True: swims the width of the editor. False: stays where it was dropped. */
+        var roam by property(false)
+        /** Where it stays when not roaming, as a fraction of the editor's width. */
+        var home by property(0.95f)
+        /** small, medium or large. */
+        var size by string("medium")
     }
 
     companion object {
         fun get(): PetSettings = service()
+
+        /** Art units to pixels, before the IDE's own UI scale. */
+        fun scaleFor(size: String?) = when (size) { "small" -> 0.48; "large" -> 0.8; else -> 0.62 }
     }
 }

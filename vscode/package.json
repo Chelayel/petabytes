@@ -1,7 +1,7 @@
 {
   "name": "tide-pets",
   "displayName": "Tide Pets",
-  "description": "Sea creatures that live in your Explorer and react to what you do: a turtle, jellyfish, octopus, crab or pufferfish that swims faster while you type, celebrates saves and fixed errors, worries about new ones, and naps when you're away.",
+  "description": "Sea creatures that live in your Explorer and react to what you do: they swim faster while you type, celebrate saves, commits and passing tests, notice the terminal and your AI assistant, eat the curly braces you feed them, and nap when you're away.",
   "version": "0.2.0",
   "publisher": "chelayel",
   "author": { "name": "Chelayel", "url": "https://www.chelayel.com" },
@@ -26,10 +26,10 @@
     "pets",
     "companion",
     "turtle",
-    "jellyfish",
     "octopus",
-    "crab",
-    "pufferfish",
+    "whale",
+    "shark",
+    "seahorse",
     "fun",
     "midnight tide"
   ],
@@ -56,6 +56,12 @@
         "icon": "$(symbol-misc)"
       },
       {
+        "command": "tidePets.feed",
+        "title": "Feed Pet",
+        "category": "Tide Pets",
+        "icon": "$(heart)"
+      },
+      {
         "command": "tidePets.toggle",
         "title": "Toggle Pet",
         "category": "Tide Pets"
@@ -74,6 +80,11 @@
     ],
     "menus": {
       "view/title": [
+        {
+          "command": "tidePets.feed",
+          "when": "view == tidePets.pet",
+          "group": "navigation"
+        },
         {
           "command": "tidePets.choose",
           "when": "view == tidePets.pet",
@@ -102,21 +113,29 @@
             "jellyfish",
             "octopus",
             "crab",
-            "pufferfish"
+            "pufferfish",
+            "whale",
+            "clownfish",
+            "seahorse",
+            "shark"
           ],
           "enumDescriptions": [
             "Shelly the sea turtle",
             "Bloop the jellyfish",
             "Inky the octopus",
             "Pinchy the crab",
-            "Puff the pufferfish"
+            "Puff the pufferfish",
+            "Blue the whale",
+            "Clem the clownfish",
+            "Sandy the seahorse",
+            "Finn the shark"
           ],
           "description": "Which pet lives in the Explorer."
         },
         "tidePets.name": {
           "type": "string",
           "default": "",
-          "description": "Your pet's name. Leave empty for its own name (Shelly, Bloop, Inky, Pinchy or Puff)."
+          "description": "Your pet's name. Leave empty for its own (Shelly, Bloop, Inky, Pinchy, Puff, Blue, Clem, Sandy or Finn)."
         }
       }
     }

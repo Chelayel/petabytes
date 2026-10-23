@@ -204,6 +204,121 @@ PETS["pufferfish"] = {
             "fixed": ["*deflates* All clear!", "Phew. Fixed it!"]},
 }
 
+
+# ---- Whale --------------------------------------------------------------
+weye = "#1E3A8A"
+PETS["whale"] = {
+  "label": "Whale", "name": "Blue", "flip": True, "floor": False, "speed": 0.6,
+  "bob": [4, 3.6], "glow": "rgba(96,165,250,0.45)", "mouth": [104, 48], "head": [96, 22],
+  "parts": [
+    p("M20 42 Q8 30 3 21 Q11 25 17 33 Q13 21 15 13 Q21 25 23 38Z", "tail", fill="#3B82F6", pivot=[21, 40], rot=[12, 1.6, 0]),
+    p("M14 44 Q14 18 52 16 Q92 14 104 36 Q110 48 100 56 Q80 66 46 64 Q16 62 14 44Z", "body", fill="#60A5FA"),
+    p("M30 56 Q60 66 98 54 Q86 63 48 63 Q36 62 30 56Z", "body", fill="#DBEAFE"),
+    p("M44 59 l2 4 M54 60 l1.5 4 M64 60 l1 3.6 M74 59 l0.5 3.4", "body", stroke="#93C5FD", sw=1.2),
+    c(94, 46, 2.2, "body", fill="#F9A8D4", opacity=0.8),
+    *eye_set(88, 40, 2.6, "body", weye),
+    p("M92 49 q5 3 10 -1", "body", stroke=weye, sw=1.4),
+    p("M84 33 l8 2", "body", stroke=weye, sw=1.4, when=["worried"]),
+    p("M102 26 q-2.5 4.5 0 5.5 q2.5 -1 0 -5.5z", "body", fill="#7DD3FC", when=["worried"]),
+    p("M70 15 q-6 -6 -10 -6 M70 15 q6 -6 10 -6 M70 15 l0 -9", "spout", stroke="#BFDBFE", sw=2.2, when=["happy"]),
+    p("M60 56 q-4 10 -14 14 q4 -8 6 -16z", "fins", fill="#3B82F6", pivot=[58, 56], rot=[15, 1.6, 0.3]),
+    *lens(112, 56),
+  ],
+  "poses": {
+    "hiding":   {"body": {"s": 0.9, "ty": 6, "p": [60, 40]}, "tail": {"s": 0.8, "ty": 6, "p": [20, 40]}, "fins": {"ty": 6}},
+    "sleeping": {"body": {"ty": 2}, "tail": {"ty": 2}, "fins": {"ty": 2}},
+    "curious":  {"body": {"r": -5, "p": [60, 40]}},
+  },
+  "lines": {"click": ["Hello there!", "*whale song*", "Big hugs!", "Thar she blows!"],
+            "pet": ["*happy whale song*", "Aww. *spouts*"], "fixed": ["*spouts* All clear!", "Fixed it! Whale done."]},
+}
+
+# ---- Clownfish ----------------------------------------------------------
+fdark = "#1C1917"
+PETS["clownfish"] = {
+  "label": "Clownfish", "name": "Clem", "flip": True, "floor": False, "speed": 1.3,
+  "bob": [3, 1.8], "glow": "rgba(251,146,60,0.45)", "mouth": [87, 44], "head": [82, 22],
+  "parts": [
+    p("M36 40 l-13 -12 q4 12 0 24z", "fins", fill="#FB923C", stroke=fdark, sw=1.2, pivot=[36, 40], rot=[18, 0.6, 0]),
+    p("M50 26 q8 -10 18 -2 q-8 -1 -18 2z", "body", fill="#FB923C", stroke=fdark, sw=1.2),
+    e(60, 40, 26, 15, "body", fill="#FB923C", stroke=fdark, sw=1.2),
+    p("M47 26.5 Q51 40 47 53.5 Q43 53 41 51 Q45 40 41 29 Q44 27 47 26.5Z", "body", fill="#FFFFFF", stroke=fdark, sw=1.1),
+    p("M68 25.4 Q73 40 68 54.6 Q64 55 61 54.6 Q65 40 61 25.4 Q64 25 68 25.4Z", "body", fill="#FFFFFF", stroke=fdark, sw=1.1),
+    p("M80 29 Q84 40 80 51 Q78 50.6 76.5 50 Q79.5 40 76.5 30 Q78 29.4 80 29Z", "body", fill="#FFFFFF", stroke=fdark, sw=1.1),
+    *eye_set(79, 36, 2.2, "body", fdark, sclera="#FFFFFF"),
+    p("M83 44 q2 1.6 3.6 0", "body", stroke=fdark, sw=1.2),
+    p("M74 29.5 l7 2", "body", stroke=fdark, sw=1.3, when=["worried"]),
+    p("M88 22 q-2.5 4.5 0 5.5 q2.5 -1 0 -5.5z", "body", fill="#7DD3FC", when=["worried"]),
+    p("M62 46 q-2 8 -8 10 q2 -6 2 -10z", "body", fill="#FB923C", stroke=fdark, sw=1, pivot=[62, 46], rot=[20, 0.5, 0.3]),
+    *lens(96, 50),
+  ],
+  "poses": {
+    "hiding":   {"body": {"s": 0.85, "ty": 4, "p": [60, 40]}, "fins": {"s": 0.85, "ty": 4, "p": [36, 40]}},
+    "sleeping": {"body": {"ty": 2}, "fins": {"ty": 2}},
+    "curious":  {"body": {"r": -8, "p": [60, 40]}},
+  },
+  "lines": {"click": ["Hi hi hi!", "*zooms*", "Just keep coding!", "Wheee!"],
+            "pet": ["*wiggles*", "Hehe!"], "typing": ["Zoom zoom!", "Faster, faster!"]},
+}
+
+# ---- Seahorse -----------------------------------------------------------
+hpink, hdark, heye = "#F9A8D4", "#EC4899", "#500724"
+PETS["seahorse"] = {
+  "label": "Seahorse", "name": "Sandy", "flip": True, "floor": False, "speed": 0.5,
+  "bob": [6, 2.8], "glow": "rgba(249,168,212,0.5)", "mouth": [83, 20], "head": [74, 6],
+  "parts": [
+    p("M52 40 q-9 2 -11 9 q7 0 11 -4z", "fins", fill="#FBCFE8", stroke=hdark, sw=1, pivot=[52, 42], rot=[25, 0.35, 0]),
+    p("M57 55 Q60 67 52 71 Q44 73 45 65 Q47 60 52 62", "body", stroke=hpink, sw=6),
+    p("M56 26 Q75 30 70 44 Q66 55 58 56 Q50 54 52 42 Q50 32 56 26Z", "body", fill=hpink, stroke=hdark, sw=1.2),
+    p("M58 32 q6 2 9 0 M57 38 q7 2 10 0 M56 44 q6 2 9 0 M56 50 q5 1.6 7 0", "body", stroke=hdark, sw=1, opacity=0.6),
+    p("M58 16 l2 -6 l2 5 l3 -5 l1 6", "body", fill=hdark),
+    c(64, 22, 8.5, "body", fill=hpink, stroke=hdark, sw=1.2),
+    p("M71 19.5 l12 -1 l0 5 l-11 1z", "body", fill=hpink, stroke=hdark, sw=1.1),
+    *eye_set(65, 20, 2.2, "body", heye),
+    c(60, 25, 1.8, "body", fill="#FDA4AF", opacity=0.8),
+    p("M61 14.5 l7 1.6", "body", stroke=heye, sw=1.3, when=["worried"]),
+    p("M76 8 q-2.5 4.5 0 5.5 q2.5 -1 0 -5.5z", "body", fill="#7DD3FC", when=["worried"]),
+    *lens(84, 40),
+  ],
+  "poses": {
+    "hiding":   {"body": {"s": 0.85, "ty": 4, "p": [60, 50]}, "fins": {"s": 0.6, "p": [52, 42]}},
+    "sleeping": {"body": {"r": 8, "p": [60, 50]}},
+    "curious":  {"body": {"r": -6, "p": [60, 50]}},
+  },
+  "lines": {"click": ["Hello, hello!", "*bobs politely*", "Neigh! Just kidding."],
+            "pet": ["*curls tail happily*", "Aww, thank you!"]},
+}
+
+# ---- Shark --------------------------------------------------------------
+sgray, sdark, seye = "#94A3B8", "#64748B", "#0F172A"
+PETS["shark"] = {
+  "label": "Shark", "name": "Finn", "flip": True, "floor": False, "speed": 1.1,
+  "bob": [3, 3.0], "glow": "rgba(148,163,184,0.45)", "mouth": [110, 46], "head": [100, 20],
+  "parts": [
+    p("M16 42 L5 25 Q13 32 19 39 Q13 47 5 57 Z", "tail", fill=sdark, pivot=[17, 42], rot=[12, 1.0, 0]),
+    p("M56 27 q6 -18 18 -20 q-4 12 -2 20z", "body", fill=sdark),
+    p("M10 42 Q30 26 70 26 Q100 28 112 42 Q100 54 70 56 Q30 56 10 42Z", "body", fill=sgray),
+    p("M30 48 Q70 60 108 44 Q100 54 70 56 Q40 56 30 48Z", "body", fill="#F1F5F9"),
+    p("M84 35 q-2 5 0 10 M88 35 q-2 5 0 10 M92 36 q-2 4 0 8", "body", stroke=sdark, sw=1.2),
+    *eye_set(99, 36, 2.4, "body", seye),
+    p("M96 46 q6 4 12 0", "body", stroke=seye, sw=1.4),
+    p("M99 47.2 l1.5 2.2 l1.5 -2 M103 47.8 l1.5 2.2 l1.5 -2", "body", fill="#FFFFFF"),
+    p("M95 30.5 l8 2", "body", stroke=seye, sw=1.4, when=["worried"]),
+    p("M106 22 q-2.5 4.5 0 5.5 q2.5 -1 0 -5.5z", "body", fill="#7DD3FC", when=["worried"]),
+    p("M62 50 q-6 10 -16 12 q6 -6 8 -12z", "fins", fill=sdark, pivot=[60, 50], rot=[12, 1.0, 0.3]),
+    *lens(114, 56),
+  ],
+  "poses": {
+    "hiding":   {"body": {"s": 0.88, "ty": 5, "p": [60, 42]}, "tail": {"s": 0.8, "ty": 5, "p": [17, 42]}, "fins": {"ty": 5}},
+    "sleeping": {"body": {"ty": 2}, "tail": {"ty": 2}, "fins": {"ty": 2}},
+    "curious":  {"body": {"r": -6, "p": [60, 42]}},
+  },
+  "lines": {"click": ["Don't worry, I'm vegetarian.", "Fin-tastic!", "*friendly shark noises*", "Chomp! Just kidding."],
+            "pet": ["*happy fin wiggle*", "Aww, you're not scared of me!"],
+            "yikes": ["Even sharks get scared sometimes.", "*hides behind a fin*"],
+            "eatCurly": ["Chomp! Curly braces.", "Mmm, crunchy braces."]},
+}
+
 LINES = {
   "hello": ["Hi! I'm {name}."],
   "wake": ["Oh! I'm up.", "Back to work?", "Mm, what did I miss?"],
@@ -222,4 +337,79 @@ LINES = {
   "sleep": ["zzz..."],
 }
 
-print(json.dumps({"version": 1, "box": [120, 80], "lines": LINES, "pets": PETS}, indent=1))
+# Snacks dropped by Feed (and every 20th "{" typed); each has its own lines.
+SNACKS = [
+  {"text": "{ }", "key": "eatCurly"},
+  {"text": "[ ]", "key": "eatSquare"},
+  {"text": "( )", "key": "eatParens"},
+  {"text": "< >", "key": "eatAngle"},
+  {"text": ";", "key": "eatSemicolon"},
+]
+
+# What happens on an event the IDE reports with a key (pet.react(key, vars)).
+# mood: happy | excited | curious | hiding | spin; ms: how long; bubbles / hearts: how many;
+# chance: how often it also says something; cooldown: seconds before it reacts to the key again.
+# Lines live in LINES (or a pet's own "lines") under the same key.
+REACTIONS = {
+  "ai":          {"mood": "curious", "ms": 1500, "bubbles": 2, "cooldown": 300},
+  "aiBig":       {"mood": "curious", "ms": 1500, "chance": 0.5, "cooldown": 180},
+  "terminal":    {"mood": "curious", "ms": 1200, "chance": 0.6, "cooldown": 300},
+  "gitPush":     {"mood": "happy", "ms": 1100, "bubbles": 5, "cooldown": 20},
+  "gitPushFriday": {"mood": "hiding", "ms": 1500, "cooldown": 20},
+  "test":        {"mood": "excited", "ms": 3000, "cooldown": 30},
+  "install":     {"mood": "excited", "ms": 3000, "cooldown": 60},
+  "danger":      {"mood": "hiding", "ms": 2200, "cooldown": 10},
+  "commandFail": {"mood": "curious", "ms": 1200, "chance": 0.7, "cooldown": 30},
+  "run":         {"mood": "spin", "ms": 800, "bubbles": 4, "cooldown": 15},
+  "build":       {"mood": "excited", "ms": 3000, "chance": 0.6, "cooldown": 60},
+  "commit":      {"mood": "happy", "ms": 1100, "bubbles": 6, "cooldown": 10},
+  "branch":      {"mood": "curious", "ms": 1500, "cooldown": 10},
+  "undo":        {"mood": "curious", "ms": 1200, "cooldown": 60},
+  "pet":         {"mood": "happy", "ms": 1100, "hearts": 5, "cooldown": 0},
+  "lateNight":   {"cooldown": 3 * 3600},
+  "morning":     {"cooldown": 6 * 3600},
+  "longSession": {"mood": "curious", "ms": 1500, "cooldown": 3600},
+  "feed":        {"cooldown": 0},
+  "crumb":       {"chance": 0.8, "cooldown": 0},
+  "hungry":      {"mood": "curious", "ms": 1500, "cooldown": 1800},
+  "full":        {"mood": "happy", "ms": 1100, "hearts": 3, "cooldown": 300},
+}
+
+LINES.update({
+  "ai": ["Ooh, an AI! Are we friends?", "Two assistants are better than one.", "Make sure it writes the tests too.",
+         "Beep boop. Just kidding, I'm a {kind}.", "Tell the AI I said hi."],
+  "aiBig": ["Did an AI write that? I won't tell.", "Whoa, that's a lot of code at once.", "That appeared fast!"],
+  "terminal": ["Ooh, the terminal. Type something cool.", "Command line time!", "I like the blinking cursor."],
+  "gitPush": ["Ship it!", "Off it goes!", "Pushed! Bon voyage, little commits."],
+  "gitPushFriday": ["Pushing on a Friday? Brave.", "A Friday push... I'll be in my shell."],
+  "test": ["Fingers crossed!", "Testing, testing...", "Come on, green!"],
+  "install": ["Downloading the internet...", "So many packages.", "node_modules is getting bigger."],
+  "danger": ["Careful with that!", "*hides* Are you sure about that one?"],
+  "commandFail": ["That one didn't work.", "Hmm, the command failed.", "Exit code says no."],
+  "run": ["Here we go!", "It's alive!", "Running {task}!", "Let's see it go!"],
+  "build": ["Building...", "Compiling, hold on.", "Construction in progress."],
+  "commit": ["Committed! Nice.", "Another one for the history books.", "Saved to the logbook."],
+  "branch": ["New branch: {branch}.", "Ooh, {branch}.", "Off to {branch}!"],
+  "undo": ["Rewinding time?", "Undo, undo, undo...", "Let's pretend that never happened."],
+  "pet": ["*happy noises*", "Hehe, that tickles.", "I like you too!"],
+  "lateNight": ["It's late. The tide's out.", "Coding past midnight? I'll keep you company.", "Night shift, huh?"],
+  "morning": ["Good morning!", "Fresh tide, fresh code.", "Morning! Coffee first?"],
+  "feed": ["Ooh, snack time!", "Food!"],
+  "crumb": ["You dropped a crumb!", "A curly brace fell in!", "Ooh, a snack from your code."],
+  "hungry": ["I'm hungry. Got any curly braces?", "*tummy rumbles* Feed me a semicolon?", "Snack break?"],
+  "full": ["I'm so full.", "*happy and full*", "No more braces, please. Okay, one more."],
+  "eatCurly": ["Mmm, curly braces!", "Crunchy!", "A matched pair. Delicious."],
+  "eatSquare": ["Square brackets! Very crisp.", "Mmm, arrays."],
+  "eatParens": ["Parentheses! Smooth.", "(Yum.)"],
+  "eatAngle": ["Angle brackets. Generic, but tasty.", "Mmm, <T>-bone."],
+  "eatSemicolon": ["A semicolon! My favorite.", "Statement terminated. Yum.", "Crunchy little semicolon."],
+  "longSession": ["You've been at it a while. Stretch break?", "Water break? I'm already in water.", "Blink a few times. Eyes need breaks too."],
+})
+
+PETS["crab"]["lines"].update({"pet": ["*happy clacks*", "Snip! I mean, thanks!"], "run": ["Scuttling into action!", "It's alive! *clack clack*"]})
+PETS["octopus"]["lines"].update({"pet": ["*hugs you with all eight arms*", "Eight arms, all for you."], "ai": ["An AI? I have eight arms, it has a million parameters."]})
+PETS["pufferfish"]["lines"].update({"pet": ["*puffs happily*", "Hehe, don't pop me."], "danger": ["*PUFF* Careful!", "*maximum puff*"]})
+PETS["jellyfish"]["lines"].update({"pet": ["*glows brighter*", "Bloop! Thank you."], "lateNight": ["It's late. Good thing I glow."]})
+PETS["turtle"]["lines"].update({"pet": ["*happy flipper flaps*", "Hehe, my shell is ticklish."], "longSession": ["Even turtles take breaks. Stretch?"]})
+
+print(json.dumps({"version": 1, "box": [120, 80], "lines": LINES, "reactions": REACTIONS, "snacks": SNACKS, "pets": PETS}, indent=1))
