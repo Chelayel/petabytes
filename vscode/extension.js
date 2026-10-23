@@ -1,4 +1,4 @@
-// Tide Pets: a sea turtle in the Explorer that reacts to what you do.
+// Tide Pets: a sea creature in the Explorer that reacts to what you do.
 const vscode = require("vscode");
 const crypto = require("crypto");
 const fs = require("fs");
@@ -18,7 +18,7 @@ class PetView {
     view.webview.options = { enableScripts: true, localResourceRoots: [] };
     view.webview.html = this.html();
     view.webview.onDidReceiveMessage((msg) => {
-      if (msg && msg.type === "ready") this.post({ type: "config", name: petName() });
+      if (msg && msg.type === "ready") this.post(config());
     });
     view.onDidDispose(() => { this.view = undefined; });
   }
@@ -29,14 +29,27 @@ class PetView {
 
   html() {
     const nonce = crypto.randomBytes(16).toString("base64");
-    const page = fs.readFileSync(path.join(this.extensionPath, "media", "pet.html"), "utf8");
+    const media = path.join(this.extensionPath, "media");
+    const page = fs.readFileSync(path.join(media, "pet.html"), "utf8");
+    // Inlined as a script literal: escape "<" so the art can never close the script tag.
+    const pets = fs.readFileSync(path.join(media, "pets.json"), "utf8").replace(/</g, "\\u003c");
     const csp = `default-src 'none'; style-src 'unsafe-inline'; script-src 'nonce-${nonce}';`;
-    return page.replace("{{csp}}", csp).replace("{{nonce}}", nonce);
+    return page.replaceAll("{{csp}}", csp).replaceAll("{{nonce}}", nonce).replaceAll("{{pets}}", () => pets);
   }
 }
 
-function petName() {
-  return vscode.workspace.getConfiguration(SECTION).get("name") || "Shelly";
+const PETS = [
+  { id: "turtle", label: "Sea turtle", detail: "Shelly: swims, paddles, and hides in her shell" },
+  { id: "jellyfish", label: "Jellyfish", detail: "Bloop: pulses, drifts, and glows" },
+  { id: "octopus", label: "Octopus", detail: "Inky: waves eight arms and hides in an ink cloud" },
+  { id: "crab", label: "Crab", detail: "Pinchy: scuttles along the sand and snaps its claws" },
+  { id: "pufferfish", label: "Pufferfish", detail: "Puff: puffs up when errors appear" },
+];
+
+function config() {
+  const settings = vscode.workspace.getConfiguration(SECTION);
+  // An empty name means the pet's own (Shelly, Bloop, ...).
+  return { type: "config", pet: settings.get("pet") || "turtle", name: settings.get("name") || "" };
 }
 
 function errorCount(uri) {
@@ -62,9 +75,20 @@ function activate(context) {
     vscode.commands.executeCommand(`${VIEW_ID}.focus`);
   }));
   sub(vscode.commands.registerCommand("tidePets.hide", () => setEnabled(false)));
+  sub(vscode.commands.registerCommand("tidePets.choose", async () => {
+    const current = vscode.workspace.getConfiguration(SECTION).get("pet");
+    const choice = await vscode.window.showQuickPick(
+      PETS.map((p) => ({ ...p, description: p.id === current ? "current" : "" })),
+      { placeHolder: "Choose your pet" },
+    );
+    if (!choice) return;
+    await vscode.workspace.getConfiguration(SECTION).update("pet", choice.id, vscode.ConfigurationTarget.Global);
+    await setEnabled(true);
+    vscode.commands.executeCommand(`${VIEW_ID}.focus`);
+  }));
 
   sub(vscode.workspace.onDidChangeConfiguration((e) => {
-    if (e.affectsConfiguration(`${SECTION}.name`)) pet.post({ type: "config", name: petName() });
+    if (e.affectsConfiguration(`${SECTION}.name`) || e.affectsConfiguration(`${SECTION}.pet`)) pet.post(config());
   }));
 
   // Typing: one message per burst; the turtle keeps swimming fast for a moment on its own.

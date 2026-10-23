@@ -17,6 +17,7 @@ repositories {
 }
 
 dependencies {
+    testImplementation(kotlin("stdlib"))
     intellijPlatform {
         // IntelliJ IDEA Community; works in every JetBrains IDE built on the platform.
         create("IC", "2024.2.5")
@@ -54,4 +55,12 @@ tasks.processResources {
 
 kotlin {
     jvmToolchain(21)
+}
+
+// Renders every pet in each mood with the IntelliJ painter, headlessly, into build/preview.
+tasks.register<JavaExec>("renderPreview") {
+    classpath = sourceSets["test"].runtimeClasspath
+    mainClass = "com.chelayel.tidepets.pet.RenderPreviewKt"
+    args(rootDir.resolve("../web/pets.json").path, layout.buildDirectory.dir("preview").get().asFile.path)
+    jvmArgs("-Djava.awt.headless=true")
 }

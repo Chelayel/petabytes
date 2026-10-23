@@ -4,51 +4,53 @@
     <vendor url="https://github.com/Chelayel/tide-pets">Chelayel</vendor>
 
     <description><![CDATA[
-        <h2>Tide Pets — a sea turtle that keeps you company while you code</h2>
-        <p>Shelly the sea turtle lives in a tool window and reacts to what you do:</p>
+        <h2>Tide Pets — sea creatures that keep you company while you code</h2>
+        <p>A pet swims along the bottom of your editor and reacts to what you do. Pick one:
+        <b>Shelly</b> the sea turtle, <b>Bloop</b> the jellyfish, <b>Inky</b> the octopus,
+        <b>Pinchy</b> the crab or <b>Puff</b> the pufferfish.</p>
+        <p><img src="https://raw.githubusercontent.com/Chelayel/tide-pets/main/docs/pets.png" alt="The five pets: a sea turtle, a jellyfish, an octopus, a crab and a pufferfish" width="620"/></p>
         <ul>
             <li><b>Typing</b> — swims faster</li>
             <li><b>Saving</b> — a happy loop and a few bubbles</li>
-            <li><b>New errors</b> in the open file — looks worried, and hides in its shell when a lot appear at once</li>
+            <li><b>New errors</b> in the open file — looks worried, and hides when a lot appear at once
+            (the octopus inks, the pufferfish puffs up)</li>
             <li><b>Errors fixed</b> — celebrates</li>
             <li><b>Run configurations</b> — cheers when one passes, hides when one fails</li>
             <li><b>Debugging</b> — brings out a magnifying glass</li>
             <li><b>Switching files</b> — looks around</li>
-            <li><b>Idle for a few minutes</b> — naps on the sand</li>
+            <li><b>Idle for a few minutes</b> — naps</li>
             <li><b>Clicked</b> — does a spin</li>
         </ul>
-        <p><img src="https://raw.githubusercontent.com/Chelayel/tide-pets/main/docs/shelly-moods.png" alt="Shelly reacting to typing, fixed errors, a new error, failed tests, debugging and being left alone" width="620"/></p>
-        <p>Turn it on or off with <b>Tools → Show Tide Pet</b>.</p>
+        <p>The pet floats over the editor and only takes clicks on itself, so it never gets in the way of your code.
+        Choose a pet or hide it under <b>Tools → Tide Pets</b>, and rename it in <b>Settings → Tools → Tide Pets</b>.</p>
         <p>Made to go with the <a href="https://plugins.jetbrains.com/plugin/31513-midnight-tide">Midnight Tide</a>
         theme, and works with any theme.</p>
         <p>Free and open source (MIT): <a href="https://github.com/Chelayel/tide-pets">github.com/Chelayel/tide-pets</a>.</p>
     ]]></description>
 
     <change-notes><![CDATA[
+        <p><b>0.2.0</b> — Four new pets: Bloop the jellyfish, Inky the octopus, Pinchy the crab and Puff the
+        pufferfish. The pet now floats along the bottom of the editor instead of living in a tool window.
+        Tools → Tide Pets to choose one; Settings → Tools → Tide Pets to rename it. New logo.</p>
         <p><b>0.1.1</b> — First release on the Marketplace (0.1.0 was built but not uploaded).</p>
         <p><b>0.1.0</b> — First release: Shelly the sea turtle.</p>
     ]]></change-notes>
 
     <depends>com.intellij.modules.platform</depends>
     <depends>com.intellij.modules.lang</depends>
-    <!-- JCEF is a separate bundled plugin from 2026.2 (build 262); optional so the
-         plugin still loads elsewhere and explains itself instead of failing. -->
-    <depends optional="true" config-file="jcef.xml">com.intellij.modules.jcef</depends>
 
     <extensions defaultExtensionNs="com.intellij">
-        <toolWindow
-            id="Tide Pets"
-            anchor="bottom"
-            icon="/icons/turtle.svg"
-            factoryClass="com.chelayel.tidepets.PetToolWindowFactory"/>
+        <postStartupActivity implementation="com.chelayel.tidepets.PetStartup"/>
+        <applicationConfigurable
+            parentId="tools"
+            instance="com.chelayel.tidepets.PetConfigurable"
+            id="com.chelayel.tidepets.settings"
+            displayName="Tide Pets"/>
     </extensions>
 
     <actions>
-        <action id="TidePets.Toggle"
-                class="com.chelayel.tidepets.TogglePetAction"
-                text="Show Tide Pet"
-                description="Show or hide the Tide Pets sea turtle">
+        <group id="TidePets.Menu" class="com.chelayel.tidepets.PetMenu" text="Tide Pets" popup="true">
             <add-to-group group-id="ToolsMenu" anchor="last"/>
-        </action>
+        </group>
     </actions>
 </idea-plugin>

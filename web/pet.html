@@ -1,8 +1,9 @@
 <!doctype html>
 <!--
-  Tide Pets: the shared pet page. VS Code shows it in a webview, IntelliJ in a
-  JCEF browser. Each host replaces {{csp}} and {{nonce}}, then sends events with
-  window.tidePets.receive({ type: ... }) (IntelliJ) or postMessage (VS Code).
+  Tide Pets: the VS Code pet page. It draws whichever pet web/pets.json
+  describes (the same art the IntelliJ plugin paints natively) and reacts to
+  events the extension posts. The host fills in the three double-brace
+  placeholders below: the content security policy, the script nonce and the pets.
 -->
 <html lang="en">
 <head>
@@ -11,17 +12,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
   :root {
-    --shell: #0F766E;
-    --shell-edge: #5EEAD4;
-    --skin: #5EEAD4;
-    --belly: #FDBA74;
-    --eye: #0E1012;
-    --glow: rgba(94, 234, 212, 0.45);
     --fg: var(--vscode-foreground, #E4E4E7);
     --muted: var(--vscode-descriptionForeground, #A1A1AA);
     --widget: var(--vscode-editorWidget-background, #1A1D21);
     --border: var(--vscode-widget-border, #2A2E33);
-    --paddle: 1.6s;
+    --glow: rgba(94, 234, 212, 0.45);
+    --bubble: #5EEAD4;
   }
   html, body { height: 100%; margin: 0; overflow: hidden; }
   body {
@@ -31,204 +27,171 @@
     user-select: none;
   }
   #sea { position: relative; height: 100%; min-height: 110px; }
+  #pet { position: absolute; left: 0; bottom: 24px; width: 96px; height: 64px; cursor: pointer; overflow: visible; }
+  #pet svg { width: 100%; height: 100%; overflow: visible; filter: drop-shadow(0 0 6px var(--glow)); }
 
-  .turtle {
-    position: absolute;
-    left: 0;
-    bottom: 24px;
-    width: 96px;
-    height: 64px;
-    cursor: pointer;
-    transition: bottom 2.5s ease-in-out;
-  }
-  .turtle .bob { width: 100%; height: 100%; animation: bob 3.2s ease-in-out infinite; }
-  .turtle svg {
-    width: 100%;
-    height: 100%;
-    overflow: visible;
-    filter: drop-shadow(0 0 6px var(--glow));
-    transition: transform 0.35s ease;
-  }
-  .turtle.left svg { transform: scaleX(-1); }
-  @keyframes bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
-
-  .flip-front { transform-box: view-box; transform-origin: 72px 48px; animation: paddle var(--paddle) ease-in-out infinite; }
-  .flip-back  { transform-box: view-box; transform-origin: 34px 49px; animation: paddle var(--paddle) ease-in-out infinite reverse; }
-  @keyframes paddle { 0%, 100% { transform: rotate(-18deg); } 50% { transform: rotate(22deg); } }
-
-  .head, .limbs { transform-box: view-box; transition: transform 0.4s ease; }
-  .head { transform-origin: 98px 42px; }
-  .limbs { transform-origin: 60px 46px; }
-
-  .eye, .brow, .sweat, .lens { display: none; }
-  .turtle .eye-open { display: inline; }
-  .turtle.sleeping .eye-open, .turtle.hiding .eye-open, .turtle.happy .eye-open { display: none; }
-  .turtle.sleeping .eye-closed, .turtle.hiding .eye-closed { display: inline; }
-  .turtle.happy .eye-happy { display: inline; }
-  .turtle.worried .brow, .turtle.worried .sweat { display: inline; }
-  .turtle.happy .brow, .turtle.happy .sweat, .turtle.sleeping .sweat, .turtle.sleeping .brow { display: none; }
-  .turtle.debugging .lens { display: inline; }
-
-  .turtle.excited { --paddle: 0.45s; }
-  .turtle.worried { --paddle: 2.4s; }
-  .turtle.sleeping { --paddle: 6s; }
-  .turtle.sleeping .bob { animation-duration: 6s; }
-  .turtle.sleeping .head { transform: translate(-3px, 3px) rotate(8deg); }
-  .turtle.hiding .head { transform: translate(-14px, 2px) scale(0.55); }
-  .turtle.hiding .limbs { transform: scale(0.5); }
-  .turtle.hiding .flip-front, .turtle.hiding .flip-back { animation-play-state: paused; }
-  .turtle.curious .head { transform: translate(3px, -4px) rotate(-12deg); }
-  .turtle.happy .bob { animation: loop 1.1s ease-in-out; }
-  .turtle.spin .bob { animation: spin 0.8s ease-in-out; }
-  @keyframes loop {
-    0% { transform: translateY(0) rotate(0); }
-    40% { transform: translateY(-18px) rotate(-14deg); }
-    70% { transform: translateY(-6px) rotate(8deg); }
-    100% { transform: translateY(0) rotate(0); }
-  }
-  @keyframes spin { from { transform: rotate(0); } to { transform: rotate(360deg); } }
-
-  .zzz {
-    position: absolute;
-    font-weight: 700;
-    color: var(--shell-edge);
-    opacity: 0;
-    pointer-events: none;
-  }
+  .zzz { position: absolute; font-weight: 700; color: var(--bubble); opacity: 0; pointer-events: none; }
   .zzz.on { animation: zzz 2.6s ease-in-out infinite; }
   @keyframes zzz {
     0% { opacity: 0; transform: translate(0, 0) scale(0.8); }
     30% { opacity: 1; }
     100% { opacity: 0; transform: translate(10px, -22px) scale(1.2); }
   }
-
   .bubble {
-    position: absolute;
-    border: 1.5px solid var(--shell-edge);
-    border-radius: 50%;
-    opacity: 0.85;
-    pointer-events: none;
-    animation: rise 1.8s ease-out forwards;
+    position: absolute; border: 1.5px solid var(--bubble); border-radius: 50%;
+    opacity: 0.85; pointer-events: none; animation: rise 1.8s ease-out forwards;
   }
   @keyframes rise { to { transform: translate(var(--dx, 0px), -70px); opacity: 0; } }
-
   .say {
-    position: absolute;
-    max-width: 200px;
-    padding: 4px 8px;
-    border-radius: 8px;
-    background: var(--widget);
-    border: 1px solid var(--border);
-    color: var(--fg);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 0.25s ease;
+    position: absolute; max-width: 220px; padding: 4px 8px; border-radius: 8px;
+    background: var(--widget); border: 1px solid var(--border); color: var(--fg);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    pointer-events: none; opacity: 0; transition: opacity 0.25s ease;
   }
   .say.on { opacity: 1; }
-
   .name { position: absolute; left: 8px; bottom: 4px; font-size: 11px; color: var(--muted); }
-
-  @media (prefers-reduced-motion: reduce) {
-    .turtle .bob, .flip-front, .flip-back, .bubble, .zzz.on { animation: none !important; }
-    .turtle { transition: none; }
-  }
+  @media (prefers-reduced-motion: reduce) { .bubble, .zzz.on { animation: none !important; } }
 </style>
 </head>
 <body>
 <div id="sea">
-  <div class="turtle" id="turtle" role="img" aria-label="Sea turtle" title="Click me">
-    <div class="bob">
-      <svg viewBox="0 0 120 80" aria-hidden="true">
-        <g class="limbs">
-          <g class="flip-back"><path d="M36 48 q-14 4 -22 15 q13 2 26 -9z" fill="var(--skin)"/></g>
-          <path d="M21 45 l-9 3 l9 3z" fill="var(--skin)"/>
-        </g>
-        <path d="M22 46 Q60 58 98 46 Z" fill="var(--belly)"/>
-        <path d="M20 46 Q22 14 60 14 Q96 14 100 46 Z" fill="var(--shell)" stroke="var(--shell-edge)" stroke-width="2"/>
-        <path d="M44 19 L52 31 L68 31 L76 19 M52 31 L46 45 M68 31 L74 45 M33 34 L52 31 M68 31 L87 34"
-              stroke="var(--shell-edge)" stroke-width="1.5" fill="none" opacity="0.7" stroke-linejoin="round"/>
-        <g class="limbs">
-          <g class="flip-front"><path d="M70 47 q6 15 26 19 q-4 -13 -18 -21z" fill="var(--skin)"/></g>
-        </g>
-        <g class="head">
-          <path d="M95 41 q4 -10 14 -9 q9 1 9 10 q-2 8 -12 8 q-8 0 -11 -4z" fill="var(--skin)"/>
-          <circle cx="104" cy="45" r="1.6" fill="#2DD4BF"/>
-          <g class="eye eye-open"><circle cx="109" cy="38" r="2.5" fill="var(--eye)"/><circle cx="110" cy="37" r="0.8" fill="#FFFFFF"/></g>
-          <path class="eye eye-closed" d="M106 38 q3 2.5 6 0" stroke="var(--eye)" stroke-width="1.6" fill="none" stroke-linecap="round"/>
-          <path class="eye eye-happy" d="M106 39 q3 -4 6 0" stroke="var(--eye)" stroke-width="1.6" fill="none" stroke-linecap="round"/>
-          <path class="brow" d="M105 33.5 l7 2" stroke="var(--eye)" stroke-width="1.4" stroke-linecap="round"/>
-          <path d="M111 45 q3 1.5 5.5 -1" stroke="var(--eye)" stroke-width="1.2" fill="none" stroke-linecap="round"/>
-          <path class="sweat" d="M100 29 q-2.5 4.5 0 5.5 q2.5 -1 0 -5.5z" fill="#7DD3FC"/>
-        </g>
-        <g class="lens">
-          <circle cx="117" cy="52" r="5" fill="rgba(253,230,138,0.15)" stroke="#FACC15" stroke-width="1.8"/>
-          <path d="M113.5 55.5 l-5 5" stroke="#FACC15" stroke-width="2.2" stroke-linecap="round"/>
-        </g>
-      </svg>
-    </div>
-  </div>
+  <div id="pet" role="img" aria-label="Pet" title="Click me"><svg viewBox="0 0 120 80" aria-hidden="true"></svg></div>
   <div class="zzz" id="zzz">z</div>
   <div class="say" id="say"></div>
-  <div class="name" id="name">Shelly</div>
+  <div class="name" id="name"></div>
 </div>
 
 <script nonce="{{nonce}}">
 (() => {
+  const DATA = {{pets}};
   const vscode = typeof acquireVsCodeApi === "function" ? acquireVsCodeApi() : null;
   const $ = (id) => document.getElementById(id);
-  const sea = $("sea"), turtle = $("turtle"), sayEl = $("say"), zzz = $("zzz"), nameEl = $("name");
+  const sea = $("sea"), petEl = $("pet"), svg = petEl.querySelector("svg"), sayEl = $("say"), zzz = $("zzz"), nameEl = $("name");
   const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const W = 96, H = 64;
+  const SCALE = 0.8, W = 120 * SCALE, H = 80 * SCALE;
   const SLEEP_AFTER = 3 * 60 * 1000;
-
+  const NS = "http://www.w3.org/2000/svg";
   const pick = (list) => list[Math.floor(Math.random() * list.length)];
-  const LINES = {
-    wake: ["Oh! I'm up.", "Back to work?", "Mm, what did I miss?"],
-    click: ["Hi!", "Hehe.", "Wheee!", "Keep going!", "*happy flipper noises*", "You've got this."],
-    save: ["Saved!", "Nice save.", "Tucked away safely.", "Saved. ✓"],
-    fixed: ["All clear!", "Fixed it!", "No more errors!", "Smooth sailing."],
-    worried: ["Uh oh.", "Hmm, an error.", "Something's off."],
-    yikes: ["Yikes!", "That's a lot of red.", "I'll just hide for a sec."],
-    taskOk: ["{name} passed!", "{name} worked!", "{name}: all good."],
-    taskFail: ["{name} failed.", "{name} didn't work.", "Oof, {name}."],
-    debugOn: ["Bug hunting!", "Let's find it."],
-    debugOff: ["Done debugging.", "Bug hunt over."],
-    file: ["Ooh, a new file.", "What's in here?", "Looking around..."],
-    typing: ["Ooh, typing!", "Go go go!", "Flippers at full speed."],
-  };
+  const now = () => Date.now();
 
+  let pet, name, parts = [], groups = {};
   const state = {
-    x: 20, dir: 1, speed: 0.4,
-    errors: 0, debugging: false, sleeping: false,
-    until: { excited: 0, happy: 0, curious: 0, hiding: 0, spin: 0 },
-    lastActivity: Date.now(), lastTypingLine: 0, sayTimer: 0, depthTimer: 0,
+    x: 20, dir: 1, speed: 0.4, clock: 0, errors: 0, debugging: false, sleeping: false,
+    until: { excited: 0, happy: 0, curious: 0, hiding: 0, spin: 0 }, happyAt: 0, spinAt: 0,
+    lastActivity: now(), lastTypingLine: 0, sayTimer: 0, poses: {},
   };
 
-  function now() { return Date.now(); }
-  function active(mood) { return state.until[mood] > now(); }
-  function flash(mood, ms) { state.until[mood] = Math.max(state.until[mood], now() + ms); }
+  // ---- Building the pet from pets.json ---------------------------------
+  function shape(part) {
+    let el;
+    if (part.path) { el = document.createElementNS(NS, "path"); el.setAttribute("d", part.path); }
+    else if (part.circle) { el = document.createElementNS(NS, "circle"); const [cx, cy, r] = part.circle; el.setAttribute("cx", cx); el.setAttribute("cy", cy); el.setAttribute("r", r); }
+    else { el = document.createElementNS(NS, "ellipse"); const [cx, cy, rx, ry] = part.ellipse; el.setAttribute("cx", cx); el.setAttribute("cy", cy); el.setAttribute("rx", rx); el.setAttribute("ry", ry); }
+    el.setAttribute("fill", part.fill || "none");
+    if (part.stroke) { el.setAttribute("stroke", part.stroke); el.setAttribute("stroke-width", part.sw || 1); el.setAttribute("stroke-linecap", "round"); el.setAttribute("stroke-linejoin", "round"); }
+    if (part.opacity != null) el.setAttribute("opacity", part.opacity);
+    return el;
+  }
 
+  function build(id) {
+    pet = DATA.pets[id] || DATA.pets.turtle;
+    svg.textContent = "";
+    parts = []; groups = {}; state.poses = {};
+    const root = document.createElementNS(NS, "g");
+    svg.appendChild(root);
+    // Groups keep the order in which their first part appears; parts stay in file order within them.
+    let current = null, currentName = null;
+    for (const part of pet.parts) {
+      if (part.group !== currentName) {
+        current = document.createElementNS(NS, "g");
+        root.appendChild(current);
+        currentName = part.group;
+        (groups[part.group] = groups[part.group] || []).push(current);
+      }
+      const el = shape(part);
+      current.appendChild(el);
+      parts.push({ part, el });
+    }
+    root.id = "root";
+    document.documentElement.style.setProperty("--glow", pet.glow);
+    const accent = pet.parts.find((p) => p.stroke && p.stroke.startsWith("#"));
+    document.documentElement.style.setProperty("--bubble", accent ? accent.stroke : "#5EEAD4");
+  }
+
+  // ---- Motion ----------------------------------------------------------
+  const wave = ([amount, period, phase], t) => amount * Math.sin(2 * Math.PI * (t / period + (phase || 0)));
+  function pivotT(px, py, inner) { return `translate(${px} ${py}) ${inner} translate(${-px} ${-py})`; }
+
+  function flags() {
+    const hiding = active("hiding"), happy = active("happy");
+    const closed = state.sleeping || hiding;
+    const worried = state.errors > 0 && !happy && !state.sleeping;
+    return {
+      hiding, happy, worried, sleeping: state.sleeping, curious: active("curious") && !state.sleeping,
+      debugging: state.debugging, puffed: worried || hiding,
+      eyesClosed: closed, eyesHappy: happy && !closed, eyesOpen: !closed && !happy,
+    };
+  }
+
+  function render(f) {
+    const t = state.clock;
+    // Poses ease toward the current mood's target.
+    const moods = ["hiding", "sleeping", "worried", "curious"].filter((m) => f[m]);
+    for (const g of Object.keys(groups)) {
+      let target = { tx: 0, ty: 0, s: 1, r: 0, p: [60, 40] };
+      for (const m of moods) { const pose = pet.poses?.[m]?.[g]; if (pose) { target = { ...target, ...pose }; break; } }
+      const cur = state.poses[g] || (state.poses[g] = { tx: 0, ty: 0, s: 1, r: 0, p: target.p });
+      for (const k of ["tx", "ty", "s", "r"]) cur[k] += (target[k] - cur[k]) * 0.15;
+      cur.p = target.p;
+      const gm = pet.groupMotion?.[g];
+      let motion = "";
+      if (gm) {
+        const sx = 1 + (gm.sx ? wave(gm.sx, t) : 0), sy = 1 + (gm.sy ? wave(gm.sy, t) : 0);
+        motion = pivotT(gm.p[0], gm.p[1], `scale(${sx} ${sy})`);
+      }
+      const pose = pivotT(cur.p[0], cur.p[1], `translate(${cur.tx} ${cur.ty}) rotate(${cur.r}) scale(${cur.s})`);
+      for (const el of groups[g]) el.setAttribute("transform", `${pose} ${motion}`);
+    }
+    for (const { part, el } of parts) {
+      const show = !part.when || part.when.some((w) => f[w]);
+      el.style.display = show ? "" : "none";
+      if (!show) continue;
+      if (part.rot) el.setAttribute("transform", `rotate(${wave(part.rot, t)} ${part.pivot[0]} ${part.pivot[1]})`);
+    }
+    // Whole pet: facing, bob, happy loop, spin.
+    let rot = 0, ty = wave([pet.bob[0], pet.bob[1] * (f.sleeping ? 2 : 1), 0], now() / 1000);
+    if (f.happy) { const p = Math.min(1, (now() - state.happyAt) / 1100); ty -= 18 * Math.sin(Math.PI * p); rot += -12 * Math.sin(2 * Math.PI * p); }
+    if (active("spin")) rot += 360 * Math.min(1, (now() - state.spinAt) / 800);
+    const flip = pet.flip && state.dir < 0 ? "translate(120 0) scale(-1 1)" : "";
+    $("root").setAttribute("transform", `translate(0 ${ty}) ${pivotT(60, 40, `rotate(${rot})`)} ${flip}`);
+  }
+
+  // ---- Talking -----------------------------------------------------------
+  function lines(key) { return pet.lines?.[key] || DATA.lines[key] || [""]; }
+  function fill(line, extra = {}) {
+    return line.replace("{name}", name).replace("{task}", extra.task || "The task")
+      .replace("{errors}", `${state.errors} error${state.errors === 1 ? "" : "s"}`);
+  }
   function say(text, ms = 2600) {
     sayEl.textContent = text;
     sayEl.classList.add("on");
     clearTimeout(state.sayTimer);
     state.sayTimer = setTimeout(() => sayEl.classList.remove("on"), ms);
   }
+  function sayLine(key, ms, extra) { say(fill(pick(lines(key)), extra), ms); }
 
   function bubbles(count = 4) {
     if (reduced) return;
-    const box = turtle.getBoundingClientRect(), seaBox = sea.getBoundingClientRect();
-    const mouthX = state.dir > 0 ? box.right - seaBox.left - 8 : box.left - seaBox.left + 8;
+    const box = petEl.getBoundingClientRect(), seaBox = sea.getBoundingClientRect();
+    const [mx, my] = pet.mouth;
+    const localX = pet.flip && state.dir < 0 ? 120 - mx : mx;
     for (let i = 0; i < count; i++) {
       const b = document.createElement("div");
       const size = 4 + Math.random() * 6;
       b.className = "bubble";
       b.style.width = b.style.height = size + "px";
-      b.style.left = mouthX + (Math.random() * 10 - 5) + "px";
-      b.style.top = box.top - seaBox.top + 18 + "px";
+      b.style.left = box.left - seaBox.left + localX * SCALE + (Math.random() * 10 - 5) + "px";
+      b.style.top = box.top - seaBox.top + my * SCALE - 6 + "px";
       b.style.setProperty("--dx", (Math.random() * 24 - 12) + "px");
       b.style.animationDelay = i * 0.18 + "s";
       sea.appendChild(b);
@@ -236,90 +199,82 @@
     }
   }
 
+  // ---- Reacting ------------------------------------------------------------
+  function active(mood) { return state.until[mood] > now(); }
+  function flash(mood, ms) {
+    if (mood === "happy" && !active("happy")) state.happyAt = now();
+    if (mood === "spin" && !active("spin")) state.spinAt = now();
+    state.until[mood] = Math.max(state.until[mood], now() + ms);
+  }
   function wake() {
     state.lastActivity = now();
-    if (state.sleeping) {
-      state.sleeping = false;
-      flash("curious", 1200);
-      say(pick(LINES.wake));
-      return true;
-    }
-    return false;
+    if (!state.sleeping) return false;
+    state.sleeping = false;
+    flash("curious", 1200);
+    sayLine("wake");
+    return true;
   }
 
-  function fill(line, name) { return line.replace("{name}", name || "The task"); }
-
-  // Everything the editor tells us.
   function receive(msg) {
     if (!msg || !msg.type) return;
     if (msg.type === "config") {
-      if (msg.name) nameEl.textContent = msg.name;
+      if (msg.pet && (!pet || DATA.pets[msg.pet] !== pet)) build(msg.pet);
+      name = msg.name || pet.name;
+      nameEl.textContent = name;
       if (msg.background) document.body.style.background = msg.background;
-      for (const [name, value] of Object.entries(msg.vars || {})) {
-        document.documentElement.style.setProperty(name, value);
-      }
+      for (const [k, v] of Object.entries(msg.vars || {})) document.documentElement.style.setProperty(k, v);
       return;
     }
     const woke = wake();
     switch (msg.type) {
       case "typing":
         flash("excited", 2500);
-        if (!woke && now() - state.lastTypingLine > 90 * 1000 && Math.random() < 0.3) {
-          state.lastTypingLine = now();
-          say(pick(LINES.typing), 1800);
-        }
+        if (!woke && now() - state.lastTypingLine > 90 * 1000 && Math.random() < 0.3) { state.lastTypingLine = now(); sayLine("typing", 1800); }
         break;
       case "save":
-        if (state.errors > 0) say(`Saved, but ${state.errors} error${state.errors > 1 ? "s" : ""} left.`);
-        else { flash("happy", 1100); bubbles(3); say(pick(LINES.save), 1800); }
+        if (state.errors > 0) sayLine("savedWithErrors");
+        else { flash("happy", 1100); bubbles(3); sayLine("save", 1800); }
         break;
       case "errors": {
         const before = msg.before ?? state.errors;
         state.errors = msg.errors;
         if (msg.errors > before) {
-          if (msg.errors - before >= 3) { flash("hiding", 3000); say(pick(LINES.yikes)); }
-          else say(pick(LINES.worried));
-        } else if (msg.errors === 0 && before > 0) {
-          flash("happy", 1100); bubbles(6); say(pick(LINES.fixed));
-        }
+          if (msg.errors - before >= 3) { flash("hiding", 3000); sayLine("yikes"); } else sayLine("worried");
+        } else if (msg.errors === 0 && before > 0) { flash("happy", 1100); bubbles(6); sayLine("fixed"); }
         break;
       }
       case "file":
         state.errors = msg.errors ?? state.errors;
         flash("curious", 1500);
-        if (!woke && Math.random() < 0.25) say(pick(LINES.file), 1600);
+        if (!woke && Math.random() < 0.25) sayLine("file", 1600);
         break;
       case "task":
-        if (msg.ok) { flash("happy", 1100); bubbles(6); say(fill(pick(LINES.taskOk), msg.name)); }
-        else { flash("hiding", 2200); say(fill(pick(LINES.taskFail), msg.name)); }
+        if (msg.ok) { flash("happy", 1100); bubbles(6); sayLine("taskOk", 2600, { task: msg.name }); }
+        else { flash("hiding", 2200); sayLine("taskFail", 2600, { task: msg.name }); }
         break;
       case "debug":
         state.debugging = !!msg.active;
-        say(pick(msg.active ? LINES.debugOn : LINES.debugOff));
+        sayLine(msg.active ? "debugOn" : "debugOff");
         break;
     }
   }
 
-  turtle.addEventListener("click", () => {
+  petEl.addEventListener("click", () => {
     const woke = wake();
     flash("spin", 800);
     bubbles(5);
-    if (!woke) say(pick(LINES.click), 1600);
+    if (!woke) sayLine("click", 1600);
   });
 
-  // Fall asleep after a while with nothing happening.
   setInterval(() => {
-    if (!state.sleeping && !state.debugging && now() - state.lastActivity > SLEEP_AFTER) {
-      state.sleeping = true;
-      say("zzz...", 2000);
-    }
+    if (!state.sleeping && !state.debugging && now() - state.lastActivity > SLEEP_AFTER) { state.sleeping = true; sayLine("sleep", 2000); }
   }, 5000);
 
-  // Drift up and down every few seconds; rest on the sand while asleep.
+  // Drift up and down every few seconds; floor pets and sleepers stay on the sand.
   function newDepth() {
     const room = Math.max(0, sea.clientHeight - H - 40);
-    const bottom = state.sleeping ? 18 : 24 + Math.random() * room;
-    turtle.style.bottom = bottom + "px";
+    petEl.style.transition = "bottom 2.5s ease-in-out";
+    petEl.style.bottom = (state.sleeping || pet.floor ? 18 : 24 + Math.random() * room) + "px";
   }
   setInterval(newDepth, 4000);
 
@@ -327,47 +282,42 @@
   function frame(t) {
     const dt = Math.min(64, t - last) / 16.7;
     last = t;
+    const f = flags();
     const width = sea.clientWidth;
-    const hiding = active("hiding"), happy = active("happy"), curious = active("curious");
-    const excited = active("excited"), spin = active("spin");
-    const worried = state.errors > 0 && !happy;
-
-    let target = 0.4;
-    if (state.sleeping || hiding || curious || spin) target = 0;
-    else if (excited) target = 1.7;
-    else if (state.debugging) target = 0.8;
-    else if (worried) target = 0.22;
+    const excited = active("excited") && !state.sleeping;
+    let target = 0.4 * pet.speed;
+    if (state.sleeping || f.hiding || f.curious || active("spin")) target = 0;
+    else if (excited) target = 1.7 * pet.speed;
+    else if (state.debugging) target = 0.8 * pet.speed;
+    else if (f.worried) target = 0.22 * pet.speed;
     if (reduced) target = 0;
     state.speed += (target - state.speed) * 0.06 * dt;
-
     state.x += state.speed * state.dir * dt;
     const maxX = Math.max(0, width - W - 4);
     if (state.x > maxX) { state.x = maxX; state.dir = -1; }
     if (state.x < 4) { state.x = 4; state.dir = 1; }
     if (state.speed > 0.1 && Math.random() < 0.0015 * dt) state.dir *= -1;
 
-    turtle.style.left = state.x + "px";
-    const cls = turtle.classList;
-    cls.toggle("left", state.dir < 0);
-    cls.toggle("sleeping", state.sleeping);
-    cls.toggle("hiding", hiding);
-    cls.toggle("happy", happy);
-    cls.toggle("curious", curious && !state.sleeping);
-    cls.toggle("excited", excited && !state.sleeping);
-    cls.toggle("worried", worried);
-    cls.toggle("debugging", state.debugging);
-    cls.toggle("spin", spin);
+    // Limbs move faster when excited, slower when worried or asleep, not at all when hiding.
+    const tempo = f.hiding || reduced ? 0 : excited ? 3.5 : state.sleeping ? 0.25 : f.worried ? 0.65 : 1;
+    state.clock += (dt * 16.7 / 1000) * tempo;
+    render(f);
 
-    const top = sea.clientHeight - parseFloat(getComputedStyle(turtle).bottom) - H;
+    petEl.style.left = state.x + "px";
+    const top = sea.clientHeight - parseFloat(getComputedStyle(petEl).bottom) - H;
     sayEl.style.left = Math.max(4, Math.min(state.x, width - sayEl.offsetWidth - 4)) + "px";
-    sayEl.style.top = Math.max(2, top - 26) + "px";
-    zzz.style.left = state.x + (state.dir > 0 ? W - 10 : 4) + "px";
-    zzz.style.top = top + 4 + "px";
+    // Above the pet, or below it when it swims too close to the top.
+    sayEl.style.top = (top - 26 >= 2 ? top - 26 : top + H + 4) + "px";
+    const [hx, hy] = pet.head;
+    zzz.style.left = state.x + (pet.flip && state.dir < 0 ? 120 - hx : hx) * SCALE + "px";
+    zzz.style.top = top + hy * SCALE + "px";
     zzz.classList.toggle("on", state.sleeping);
-
     requestAnimationFrame(frame);
   }
 
+  build("turtle");
+  name = pet.name;
+  nameEl.textContent = name;
   window.tidePets = { receive };
   if (vscode) {
     window.addEventListener("message", (e) => receive(e.data));
@@ -375,8 +325,8 @@
   }
   newDepth();
   requestAnimationFrame(frame);
-  // Say hi, unless she's already reacting to something.
-  setTimeout(() => { if (!sayEl.classList.contains("on")) say("Hi! I'm here.", 2200); }, 600);
+  // Say hi, unless already reacting to something.
+  setTimeout(() => { if (!sayEl.classList.contains("on")) sayLine("hello", 2200); }, 600);
 })();
 </script>
 </body>

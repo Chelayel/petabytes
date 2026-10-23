@@ -1,8 +1,8 @@
 {
   "name": "tide-pets",
   "displayName": "Tide Pets",
-  "description": "A sea turtle that lives in your Explorer and reacts to what you do: it swims faster while you type, celebrates saves and fixed errors, worries about new ones, and naps when you're away.",
-  "version": "0.1.1",
+  "description": "Sea creatures that live in your Explorer and react to what you do: a turtle, jellyfish, octopus, crab or pufferfish that swims faster while you type, celebrates saves and fixed errors, worries about new ones, and naps when you're away.",
+  "version": "0.2.0",
   "publisher": "chelayel",
   "author": { "name": "Chelayel", "url": "https://www.chelayel.com" },
   "license": "MIT",
@@ -24,9 +24,12 @@
   "keywords": [
     "pet",
     "pets",
-    "turtle",
-    "sea turtle",
     "companion",
+    "turtle",
+    "jellyfish",
+    "octopus",
+    "crab",
+    "pufferfish",
     "fun",
     "midnight tide"
   ],
@@ -47,6 +50,12 @@
     },
     "commands": [
       {
+        "command": "tidePets.choose",
+        "title": "Choose Pet",
+        "category": "Tide Pets",
+        "icon": "$(symbol-misc)"
+      },
+      {
         "command": "tidePets.toggle",
         "title": "Toggle Pet",
         "category": "Tide Pets"
@@ -66,6 +75,11 @@
     "menus": {
       "view/title": [
         {
+          "command": "tidePets.choose",
+          "when": "view == tidePets.pet",
+          "group": "navigation"
+        },
+        {
           "command": "tidePets.hide",
           "when": "view == tidePets.pet",
           "group": "navigation"
@@ -80,16 +94,35 @@
           "default": true,
           "description": "Show the pet in the Explorer."
         },
+        "tidePets.pet": {
+          "type": "string",
+          "default": "turtle",
+          "enum": [
+            "turtle",
+            "jellyfish",
+            "octopus",
+            "crab",
+            "pufferfish"
+          ],
+          "enumDescriptions": [
+            "Shelly the sea turtle",
+            "Bloop the jellyfish",
+            "Inky the octopus",
+            "Pinchy the crab",
+            "Puff the pufferfish"
+          ],
+          "description": "Which pet lives in the Explorer."
+        },
         "tidePets.name": {
           "type": "string",
-          "default": "Shelly",
-          "description": "Your pet's name."
+          "default": "",
+          "description": "Your pet's name. Leave empty for its own name (Shelly, Bloop, Inky, Pinchy or Puff)."
         }
       }
     }
   },
   "scripts": {
-    "sync-page": "node -e \"require('fs').copyFileSync('../web/pet.html','media/pet.html')\"",
+    "sync-page": "node -e \"for (const f of ['pet.html','pets.json']) require('fs').copyFileSync('../web/'+f,'media/'+f)\"",
     "vscode:prepublish": "npm run sync-page"
   }
 }
