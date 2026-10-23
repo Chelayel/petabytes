@@ -115,10 +115,11 @@ jobs:
       - name: Versions
         id: v
         shell: bash
+        # `|| true`: a store that doesn't list the extension yet is "nothing", not a failure.
         run: |
           version="${GITHUB_REF_NAME#v}"
-          jb=$(curl -sS "https://plugins.jetbrains.com/plugins/list?pluginId=com.chelayel.tidepets" | grep -o '<version>[^<]*</version>' | head -1 | sed 's/<[^>]*>//g')
-          ms=$(npx --yes @vscode/vsce show chelayel.tide-pets --json 2>/dev/null | node -p "try{JSON.parse(require('fs').readFileSync(0,'utf8')).versions[0].version}catch(e){''}")
+          jb=$(curl -sS "https://plugins.jetbrains.com/plugins/list?pluginId=com.chelayel.tidepets" | grep -o '<version>[^<]*</version>' | head -1 | sed 's/<[^>]*>//g' || true)
+          ms=$(npx --yes @vscode/vsce show chelayel.tide-pets --json 2>/dev/null | node -p "try{JSON.parse(require('fs').readFileSync(0,'utf8')).versions[0].version}catch(e){''}" || true)
           echo "version=$version" >> "$GITHUB_OUTPUT"
           echo "jb=$jb" >> "$GITHUB_OUTPUT"; echo "ms=$ms" >> "$GITHUB_OUTPUT"
           echo "Releasing $version (JetBrains Marketplace has ${jb:-nothing}; VS Code Marketplace has ${ms:-nothing})"

@@ -2,7 +2,7 @@
   "name": "tide-pets",
   "displayName": "Tide Pets",
   "description": "A sea turtle that lives in your Explorer and reacts to what you do: it swims faster while you type, celebrates saves and fixed errors, worries about new ones, and naps when you're away.",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "publisher": "chelayel",
   "author": { "name": "Chelayel", "url": "https://www.chelayel.com" },
   "license": "MIT",
