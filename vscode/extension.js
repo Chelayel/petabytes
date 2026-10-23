@@ -151,6 +151,7 @@ function activate(context) {
   }));
 
   // The terminal: opening it, and what runs in it (shell integration, VS Code 1.93+).
+  sub(vscode.window.onDidOpenTerminal(() => pet.post({ type: "react", key: "terminal" })));
   sub(vscode.window.onDidChangeActiveTerminal((t) => { if (t) pet.post({ type: "react", key: "terminal" }); }));
   if (vscode.window.onDidStartTerminalShellExecution) {
     sub(vscode.window.onDidStartTerminalShellExecution((e) => {

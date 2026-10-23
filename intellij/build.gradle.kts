@@ -37,6 +37,7 @@ intellijPlatform {
     // `./gradlew publishPlugin` with JETBRAINS_MARKETPLACE_TOKEN set (a token from
     // https://plugins.jetbrains.com/author/me/tokens). The first upload of a new
     // plugin is done by hand on the Marketplace site; this handles updates.
+
     publishing {
         token = providers.environmentVariable("JETBRAINS_MARKETPLACE_TOKEN")
     }

@@ -10,8 +10,9 @@ import com.intellij.execution.executors.DefaultDebugExecutor
 import com.intellij.execution.executors.DefaultRunExecutor
 import com.intellij.openapi.command.CommandProcessor
 import com.intellij.openapi.vcs.BranchChangeListener
-import com.intellij.openapi.wm.ToolWindow
-import com.intellij.openapi.wm.ex.ToolWindowManagerListener
+import com.intellij.openapi.editor.EditorKind
+import com.intellij.openapi.fileEditor.FileDocumentManager
+import com.intellij.openapi.wm.ToolWindowManager
 import com.intellij.execution.process.ProcessHandler
 import com.intellij.execution.runners.ExecutionEnvironment
 import com.intellij.lang.annotation.HighlightSeverity
@@ -127,6 +128,7 @@ class PetService(private val project: Project) : Disposable {
         if (o.bounds != bounds) o.bounds = bounds
         o.isVisible = true
         o.brain.avoid(caretOverPet(editor, o, target))
+        watchToolWindows()
         if (vertical) o.brain.update(dtMs, bounds.height.toDouble(), o.painter.spriteHeight, room = JBUI.scale(6).toDouble())
         else o.brain.update(dtMs, bounds.width.toDouble(), o.painter.spriteWidth, room = JBUI.scale(10).toDouble())
         o.repaint()
@@ -184,15 +186,6 @@ class PetService(private val project: Project) : Disposable {
         }, this)
 
         // AI assistants and the terminal, by the tool window you open.
-        projectBus.subscribe(ToolWindowManagerListener.TOPIC, object : ToolWindowManagerListener {
-            override fun toolWindowShown(toolWindow: ToolWindow) {
-                val id = toolWindow.id
-                when {
-                    AI_WINDOWS.containsMatchIn(id) -> send { react("ai") }
-                    id.equals("Terminal", ignoreCase = true) -> send { react("terminal") }
-                }
-            }
-        })
 
         // Branch switches. The VCS API isn't in every IDE, so this is best effort.
         runCatching {
@@ -256,7 +249,37 @@ class PetService(private val project: Project) : Disposable {
         }
     }
 
-    private fun inThisProject(document: Document) = EditorFactory.getInstance().getEditors(document, project).isNotEmpty()
+    /** A file open in this project's editor: not the terminal, a console or a diff, whose text is documents too. */
+    private fun inThisProject(document: Document): Boolean =
+        FileDocumentManager.getInstance().getFile(document) != null &&
+            EditorFactory.getInstance().getEditors(document, project).any { it.editorKind == EditorKind.MAIN_EDITOR }
+
+    // The Terminal and AI tool windows, checked a few times a second: a reaction when one becomes
+    // visible or gets focus, each time (the reaction's own cooldown stops doubles).
+    private val shownWindows = HashSet<String>()
+    private var activeWindow: String? = null
+    private var lastWindowCheck = 0L
+
+    private fun watchToolWindows() {
+        val now = System.currentTimeMillis()
+        if (now - lastWindowCheck < 300) return
+        lastWindowCheck = now
+        val twm = ToolWindowManager.getInstance(project)
+        fun keyFor(id: String) = when {
+            AI_WINDOWS.containsMatchIn(id) -> "ai"
+            id.equals("Terminal", ignoreCase = true) -> "terminal"
+            else -> null
+        }
+        for (id in twm.toolWindowIds) {
+            val key = keyFor(id) ?: continue
+            val visible = twm.getToolWindow(id)?.isVisible == true
+            if (visible && shownWindows.add(id)) overlay?.brain?.react(key)
+            if (!visible) shownWindows.remove(id)
+        }
+        val active = twm.activeToolWindowId
+        if (active != null && active != activeWindow) keyFor(active)?.let { overlay?.brain?.react(it) }
+        activeWindow = active
+    }
 
     private fun errorsInSelectedEditor(): Int {
         val editor = FileEditorManager.getInstance(project).selectedTextEditor ?: return 0

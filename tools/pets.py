@@ -435,15 +435,15 @@ SNACKS = [
 # chance: how often it also says something; cooldown: seconds before it reacts to the key again.
 # Lines live in LINES (or a pet's own "lines") under the same key.
 REACTIONS = {
-  "ai":          {"mood": "curious", "ms": 1500, "bubbles": 2, "cooldown": 300},
-  "aiBig":       {"mood": "curious", "ms": 1500, "chance": 0.5, "cooldown": 180},
-  "terminal":    {"mood": "curious", "ms": 1200, "chance": 0.6, "cooldown": 300},
+  "ai":          {"mood": "curious", "ms": 1500, "bubbles": 2, "cooldown": 15},
+  "aiBig":       {"mood": "curious", "ms": 1500, "chance": 0.8, "cooldown": 30},
+  "terminal":    {"mood": "curious", "ms": 1200, "cooldown": 15},
   "gitPush":     {"mood": "happy", "ms": 1100, "bubbles": 5, "cooldown": 20},
   "gitPushFriday": {"mood": "hiding", "ms": 1500, "cooldown": 20},
   "test":        {"mood": "excited", "ms": 3000, "cooldown": 30},
   "install":     {"mood": "excited", "ms": 3000, "cooldown": 60},
   "danger":      {"mood": "hiding", "ms": 2200, "cooldown": 10},
-  "commandFail": {"mood": "curious", "ms": 1200, "chance": 0.7, "cooldown": 30},
+  "commandFail": {"mood": "curious", "ms": 1200, "cooldown": 10},
   "run":         {"mood": "spin", "ms": 800, "bubbles": 4, "cooldown": 15},
   "build":       {"mood": "excited", "ms": 3000, "chance": 0.6, "cooldown": 60},
   "commit":      {"mood": "happy", "ms": 1100, "bubbles": 6, "cooldown": 10},
@@ -461,9 +461,11 @@ REACTIONS = {
 
 LINES.update({
   "ai": ["Ooh, an AI! Are we friends?", "Two assistants are better than one.", "Make sure it writes the tests too.",
-         "Beep boop. Just kidding, I'm a {kind}.", "Tell the AI I said hi."],
+         "Beep boop. Just kidding, I'm a {kind}.", "Tell the AI I said hi.", "Asking the AI? I'd have said the same.",
+         "Don't forget to read what it writes.", "I can't code, but I can cheer!", "The robot's back!"],
   "aiBig": ["Did an AI write that? I won't tell.", "Whoa, that's a lot of code at once.", "That appeared fast!"],
-  "terminal": ["Ooh, the terminal. Type something cool.", "Command line time!", "I like the blinking cursor."],
+  "terminal": ["Ooh, the terminal. Type something cool.", "Command line time!", "I like the blinking cursor.",
+               "Terminal! Where the magic happens.", "Back to the command line?", "Careful with rm -rf.", "What are we running?"],
   "gitPush": ["Ship it!", "Off it goes!", "Pushed! Bon voyage, little commits."],
   "gitPushFriday": ["Pushing on a Friday? Brave.", "A Friday push... I'll be in my shell."],
   "test": ["Fingers crossed!", "Testing, testing...", "Come on, green!"],
