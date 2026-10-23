@@ -59,15 +59,24 @@ class PetService(private val project: Project) : Disposable {
         if (!settings.enabled) { hide(); return }
         val pet = catalog.pet(settings.pet)
         val name = settings.name?.takeIf { it.isNotBlank() } ?: pet.name
-        val current = overlay
+        val scale = PetSettings.scaleFor(settings.size)
+        var current = overlay
+        if (current != null && current.painter.scale != JBUI.scale(1) * scale) { hide(); current = null }
         if (current == null) {
             val brain = PetBrain(catalog, pet, name)
-            overlay = FloatingPet(brain)
+            overlay = FloatingPet(brain, scale) { home ->
+                // Remember where it was dropped, for every project window.
+                PetSettings.get().state.apply { roam = false; this.home = home.toFloat() }
+                PetService.refreshAll()
+            }
             brain.hello()
+            current = overlay
         } else if (current.brain.pet !== pet || current.brain.name != name) {
             current.brain.become(pet, name)
             current.brain.hello()
         }
+        current!!.brain.roam = settings.roam
+        current.brain.home = settings.home.toDouble()
         listen()
         if (!timer.isRunning) { lastTick = System.nanoTime(); timer.start() }
     }
@@ -101,8 +110,25 @@ class PetService(private val project: Project) : Disposable {
         val bounds = Rectangle(r.x, r.y + r.height - h - gap, (r.width - gap).coerceAtLeast(0), h)
         if (o.bounds != bounds) o.bounds = bounds
         o.isVisible = true
+        o.brain.avoid(caretOverPet(editor, o, target))
         o.brain.update(dtMs, bounds.width.toDouble(), o.painter.spriteWidth, room = JBUI.scale(10).toDouble())
         o.repaint()
+    }
+
+    /**
+     * The caret's x (in the pet layer) when you're working on a line the pet covers:
+     * a roaming pet swims clear of it, one that stays put fades and lets clicks through.
+     */
+    private fun caretOverPet(editor: com.intellij.openapi.editor.Editor, o: FloatingPet, target: JLayeredPane): Double? {
+        val content = editor.contentComponent
+        if (!content.isFocusOwner) return null
+        val xy = editor.visualPositionToXY(editor.caretModel.visualPosition)
+        val p = SwingUtilities.convertPoint(content, xy, o)
+        val pet = o.petBounds()
+        val margin = JBUI.scale(24)
+        val lineHit = p.y + editor.lineHeight > pet.y && p.y < pet.maxY
+        val nearby = !o.brain.roam && p.x > pet.x - margin && p.x < pet.maxX + margin
+        return if (lineHit && (o.brain.roam || nearby)) p.x.toDouble() else null
     }
 
     private fun send(action: PetBrain.() -> Unit) {

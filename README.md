@@ -25,7 +25,7 @@ Made to go with the [Midnight Tide](https://github.com/Chelayel/Midnight-Tide) t
 | Editor | Folder | Where the pet lives | Choose, show or hide |
 | --- | --- | --- | --- |
 | VS Code | [`vscode/`](vscode/) | A **Tide Pets** panel in the Explorer (VS Code doesn't let extensions draw over the editor) | **Tide Pets: Choose Pet** / **Toggle Pet**, or the `tidePets.*` settings |
-| JetBrains (2024.2+) | [`intellij/`](intellij/) | Floating along the bottom of the editor; it only takes clicks on itself | **Tools → Tide Pets**; rename in **Settings → Tools → Tide Pets** |
+| JetBrains (2024.2+) | [`intellij/`](intellij/) | Floating at the bottom of the editor: drag it where you want it, or turn on **Swim Around**. It fades and lets clicks through while you work on a line it covers | Right-click the pet or **Tools → Tide Pets**; size and name in **Settings → Tools → Tide Pets** |
 
 ## How it's built
 

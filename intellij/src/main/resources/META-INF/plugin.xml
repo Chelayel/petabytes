@@ -21,8 +21,10 @@
             <li><b>Idle for a few minutes</b> — naps</li>
             <li><b>Clicked</b> — does a spin</li>
         </ul>
-        <p>The pet floats over the editor and only takes clicks on itself, so it never gets in the way of your code.
-        Choose a pet or hide it under <b>Tools → Tide Pets</b>, and rename it in <b>Settings → Tools → Tide Pets</b>.</p>
+        <p>The pet sits in the bottom-right corner of the editor. <b>Drag it</b> anywhere along the bottom edge and it
+        stays there; turn on <b>Swim Around</b> to let it roam. It only takes clicks on itself, and while you work on a
+        line it covers it fades and lets your clicks through. Right-click it to choose a pet, let it swim, or hide it;
+        <b>Settings → Tools → Tide Pets</b> sets its size and name.</p>
         <p>Made to go with the <a href="https://plugins.jetbrains.com/plugin/31513-midnight-tide">Midnight Tide</a>
         theme, and works with any theme.</p>
         <p>Free and open source (MIT): <a href="https://github.com/Chelayel/tide-pets">github.com/Chelayel/tide-pets</a>.</p>
@@ -30,8 +32,9 @@
 
     <change-notes><![CDATA[
         <p><b>0.2.0</b> — Four new pets: Bloop the jellyfish, Inky the octopus, Pinchy the crab and Puff the
-        pufferfish. The pet now floats along the bottom of the editor instead of living in a tool window.
-        Tools → Tide Pets to choose one; Settings → Tools → Tide Pets to rename it. New logo.</p>
+        pufferfish. The pet now floats at the bottom of the editor instead of living in a tool window: drag it where
+        you want it, or let it swim around; it fades out of the way of the line you're working on. Right-click it or
+        use Tools → Tide Pets to choose one; Settings → Tools → Tide Pets for its size and name. New logo.</p>
         <p><b>0.1.1</b> — First release on the Marketplace (0.1.0 was built but not uploaded).</p>
         <p><b>0.1.0</b> — First release: Shelly the sea turtle.</p>
     ]]></change-notes>

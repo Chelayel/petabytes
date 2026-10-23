@@ -14,7 +14,7 @@ import com.intellij.openapi.project.DumbAwareToggleAction
 class PetMenu : ActionGroup() {
     private val children: Array<AnAction> by lazy {
         val pets = PetCatalog.load().pets.values.map { ChoosePet(it.id, "${it.label} (${it.name})") }
-        arrayOf(ShowPet(), Separator.create("Pet"), *pets.toTypedArray(), Separator.create(), OpenSettings())
+        arrayOf(ShowPet(), Roam(), Separator.create("Pet"), *pets.toTypedArray(), Separator.create(), OpenSettings())
     }
 
     override fun getChildren(e: AnActionEvent?) = children
@@ -25,6 +25,16 @@ class ShowPet : DumbAwareToggleAction("Show Pet") {
     override fun isSelected(e: AnActionEvent) = PetSettings.get().state.enabled
     override fun setSelected(e: AnActionEvent, state: Boolean) {
         PetSettings.get().state.enabled = state
+        PetService.refreshAll()
+    }
+}
+
+/** On: swims the width of the editor. Off: stays where it was dropped (dragging it turns this off). */
+class Roam : DumbAwareToggleAction("Swim Around") {
+    override fun getActionUpdateThread() = ActionUpdateThread.BGT
+    override fun isSelected(e: AnActionEvent) = PetSettings.get().state.roam
+    override fun setSelected(e: AnActionEvent, state: Boolean) {
+        PetSettings.get().state.roam = state
         PetService.refreshAll()
     }
 }

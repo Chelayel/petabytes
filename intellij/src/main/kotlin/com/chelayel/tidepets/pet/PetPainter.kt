@@ -20,7 +20,8 @@ class BubbleStyle(val text: Color, val background: Color, val border: Color, val
  * Paints a [PetBrain]'s pet into an area: the pet sits [bottomInset] above the bottom edge
  * (plus its drift), at [scale] pixels per art unit, with its speech above it.
  */
-class PetPainter(private val scale: Double, private val bottomInset: Double = 4.0) {
+class PetPainter(var scale: Double, private val bottomInset: Double = 4.0) {
+    private var fade = 1f
     val spriteWidth get() = 120 * scale
     val spriteHeight get() = 80 * scale
 
@@ -28,8 +29,10 @@ class PetPainter(private val scale: Double, private val bottomInset: Double = 4.
     fun origin(brain: PetBrain, height: Double): Pair<Double, Double> =
         brain.x to height - bottomInset - brain.depth - spriteHeight
 
-    fun paint(g0: Graphics2D, brain: PetBrain, width: Double, height: Double, style: BubbleStyle) {
+    /** [fade] multiplies every opacity: 1 normally, low while the pet stays out of the way. */
+    fun paint(g0: Graphics2D, brain: PetBrain, width: Double, height: Double, style: BubbleStyle, fade: Float = 1f) {
         val g = g0.create() as Graphics2D
+        this.fade = fade
         try {
             g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
             g.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE)
@@ -79,7 +82,7 @@ class PetPainter(private val scale: Double, private val bottomInset: Double = 4.
             }
             part.rot?.let { at.rotate(Math.toRadians(it.at(t)), part.pivotX, part.pivotY) }
             val shape = at.createTransformedShape(part.shape)
-            val alpha = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, part.opacity)
+            val alpha = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, part.opacity * fade)
             g.composite = alpha
             part.fill?.let { g.color = it; g.fill(shape) }
             part.stroke?.let {
@@ -103,7 +106,7 @@ class PetPainter(private val scale: Double, private val bottomInset: Double = 4.
             val p = 1 - (1 - age) * (1 - age) // ease-out
             val x = ox + mouthX * scale + b.x + b.dx * p
             val y = oy + pet.mouthY * scale - 6 - 70 * p
-            g.color = withAlpha(pet.accent, (0.85 * (1 - age)).coerceIn(0.0, 1.0))
+            g.color = withAlpha(pet.accent, (0.85 * (1 - age) * fade).coerceIn(0.0, 1.0))
             g.draw(Ellipse2D.Double(x - b.size / 2, y - b.size / 2, b.size, b.size))
         }
     }

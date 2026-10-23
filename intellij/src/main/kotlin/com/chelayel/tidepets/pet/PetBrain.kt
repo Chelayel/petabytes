@@ -38,6 +38,16 @@ class PetBrain(
     private var lastActivity = clock()
     private var lastTypingLine = 0L
 
+    /** False: the pet stays near [home] instead of swimming the whole width. */
+    var roam = false
+    /** Where the pet stays when it isn't roaming, as a fraction of the width. */
+    var home = 0.95
+    /** Held by the mouse: it follows the pointer and doesn't swim. */
+    var dragging = false
+    /** The caret is on a line the pet covers: it fades and swims clear of [avoidX]. */
+    var dodging = false; private set
+    private var avoidX = 0.0
+
     var speech: String? = null; private set
     var speechUntil = 0L; private set
     val bubbles = ArrayList<Bubble>()
@@ -145,6 +155,29 @@ class PetBrain(
         sayLine(if (active) "debugOn" else "debugOff")
     }
 
+    /** Follow the mouse while it drags the pet; [x] is the art box's left edge. */
+    fun dragTo(x: Double, width: Double, spriteWidth: Double) {
+        val clamped = x.coerceIn(4.0, max(4.0, width - spriteWidth - 4))
+        if (clamped != this.x) dir = if (clamped > this.x) 1 else -1
+        this.x = clamped
+        speed = 0.0
+        lastActivity = now()
+        sleeping = false
+    }
+
+    /** Dropped: stay here from now on. */
+    fun dropped(width: Double, spriteWidth: Double) {
+        dragging = false
+        roam = false
+        home = if (width > spriteWidth) (x / (width - spriteWidth)).coerceIn(0.0, 1.0) else 0.0
+    }
+
+    /** The caret's x if it's on a line the pet covers, or null. */
+    fun avoid(caretX: Double?) {
+        dodging = caretX != null
+        if (caretX != null) avoidX = caretX
+    }
+
     fun clicked() {
         val woke = wake()
         flash("spin", 800)
@@ -162,18 +195,34 @@ class PetBrain(
 
         val f = flags()
         val excited = active("excited") && !sleeping
-        var target = 0.4 * pet.speed
-        if (sleeping || "hiding" in f || "curious" in f || active("spin")) target = 0.0
-        else if (excited) target = 1.7 * pet.speed
-        else if (debugging) target = 0.8 * pet.speed
-        else if ("worried" in f) target = 0.22 * pet.speed
-        speed += (target - speed) * 0.06 * dt
-
-        x += speed * dir * dt
         val maxX = max(0.0, width - spriteWidth - 4)
+        if (dragging) {
+            speed = 0.0
+        } else if (dodging && roam) {
+            // Swim clear of the caret, toward whichever side has more room.
+            val center = x + spriteWidth / 2
+            val clear = kotlin.math.abs(center - avoidX) > spriteWidth
+            dir = if (avoidX > width / 2) -1 else 1
+            speed += ((if (clear) 0.0 else 2.2) - speed) * 0.1 * dt
+            x += speed * dir * dt
+        } else if (!roam) {
+            // Stay near home: drift a little either side of it, face where it's going.
+            val target = home * maxX + 12 * kotlin.math.sin(t / 2600.0)
+            val step = (target - x) * 0.04 * dt
+            if (kotlin.math.abs(step) > 0.05) dir = if (step > 0) 1 else -1
+            x += step
+        } else {
+            var target = 0.4 * pet.speed
+            if (sleeping || "hiding" in f || "curious" in f || active("spin")) target = 0.0
+            else if (excited) target = 1.7 * pet.speed
+            else if (debugging) target = 0.8 * pet.speed
+            else if ("worried" in f) target = 0.22 * pet.speed
+            speed += (target - speed) * 0.06 * dt
+            x += speed * dir * dt
+            if (speed > 0.1 && random.nextDouble() < 0.0015 * dt) dir = -dir
+        }
         if (x > maxX) { x = maxX; dir = -1 }
         if (x < 4) { x = 4.0; dir = 1 }
-        if (speed > 0.1 && random.nextDouble() < 0.0015 * dt) dir = -dir
 
         if (t >= nextDepthAt) {
             depthTarget = if (sleeping || pet.floor) 0.0 else random.nextDouble() * room
