@@ -1,0 +1,7 @@
+.DS_Store
+.idea/
+*.log
+*.vsix
+
+# The VS Code extension gets its copy of the shared page at package time.
+vscode/media/pet.html

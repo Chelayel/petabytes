@@ -1,0 +1,95 @@
+{
+  "name": "tide-pets",
+  "displayName": "Tide Pets",
+  "description": "A sea turtle that lives in your Explorer and reacts to what you do: it swims faster while you type, celebrates saves and fixed errors, worries about new ones, and naps when you're away.",
+  "version": "0.1.0",
+  "publisher": "chelayel",
+  "author": { "name": "Chelayel", "url": "https://www.chelayel.com" },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Chelayel/tide-pets.git"
+  },
+  "homepage": "https://github.com/Chelayel/tide-pets#readme",
+  "bugs": {
+    "url": "https://github.com/Chelayel/tide-pets/issues"
+  },
+  "icon": "media/icon.png",
+  "engines": {
+    "vscode": "^1.74.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "keywords": [
+    "pet",
+    "pets",
+    "turtle",
+    "sea turtle",
+    "companion",
+    "fun",
+    "midnight tide"
+  ],
+  "main": "./extension.js",
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "contributes": {
+    "views": {
+      "explorer": [
+        {
+          "type": "webview",
+          "id": "tidePets.pet",
+          "name": "Tide Pets",
+          "when": "config.tidePets.enabled"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "tidePets.toggle",
+        "title": "Toggle Pet",
+        "category": "Tide Pets"
+      },
+      {
+        "command": "tidePets.show",
+        "title": "Show Pet",
+        "category": "Tide Pets"
+      },
+      {
+        "command": "tidePets.hide",
+        "title": "Hide Pet",
+        "category": "Tide Pets",
+        "icon": "$(close)"
+      }
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "tidePets.hide",
+          "when": "view == tidePets.pet",
+          "group": "navigation"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "Tide Pets",
+      "properties": {
+        "tidePets.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show the pet in the Explorer."
+        },
+        "tidePets.name": {
+          "type": "string",
+          "default": "Shelly",
+          "description": "Your pet's name."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "sync-page": "node -e \"require('fs').copyFileSync('../web/pet.html','media/pet.html')\"",
+    "vscode:prepublish": "npm run sync-page"
+  }
+}

@@ -1,0 +1,52 @@
+<idea-plugin>
+    <id>com.chelayel.tidepets</id>
+    <name>Tide Pets</name>
+    <vendor url="https://github.com/Chelayel/tide-pets">Chelayel</vendor>
+
+    <description><![CDATA[
+        <h2>Tide Pets — a sea turtle that keeps you company while you code</h2>
+        <p>Shelly the sea turtle lives in a tool window and reacts to what you do:</p>
+        <ul>
+            <li><b>Typing</b> — swims faster</li>
+            <li><b>Saving</b> — a happy loop and a few bubbles</li>
+            <li><b>New errors</b> in the open file — looks worried, and hides in its shell when a lot appear at once</li>
+            <li><b>Errors fixed</b> — celebrates</li>
+            <li><b>Run configurations</b> — cheers when one passes, hides when one fails</li>
+            <li><b>Debugging</b> — brings out a magnifying glass</li>
+            <li><b>Switching files</b> — looks around</li>
+            <li><b>Idle for a few minutes</b> — naps on the sand</li>
+            <li><b>Clicked</b> — does a spin</li>
+        </ul>
+        <p>Turn it on or off with <b>Tools → Show Tide Pet</b>.</p>
+        <p>Made to go with the <a href="https://plugins.jetbrains.com/plugin/31513-midnight-tide">Midnight Tide</a>
+        theme, and works with any theme.</p>
+        <p>Free and open source (MIT): <a href="https://github.com/Chelayel/tide-pets">github.com/Chelayel/tide-pets</a>.</p>
+    ]]></description>
+
+    <change-notes><![CDATA[
+        <p><b>0.1.0</b> — First release: Shelly the sea turtle.</p>
+    ]]></change-notes>
+
+    <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.modules.lang</depends>
+    <!-- JCEF is a separate bundled plugin from 2026.2 (build 262); optional so the
+         plugin still loads elsewhere and explains itself instead of failing. -->
+    <depends optional="true" config-file="jcef.xml">com.intellij.modules.jcef</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <toolWindow
+            id="Tide Pets"
+            anchor="bottom"
+            icon="/icons/turtle.svg"
+            factoryClass="com.chelayel.tidepets.PetToolWindowFactory"/>
+    </extensions>
+
+    <actions>
+        <action id="TidePets.Toggle"
+                class="com.chelayel.tidepets.TogglePetAction"
+                text="Show Tide Pet"
+                description="Show or hide the Tide Pets sea turtle">
+            <add-to-group group-id="ToolsMenu" anchor="last"/>
+        </action>
+    </actions>
+</idea-plugin>
