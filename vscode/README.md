@@ -1,35 +1,36 @@
 # Tide Pets
 
-![Shelly the sea turtle saying hi](https://raw.githubusercontent.com/Chelayel/tide-pets/main/docs/shelly.png)
+A sea creature lives in a **Tide Pets** panel in your Explorer and reacts to what you're doing. Pick one: **Shelly** the sea turtle, **Bloop** the jellyfish, **Inky** the octopus, **Pinchy** the crab or **Puff** the pufferfish.
 
-Shelly the sea turtle lives in a **Tide Pets** panel in your Explorer and reacts to what you're doing:
+![The five pets](https://raw.githubusercontent.com/Chelayel/tide-pets/main/docs/pets.png)
 
 - **Typing:** swims faster
 - **Saving:** does a happy loop and blows bubbles
-- **New errors in the open file:** looks worried, and hides in her shell when several appear at once
+- **New errors in the open file:** looks worried, and hides when several appear at once (Inky inks, Puff puffs up)
 - **All errors fixed:** celebrates
 - **Tasks:** cheers when one passes, hides when one fails
 - **Debugging:** brings out a magnifying glass
 - **Switching files:** looks around
-- **Away for 3 minutes:** naps on the sand
+- **Away for 3 minutes:** naps
 - **Clicked:** does a spin
 
-![Shelly reacting to typing, fixed errors, a new error, failed tests, debugging and being left alone](https://raw.githubusercontent.com/Chelayel/tide-pets/main/docs/shelly-moods.png)
+![Pets reacting to typing, fixed errors, a new error, failed tests, debugging and being left alone](https://raw.githubusercontent.com/Chelayel/tide-pets/main/docs/moods.png)
 
-## Turn her on or off
+## Choose, show or hide
 
-- Command Palette → **Tide Pets: Toggle Pet** (or **Show Pet** / **Hide Pet**)
-- The **×** button on the panel's title bar
-- The `tidePets.enabled` setting
+- Command Palette → **Tide Pets: Choose Pet**, **Toggle Pet**, **Show Pet** or **Hide Pet**
+- The buttons on the panel's title bar
+- The settings below
 
 ## Settings
 
 | Setting | Default | |
 | --- | --- | --- |
 | `tidePets.enabled` | `true` | Show the pet in the Explorer |
-| `tidePets.name` | `"Shelly"` | Your pet's name |
+| `tidePets.pet` | `"turtle"` | `turtle`, `jellyfish`, `octopus`, `crab` or `pufferfish` |
+| `tidePets.name` | `""` | Your pet's name; empty for its own (Shelly, Bloop, Inky, Pinchy or Puff) |
 
-Made to go with the [Midnight Tide](https://marketplace.visualstudio.com/items?itemName=Chelayel.midnight-tide-vscode) theme, and works with any theme. Also available for [JetBrains IDEs](https://github.com/Chelayel/tide-pets).
+Made to go with the [Midnight Tide](https://marketplace.visualstudio.com/items?itemName=Chelayel.midnight-tide-vscode) theme, and works with any theme. In [JetBrains IDEs](https://plugins.jetbrains.com/search?search=tide%20pets) the pet floats along the bottom of the editor.
 
 ## License
 

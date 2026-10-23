@@ -7,13 +7,15 @@ import com.intellij.openapi.components.State
 import com.intellij.openapi.components.Storage
 import com.intellij.openapi.components.service
 
-/** Whether the pet is shown, and its name. Shared by every open project. */
+/** Whether the pet is shown, which one, and its name. Shared by every open project. */
 @Service(Service.Level.APP)
 @State(name = "TidePets", storages = [Storage("tidePets.xml")])
 class PetSettings : SimplePersistentStateComponent<PetSettings.Options>(Options()) {
     class Options : BaseState() {
         var enabled by property(true)
-        var name by string("Shelly")
+        var pet by string("turtle")
+        /** Empty: the pet's own name (Shelly, Bloop, ...). */
+        var name by string("")
     }
 
     companion object {
