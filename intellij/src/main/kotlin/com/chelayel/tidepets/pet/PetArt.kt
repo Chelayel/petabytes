@@ -54,7 +54,17 @@ class Pet(
     val lines: Map<String, List<String>>,
 )
 
-class PetCatalog(val pets: Map<String, Pet>, private val lines: Map<String, List<String>>) {
+/** What an IDE event (by key) makes the pet do; see REACTIONS in tools/pets.py. */
+class Reaction(val mood: String?, val ms: Long, val bubbles: Int, val hearts: Int, val chance: Double, val cooldownMs: Long)
+
+class Snack(val text: String, val key: String)
+
+class PetCatalog(
+    val pets: Map<String, Pet>,
+    private val lines: Map<String, List<String>>,
+    val reactions: Map<String, Reaction> = emptyMap(),
+    val snacks: List<Snack> = listOf(Snack("{ }", "eatCurly")),
+) {
     fun pet(id: String?): Pet = pets[id] ?: pets.getValue("turtle")
     fun lines(pet: Pet, key: String): List<String> = pet.lines[key] ?: lines[key] ?: listOf("")
 
@@ -69,7 +79,15 @@ class PetCatalog(val pets: Map<String, Pet>, private val lines: Map<String, List
         fun parse(text: String): PetCatalog {
             val root = Json(text).parse() as Map<String, Any?>
             val pets = (root["pets"] as Map<String, Any?>).mapValues { (id, raw) -> pet(id, raw as Map<String, Any?>) }
-            return PetCatalog(pets, stringLists(root["lines"]))
+            val reactions = (root["reactions"] as Map<String, Any?>? ?: emptyMap()).mapValues { (_, r) ->
+                r as Map<String, Any?>
+                Reaction(
+                    r["mood"] as String?, ((r["ms"] as Double?) ?: 1200.0).toLong(), ((r["bubbles"] as Double?) ?: 0.0).toInt(),
+                    ((r["hearts"] as Double?) ?: 0.0).toInt(), (r["chance"] as Double?) ?: 1.0, (((r["cooldown"] as Double?) ?: 0.0) * 1000).toLong(),
+                )
+            }
+            val snacks = (root["snacks"] as List<Map<String, Any?>>? ?: emptyList()).map { Snack(it["text"] as String, it["key"] as String) }
+            return PetCatalog(pets, stringLists(root["lines"]), reactions, snacks.ifEmpty { listOf(Snack("{ }", "eatCurly")) })
         }
 
         @Suppress("UNCHECKED_CAST")

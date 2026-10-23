@@ -60,6 +60,8 @@ class FloatingPet(val brain: PetBrain, scale: Double, private val onDropped: (Do
                 if (moved) {
                     brain.dropped(width.toDouble(), painter.spriteWidth)
                     onDropped(brain.home)
+                } else if (e.clickCount == 2) {
+                    brain.react("pet")
                 } else {
                     brain.clicked()
                 }

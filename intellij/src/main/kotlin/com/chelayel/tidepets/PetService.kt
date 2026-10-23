@@ -7,6 +7,11 @@ import com.intellij.codeInsight.daemon.impl.HighlightInfo
 import com.intellij.execution.ExecutionListener
 import com.intellij.execution.ExecutionManager
 import com.intellij.execution.executors.DefaultDebugExecutor
+import com.intellij.execution.executors.DefaultRunExecutor
+import com.intellij.openapi.command.CommandProcessor
+import com.intellij.openapi.vcs.BranchChangeListener
+import com.intellij.openapi.wm.ToolWindow
+import com.intellij.openapi.wm.ex.ToolWindowManagerListener
 import com.intellij.execution.process.ProcessHandler
 import com.intellij.execution.runners.ExecutionEnvironment
 import com.intellij.lang.annotation.HighlightSeverity
@@ -49,6 +54,8 @@ class PetService(private val project: Project) : Disposable {
     private var lastTick = System.nanoTime()
 
     private var lastTyping = 0L
+    private var braces = 0
+    private val undos = ArrayDeque<Long>()
     private var lastSave = 0L
     private var lastErrors = 0
     private var listening = false
@@ -145,9 +152,41 @@ class PetService(private val project: Project) : Disposable {
             override fun documentChanged(event: DocumentEvent) {
                 if (!inThisProject(event.document)) return
                 val now = System.currentTimeMillis()
+                val command = CommandProcessor.getInstance().currentCommandName.orEmpty()
+                if (command.startsWith("Undo")) {
+                    // Several undos in a few seconds.
+                    undos.addLast(now)
+                    while (undos.isNotEmpty() && now - undos.first() > 8000) undos.removeFirst()
+                    if (undos.size >= 4) { undos.clear(); send { react("undo") } }
+                    return
+                }
                 if (now - lastTyping > 400) { lastTyping = now; send { typing() } }
+                val text = event.newFragment
+                // Every 20th "{" typed drops a crumb for the pet.
+                if (text.length <= 2 && text.contains('{') && ++braces % 20 == 0) feed("{ }", "crumb")
+                // A big block appearing at once, not a paste: most likely an AI suggestion.
+                if (text.length >= 120 && text.count { it == '\n' } >= 3 && !command.contains("Paste")) send { react("aiBig") }
             }
         }, this)
+
+        // AI assistants and the terminal, by the tool window you open.
+        projectBus.subscribe(ToolWindowManagerListener.TOPIC, object : ToolWindowManagerListener {
+            override fun toolWindowShown(toolWindow: ToolWindow) {
+                val id = toolWindow.id
+                when {
+                    AI_WINDOWS.containsMatchIn(id) -> send { react("ai") }
+                    id.equals("Terminal", ignoreCase = true) -> send { react("terminal") }
+                }
+            }
+        })
+
+        // Branch switches. The VCS API isn't in every IDE, so this is best effort.
+        runCatching {
+            projectBus.subscribe(BranchChangeListener.VCS_BRANCH_CHANGED, object : BranchChangeListener {
+                override fun branchWillChange(branchName: String) {}
+                override fun branchHasChanged(branchName: String) { send { react("branch", mapOf("branch" to branchName)) } }
+            })
+        }
 
         // The IDE also saves on its own (when the window loses focus), so only react now and then.
         appBus.subscribe(FileDocumentManagerListener.TOPIC, object : FileDocumentManagerListener {
@@ -177,7 +216,11 @@ class PetService(private val project: Project) : Disposable {
 
         projectBus.subscribe(ExecutionManager.EXECUTION_TOPIC, object : ExecutionListener {
             override fun processStarted(executorId: String, env: ExecutionEnvironment, handler: ProcessHandler) {
-                if (executorId == DefaultDebugExecutor.EXECUTOR_ID) send { debug(true) }
+                val name = env.runProfile.name
+                when (executorId) {
+                    DefaultDebugExecutor.EXECUTOR_ID -> send { debug(true) }
+                    DefaultRunExecutor.EXECUTOR_ID -> send { react(if (TEST_RUN.containsMatchIn(name)) "test" else "run", mapOf("task" to name)) }
+                }
             }
 
             override fun processTerminated(executorId: String, env: ExecutionEnvironment, handler: ProcessHandler, exitCode: Int) {
@@ -188,6 +231,15 @@ class PetService(private val project: Project) : Disposable {
                 send { taskFinished(exitCode == 0, name) }
             }
         })
+    }
+
+    /** Drop a snack; [key] is the reaction to show with it ("feed" from the menu, "crumb" from typing). */
+    fun feed(snack: String? = null, key: String = "feed") {
+        send {
+            val width = overlay?.width?.toDouble() ?: 400.0
+            feed(width, snack)
+            react(key)
+        }
     }
 
     private fun inThisProject(document: Document) = EditorFactory.getInstance().getEditors(document, project).isNotEmpty()
@@ -201,6 +253,9 @@ class PetService(private val project: Project) : Disposable {
     override fun dispose() = hide()
 
     companion object {
+        private val AI_WINDOWS = Regex("copilot|ai assistant|ai chat|junie|claude|gemini|ai relay|codeium|tabnine|chatgpt|cody|continue", RegexOption.IGNORE_CASE)
+        private val TEST_RUN = Regex("\\btests?\\b|spec", RegexOption.IGNORE_CASE)
+
         /** Apply changed settings in every open project. */
         fun refreshAll() {
             for (p in ProjectManager.getInstance().openProjects) if (!p.isDisposed) p.service<PetService>().refresh()

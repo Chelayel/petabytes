@@ -5,22 +5,30 @@
 
     <description><![CDATA[
         <h2>Tide Pets — sea creatures that keep you company while you code</h2>
-        <p>A pet swims along the bottom of your editor and reacts to what you do. Pick one:
-        <b>Shelly</b> the sea turtle, <b>Bloop</b> the jellyfish, <b>Inky</b> the octopus,
-        <b>Pinchy</b> the crab or <b>Puff</b> the pufferfish.</p>
-        <p><img src="https://raw.githubusercontent.com/Chelayel/tide-pets/main/docs/pets.png" alt="The five pets: a sea turtle, a jellyfish, an octopus, a crab and a pufferfish" width="620"/></p>
+        <p>A pet lives at the bottom of your editor and reacts to what you do. Pick one:
+        <b>Shelly</b> the sea turtle, <b>Bloop</b> the jellyfish, <b>Inky</b> the octopus, <b>Pinchy</b> the crab,
+        <b>Puff</b> the pufferfish, <b>Blue</b> the whale, <b>Clem</b> the clownfish, <b>Sandy</b> the seahorse
+        or <b>Finn</b> the shark.</p>
+        <p><img src="https://raw.githubusercontent.com/Chelayel/tide-pets/main/docs/pets.png" alt="The nine pets" width="620"/></p>
         <ul>
             <li><b>Typing</b> — swims faster</li>
             <li><b>Saving</b> — a happy loop and a few bubbles</li>
             <li><b>New errors</b> in the open file — looks worried, and hides when a lot appear at once
             (the octopus inks, the pufferfish puffs up)</li>
             <li><b>Errors fixed</b> — celebrates</li>
-            <li><b>Run configurations</b> — cheers when one passes, hides when one fails</li>
+            <li><b>Run configurations</b> — spins when the app starts, cheers when a run passes, hides when it fails</li>
+            <li><b>AI assistants</b> — notices when you open Copilot, AI Assistant, Junie and friends, and when a big block of code appears at once</li>
+            <li><b>The terminal</b> — says hello when you open it</li>
+            <li><b>Branches and undo</b> — notices a new branch, and a run of undos</li>
+            <li><b>Late nights, mornings, long sessions</b> — says so, and suggests a stretch</li>
             <li><b>Debugging</b> — brings out a magnifying glass</li>
             <li><b>Switching files</b> — looks around</li>
             <li><b>Idle for a few minutes</b> — naps</li>
-            <li><b>Clicked</b> — does a spin</li>
+            <li><b>Clicked / double-clicked</b> — does a spin / shows hearts</li>
         </ul>
+        <p><b>Feed it:</b> right-click the pet and choose <b>Feed Pet</b>, and a <code>{ }</code>, <code>[ ]</code>,
+        <code>( )</code>, <code>&lt; &gt;</code> or <code>;</code> sinks down for it to eat. Every 20th <code>{</code>
+        you type drops a crumb too.</p>
         <p>The pet sits in the bottom-right corner of the editor. <b>Drag it</b> anywhere along the bottom edge and it
         stays there; turn on <b>Swim Around</b> to let it roam. It only takes clicks on itself, and while you work on a
         line it covers it fades and lets your clicks through. Right-click it to choose a pet, let it swim, or hide it;
@@ -31,8 +39,9 @@
     ]]></description>
 
     <change-notes><![CDATA[
-        <p><b>0.2.0</b> — Four new pets: Bloop the jellyfish, Inky the octopus, Pinchy the crab and Puff the
-        pufferfish. The pet now floats at the bottom of the editor instead of living in a tool window: drag it where
+        <p><b>0.2.0</b> — Eight new pets: Bloop the jellyfish, Inky the octopus, Pinchy the crab, Puff the
+        pufferfish, Blue the whale, Clem the clownfish, Sandy the seahorse and Finn the shark. Feed your pet
+        curly braces; it reacts to AI assistants, the terminal, runs, branches, undo sprees and the time of day. The pet now floats at the bottom of the editor instead of living in a tool window: drag it where
         you want it, or let it swim around; it fades out of the way of the line you're working on. Right-click it or
         use Tools → Tide Pets to choose one; Settings → Tools → Tide Pets for its size and name. New logo.</p>
         <p><b>0.1.1</b> — First release on the Marketplace (0.1.0 was built but not uploaded).</p>
