@@ -2,9 +2,9 @@
 
 # Tide Pets
 
-Sea creatures that keep you company while you code, in VS Code and JetBrains IDEs, and react to what you're doing. Pick one: **Shelly** the sea turtle, **Bloop** the jellyfish, **Inky** the octopus, **Pinchy** the crab, **Puff** the pufferfish, **Blue** the whale, **Clem** the clownfish, **Sandy** the seahorse or **Finn** the shark.
+Sea creatures that keep you company while you code, in VS Code and JetBrains IDEs, and react to what you're doing. Pick one: **Shelly** the sea turtle, **Bloop** the jellyfish, **Inky** the octopus, **Pinchy** the crab, **Puff** the pufferfish, **Blue** the whale, **Clem** the clownfish, **Sandy** the seahorse, **Finn** the shark, **Splash** the dolphin, **Angie** the angelfish or **Indigo** the blue tang.
 
-![The nine pets](docs/pets.png)
+![The twelve pets](docs/pets.png)
 
 | You | Your pet |
 | --- | --- |
@@ -30,14 +30,14 @@ Sea creatures that keep you company while you code, in VS Code and JetBrains IDE
 
 Made to go with the [Midnight Tide](https://github.com/Chelayel/Midnight-Tide) theme, and works with any theme.
 
-In IntelliJ IDEA, the pet floats at the bottom of the editor:
+In IntelliJ IDEA, the pet swims up and down a strip at the editor's right edge, beside the scrollbar and out of the way of your code (or along the bottom edge, if you prefer):
 
-![Shelly floating at the bottom of the editor in IntelliJ IDEA, asking for food](docs/intellij-pet.png)
+![Splash the dolphin swimming at the right edge of the editor in IntelliJ IDEA, asking for a snack](docs/intellij-right-edge.png)
 
 | Editor | Folder | Where the pet lives | Choose, show or hide |
 | --- | --- | --- | --- |
 | VS Code | [`vscode/`](vscode/) | A **Tide Pets** panel in the Explorer (VS Code doesn't let extensions draw over the editor) | **Tide Pets: Choose Pet** / **Toggle Pet**, or the `tidePets.*` settings |
-| JetBrains (2024.2+) | [`intellij/`](intellij/) | Floating at the bottom of the editor: drag it where you want it, or turn on **Swim Around**. It fades and lets clicks through while you work on a line it covers | Right-click the pet or **Tools → Tide Pets**; size and name in **Settings → Tools → Tide Pets** |
+| JetBrains (2024.2+) | [`intellij/`](intellij/) | Swimming up and down the editor's right edge, or along its bottom edge. Drag it to move it; it fades and lets clicks through when your cursor is right beside it | Right-click the pet or **Tools → Tide Pets**; position, size and name in **Settings → Tools → Tide Pets** |
 
 ## How it's built
 

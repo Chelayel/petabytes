@@ -26,6 +26,10 @@ import kotlin.math.abs
  * right-click it for its menu.
  */
 class FloatingPet(val brain: PetBrain, scale: Double, private val onDropped: (Double) -> Unit) : JComponent() {
+    /** Mouse position along the pet's axis: down the right edge, or across the bottom. */
+    private fun along(e: MouseEvent) = if (brain.vertical) e.y else e.x
+    private val axisLength get() = if (brain.vertical) height.toDouble() else width.toDouble()
+    private val spriteLength get() = if (brain.vertical) painter.spriteHeight else painter.spriteWidth
     val painter = PetPainter(scale = JBUI.scale(1) * scale)
     private var pressX = 0
     private var grabOffset = 0.0
@@ -38,18 +42,18 @@ class FloatingPet(val brain: PetBrain, scale: Double, private val onDropped: (Do
             override fun mousePressed(e: MouseEvent) {
                 if (e.isPopupTrigger) { menu(e); return }
                 if (!SwingUtilities.isLeftMouseButton(e)) return
-                pressX = e.x
-                grabOffset = e.x - brain.x
+                pressX = along(e)
+                grabOffset = along(e) - brain.x
                 moved = false
             }
 
             override fun mouseDragged(e: MouseEvent) {
                 if (!SwingUtilities.isLeftMouseButton(e)) return
-                if (!moved && abs(e.x - pressX) < JBUI.scale(4)) return
+                if (!moved && abs(along(e) - pressX) < JBUI.scale(4)) return
                 moved = true
                 brain.dragging = true
                 cursor = Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR)
-                brain.dragTo(e.x - grabOffset, width.toDouble(), painter.spriteWidth)
+                brain.dragTo(along(e) - grabOffset, axisLength, spriteLength)
                 repaint()
             }
 
@@ -58,7 +62,7 @@ class FloatingPet(val brain: PetBrain, scale: Double, private val onDropped: (Do
                 if (!SwingUtilities.isLeftMouseButton(e)) return
                 cursor = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)
                 if (moved) {
-                    brain.dropped(width.toDouble(), painter.spriteWidth)
+                    brain.dropped(axisLength, spriteLength)
                     onDropped(brain.home)
                 } else if (e.clickCount == 2) {
                     brain.react("pet")
@@ -78,12 +82,15 @@ class FloatingPet(val brain: PetBrain, scale: Double, private val onDropped: (Do
         ActionManager.getInstance().createActionPopupMenu(ActionPlaces.POPUP, group).component.show(this, e.x, e.y)
     }
 
-    /** Room above the pet for its speech bubble. */
+    /** Room above the pet for its speech bubble (along the bottom edge). */
     val preferredHeight get() = (painter.spriteHeight + JBUI.scale(44)).toInt()
+
+    /** Room to the pet's left for its speech bubble (along the right edge). */
+    val preferredWidth get() = (painter.spriteWidth + JBUI.scale(200)).toInt()
 
     /** The pet's own rectangle, in this component's coordinates. */
     fun petBounds(): java.awt.geom.Rectangle2D {
-        val (ox, oy) = painter.origin(brain, height.toDouble())
+        val (ox, oy) = painter.origin(brain, height.toDouble(), width.toDouble())
         return java.awt.geom.Rectangle2D.Double(ox, oy, painter.spriteWidth, painter.spriteHeight)
     }
 

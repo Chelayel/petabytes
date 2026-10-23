@@ -1,8 +1,8 @@
 # Tide Pets
 
-A sea creature lives in a **Tide Pets** panel in your Explorer and reacts to what you're doing. Pick one: **Shelly** the sea turtle, **Bloop** the jellyfish, **Inky** the octopus, **Pinchy** the crab, **Puff** the pufferfish, **Blue** the whale, **Clem** the clownfish, **Sandy** the seahorse or **Finn** the shark.
+A sea creature lives in a **Tide Pets** panel in your Explorer and reacts to what you're doing. Pick one: **Shelly** the sea turtle, **Bloop** the jellyfish, **Inky** the octopus, **Pinchy** the crab, **Puff** the pufferfish, **Blue** the whale, **Clem** the clownfish, **Sandy** the seahorse, **Finn** the shark, **Splash** the dolphin, **Angie** the angelfish or **Indigo** the blue tang.
 
-![The nine pets](https://raw.githubusercontent.com/Chelayel/tide-pets/main/docs/pets.png)
+![The twelve pets](https://raw.githubusercontent.com/Chelayel/tide-pets/main/docs/pets.png)
 
 - **Typing:** swims faster
 - **Saving:** does a happy loop and blows bubbles
@@ -34,8 +34,8 @@ A sea creature lives in a **Tide Pets** panel in your Explorer and reacts to wha
 | Setting | Default | |
 | --- | --- | --- |
 | `tidePets.enabled` | `true` | Show the pet in the Explorer |
-| `tidePets.pet` | `"turtle"` | `turtle`, `jellyfish`, `octopus`, `crab`, `pufferfish`, `whale`, `clownfish`, `seahorse` or `shark` |
-| `tidePets.name` | `""` | Your pet's name; empty for its own (Shelly, Bloop, Inky, Pinchy, Puff, Blue, Clem, Sandy or Finn) |
+| `tidePets.pet` | `"turtle"` | `turtle`, `jellyfish`, `octopus`, `crab`, `pufferfish`, `whale`, `clownfish`, `seahorse`, `shark`, `dolphin`, `angelfish` or `tang` |
+| `tidePets.name` | `""` | Your pet's name; empty for its own (Shelly, Bloop, Inky, Pinchy, Puff, Blue, Clem, Sandy, Finn, Splash, Angie or Indigo) |
 
 Made to go with the [Midnight Tide](https://marketplace.visualstudio.com/items?itemName=Chelayel.midnight-tide-vscode) theme, and works with any theme. In [JetBrains IDEs](https://plugins.jetbrains.com/search?search=tide%20pets) the pet floats along the bottom of the editor.
 

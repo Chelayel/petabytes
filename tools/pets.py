@@ -319,6 +319,90 @@ PETS["shark"] = {
             "eatCurly": ["Chomp! Curly braces.", "Mmm, crunchy braces."]},
 }
 
+
+# ---- Dolphin ------------------------------------------------------------
+dgray, ddark, deye = "#7C9CC0", "#5B7BA0", "#0F172A"
+PETS["dolphin"] = {
+  "label": "Dolphin", "name": "Splash", "flip": True, "floor": False, "speed": 1.4,
+  "bob": [4, 2.2], "glow": "rgba(124,156,192,0.5)", "mouth": [114, 44], "head": [98, 22],
+  "parts": [
+    p("M15 44 L3 33 Q9 36 15 41 Q9 47 3 55 Z", "tail", fill=ddark, pivot=[15, 44], rot=[14, 0.9, 0]),
+    p("M58 29 q4 -14 14 -18 q-2 10 0 18z", "body", fill=ddark),
+    p("M10 44 Q20 30 50 28 Q80 26 98 36 Q106 40 117 43 Q107 46 98 47 Q80 58 48 56 Q24 54 10 44Z", "body", fill=dgray),
+    p("M30 50 Q62 60 100 46 Q84 56 50 56 Q36 55 30 50Z", "body", fill="#E2E8F0"),
+    *eye_set(92, 38, 2.4, "body", deye),
+    p("M101 45 q6 2.5 12 -0.5", "body", stroke=deye, sw=1.3),
+    c(96, 43, 1.8, "body", fill="#F9A8D4", opacity=0.7),
+    p("M87 32 l8 2", "body", stroke=deye, sw=1.4, when=["worried"]),
+    p("M104 24 q-2.5 4.5 0 5.5 q2.5 -1 0 -5.5z", "body", fill="#7DD3FC", when=["worried"]),
+    p("M64 50 q-4 10 -14 12 q4 -6 6 -12z", "fins", fill=ddark, pivot=[62, 50], rot=[14, 0.9, 0.3]),
+    *lens(116, 56),
+  ],
+  "poses": {
+    "hiding":   {"body": {"s": 0.9, "ty": 5, "p": [60, 42]}, "tail": {"s": 0.85, "ty": 5, "p": [15, 44]}, "fins": {"ty": 5}},
+    "sleeping": {"body": {"ty": 2}, "tail": {"ty": 2}, "fins": {"ty": 2}},
+    "curious":  {"body": {"r": -6, "p": [60, 42]}},
+  },
+  "lines": {"click": ["Ee-ee-ee!", "*does a flip*", "Splash!", "Wanna race?"],
+            "pet": ["*happy clicks*", "Ee-ee! Thank you!"], "fixed": ["*leaps* All clear!", "Fixed it! Ee-ee!"],
+            "run": ["Here we go! *splash*", "It's alive! Ee-ee!"]},
+}
+
+# ---- Angelfish ----------------------------------------------------------
+aeye, astripe = "#0F172A", "#334155"
+PETS["angelfish"] = {
+  "label": "Angelfish", "name": "Angie", "flip": True, "floor": False, "speed": 0.7,
+  "bob": [4, 3.0], "glow": "rgba(251,191,36,0.4)", "mouth": [87, 40], "head": [80, 6],
+  "parts": [
+    p("M41 40 l-11 -9 q3 9 0 18z", "fins", fill="#FBBF24", pivot=[41, 40], rot=[16, 0.8, 0]),
+    p("M58 16 Q50 6 43 1", "fins", stroke="#FBBF24", sw=2.2, pivot=[58, 16], rot=[8, 1.6, 0.2]),
+    p("M58 64 Q50 74 43 79", "fins", stroke="#FBBF24", sw=2.2, pivot=[58, 64], rot=[8, 1.6, 0.7]),
+    p("M40 40 Q56 10 66 6 Q70 24 87 40 Q70 56 66 74 Q56 70 40 40Z", "body", fill="#E2E8F0", stroke="#FBBF24", sw=1.4),
+    p("M54 20 Q58 40 54 62 M64 12 Q68 40 64 70", "body", stroke=astripe, sw=3.2, opacity=0.85),
+    p("M74 28 Q76 40 74 52", "body", stroke=astripe, sw=2.2, opacity=0.7),
+    *eye_set(78, 36, 2.6, "body", aeye, sclera="#FFFFFF"),
+    p("M84 40.5 q2 1.4 3.4 0", "body", stroke=aeye, sw=1.2),
+    p("M73 29.5 l7 2", "body", stroke=aeye, sw=1.3, when=["worried"]),
+    p("M88 22 q-2.5 4.5 0 5.5 q2.5 -1 0 -5.5z", "body", fill="#7DD3FC", when=["worried"]),
+    p("M66 46 q-3 7 -8 9 q2 -5 2 -9z", "body", fill="#FDE68A", pivot=[66, 46], rot=[20, 0.6, 0.3]),
+    *lens(96, 54),
+  ],
+  "poses": {
+    "hiding":   {"body": {"s": 0.85, "ty": 3, "p": [62, 40]}, "fins": {"s": 0.8, "ty": 3, "p": [50, 40]}},
+    "sleeping": {"body": {"r": 6, "p": [62, 40]}, "fins": {"r": 6, "p": [62, 40]}},
+    "curious":  {"body": {"r": -8, "p": [62, 40]}},
+  },
+  "lines": {"click": ["Hello, darling.", "*glides gracefully*", "Aren't my fins lovely?"],
+            "pet": ["*flutters fins*", "You're an angel too."]},
+}
+
+# ---- Blue tang ----------------------------------------------------------
+teye = "#0F172A"
+PETS["tang"] = {
+  "label": "Blue tang", "name": "Indigo", "flip": True, "floor": False, "speed": 1.1,
+  "bob": [3, 2.0], "glow": "rgba(37,99,235,0.45)", "mouth": [89, 42], "head": [84, 20],
+  "parts": [
+    p("M33 40 l-12 -11 q4 11 0 22z", "fins", fill="#FACC15", pivot=[33, 40], rot=[16, 0.7, 0]),
+    e(60, 40, 28, 16, "body", fill="#2563EB", stroke="#1E3A8A", sw=1.2),
+    p("M43 26 Q60 18 78 26", "body", stroke="#1E3A8A", sw=2),
+    p("M42 34 Q56 24 74 30 Q66 36 54 36 Q60 44 74 45 Q60 51 44 44 Q38 40 42 34Z", "body", fill="#0F172A"),
+    *eye_set(79, 36, 2.4, "body", teye, sclera="#FFFFFF"),
+    p("M85 42 q2 1.5 3.5 0", "body", stroke=teye, sw=1.2),
+    p("M74 29.5 l7 2", "body", stroke=teye, sw=1.3, when=["worried"]),
+    p("M90 22 q-2.5 4.5 0 5.5 q2.5 -1 0 -5.5z", "body", fill="#7DD3FC", when=["worried"]),
+    p("M65 46 q-2 7 -7 9 q2 -5 1 -9z", "body", fill="#93C5FD", pivot=[65, 46], rot=[20, 0.55, 0.3]),
+    *lens(98, 54),
+  ],
+  "poses": {
+    "hiding":   {"body": {"s": 0.85, "ty": 3, "p": [60, 40]}, "fins": {"s": 0.85, "ty": 3, "p": [33, 40]}},
+    "sleeping": {"body": {"ty": 2}, "fins": {"ty": 2}},
+    "curious":  {"body": {"r": -8, "p": [60, 40]}},
+  },
+  "lines": {"click": ["Hi! Wait, what was I doing?", "*swims in a happy circle*", "Hello, friend!"],
+            "pet": ["*wiggles*", "Hehe, I forgot what I was saying. Hi!"],
+            "file": ["Ooh, a new file! Or have I seen it?", "Where are we again?"]},
+}
+
 LINES = {
   "hello": ["Hi! I'm {name}."],
   "wake": ["Oh! I'm up.", "Back to work?", "Mm, what did I miss?"],

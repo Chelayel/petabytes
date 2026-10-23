@@ -22,23 +22,30 @@ class BubbleStyle(val text: Color, val background: Color, val border: Color, val
  */
 class PetPainter(var scale: Double, private val bottomInset: Double = 4.0) {
     private var fade = 1f
+    private var lastWidth = 0.0
     val spriteWidth get() = 120 * scale
     val spriteHeight get() = 80 * scale
 
     /** Where the pet is drawn in an area [height] tall: x, y of the art box's top-left. */
-    fun origin(brain: PetBrain, height: Double): Pair<Double, Double> =
-        brain.x to height - bottomInset - brain.depth - spriteHeight
+    fun origin(brain: PetBrain, height: Double, width: Double = 0.0): Pair<Double, Double> =
+        if (brain.vertical) (width - bottomInset - brain.depth - spriteWidth) to brain.x
+        else brain.x to height - bottomInset - brain.depth - spriteHeight
+
+    /** Facing left: always along the right edge (toward the code), else by swimming direction. */
+    private fun facingLeft(brain: PetBrain) = brain.vertical || brain.dir < 0
 
     /** [fade] multiplies every opacity: 1 normally, low while the pet stays out of the way. */
     fun paint(g0: Graphics2D, brain: PetBrain, width: Double, height: Double, style: BubbleStyle, fade: Float = 1f) {
         val g = g0.create() as Graphics2D
         this.fade = fade
+        lastWidth = width
         try {
             g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
             g.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE)
             g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON)
-            val (ox, oy) = origin(brain, height)
+            val (ox, oy) = origin(brain, height, width)
             brain.spriteMouthTop = oy
+            brain.artScale = scale
             paintFood(g, brain, style)
             paintPet(g, brain, ox, oy)
             paintBubbles(g, brain, ox, oy)
@@ -68,7 +75,7 @@ class PetPainter(var scale: Double, private val bottomInset: Double = 4.0) {
         base.scale(scale, scale)
         base.translate(0.0, ty)
         base.rotate(Math.toRadians(rot), 60.0, 40.0)
-        if (pet.flip && brain.dir < 0) { base.translate(120.0, 0.0); base.scale(-1.0, 1.0) }
+        if (pet.flip && facingLeft(brain)) { base.translate(120.0, 0.0); base.scale(-1.0, 1.0) }
 
         for (part in pet.parts) {
             val show = part.whenFlags == null || part.whenFlags.any { it in flags }
@@ -100,9 +107,9 @@ class PetPainter(var scale: Double, private val bottomInset: Double = 4.0) {
     private fun paintBubbles(g: Graphics2D, brain: PetBrain, ox: Double, oy: Double) {
         val pet = brain.pet
         val now = brain.now()
-        val mouthX = if (pet.flip && brain.dir < 0) 120 - pet.mouthX else pet.mouthX
+        val mouthX = if (pet.flip && facingLeft(brain)) 120 - pet.mouthX else pet.mouthX
         g.stroke = BasicStroke(1.5f)
-        val headX = if (pet.flip && brain.dir < 0) 120 - pet.headX else pet.headX
+        val headX = if (pet.flip && facingLeft(brain)) 120 - pet.headX else pet.headX
         for (b in brain.bubbles) {
             val age = (now - b.born) / 1800.0
             if (age < 0) continue
@@ -137,14 +144,22 @@ class PetPainter(var scale: Double, private val bottomInset: Double = 4.0) {
         g.font = Font(Font.MONOSPACED, Font.BOLD, (style.font.size2D + 1).toInt())
         g.color = withAlpha(brain.pet.accent, fade.toDouble())
         val w = g.fontMetrics.stringWidth(food.snack.text)
-        g.drawString(food.snack.text, (food.x - w / 2).toFloat(), (food.y + g.fontMetrics.ascent).toFloat())
+        if (brain.vertical) {
+            // Sinking down the pet's column, in front of its mouth.
+            val pet = brain.pet
+            val (ox, _) = origin(brain, 0.0, lastWidth)
+            val mouthX = ox + (if (pet.flip) 120 - pet.mouthX else pet.mouthX) * scale
+            g.drawString(food.snack.text, (mouthX - w / 2).toFloat(), (food.x).toFloat())
+        } else {
+            g.drawString(food.snack.text, (food.x - w / 2).toFloat(), (food.y + g.fontMetrics.ascent).toFloat())
+        }
     }
 
     private fun paintZzz(g: Graphics2D, brain: PetBrain, ox: Double, oy: Double, style: BubbleStyle) {
         if (!brain.sleeping) return
         val pet = brain.pet
         val p = (brain.now() % 2600) / 2600.0
-        val headX = if (pet.flip && brain.dir < 0) 120 - pet.headX else pet.headX
+        val headX = if (pet.flip && facingLeft(brain)) 120 - pet.headX else pet.headX
         g.font = style.font.deriveFont(Font.BOLD, (style.font.size2D * (0.9f + 0.4f * p.toFloat())))
         g.color = withAlpha(pet.accent, if (p < 0.3) p / 0.3 else 1 - (p - 0.3) / 0.7)
         g.drawString("z", (ox + headX * scale + 10 * p).toFloat(), (oy + pet.headY * scale - 22 * p).toFloat())
@@ -159,8 +174,9 @@ class PetPainter(var scale: Double, private val bottomInset: Double = 4.0) {
         val fm = g.fontMetrics
         val w = fm.stringWidth(text) + 16.0
         val h = fm.height + 8.0
-        val x = ox.coerceIn(4.0, (width - w - 4).coerceAtLeast(4.0))
-        val y = (oy - h - 2).coerceAtLeast(2.0)
+        // Along the right edge the bubble opens to the pet's left; otherwise above it.
+        val x = if (brain.vertical) (ox - w - 2).coerceAtLeast(2.0) else ox.coerceIn(4.0, (width - w - 4).coerceAtLeast(4.0))
+        val y = if (brain.vertical) oy + spriteHeight * 0.15 else (oy - h - 2).coerceAtLeast(2.0)
         val box = RoundRectangle2D.Double(x, y, w, h, 14.0, 14.0)
         g.color = withAlpha(style.background, alpha * style.background.alpha / 255.0)
         g.fill(box)

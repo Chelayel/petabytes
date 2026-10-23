@@ -19,7 +19,7 @@ class PetBrain(
     class Bubble(val x: Double, val y: Double, val size: Double, val dx: Double, val born: Long, val heart: Boolean = false)
 
     /** A snack sinking toward the pet: [x] in pixels across the area, [y] pixels from its top. */
-    class Food(val snack: Snack, val x: Double, var y: Double)
+    class Food(val snack: Snack, var x: Double, var y: Double)
 
     // Position, in pixels from the left of the area the pet swims in.
     var x = 20.0; private set
@@ -40,6 +40,15 @@ class PetBrain(
     var spinAt = 0L; private set
     private var lastActivity = clock()
     private var lastTypingLine = 0L
+
+    /**
+     * True: the pet lives in a strip along the right edge and moves up and down; [x] is then its
+     * distance from the top. False: it moves along the bottom edge and [x] is from the left.
+     */
+    var vertical = false
+
+    /** Pixels per art unit, set by the painter. */
+    var artScale = 0.62
 
     /** False: the pet stays near [home] instead of swimming the whole width. */
     var roam = false
@@ -149,7 +158,8 @@ class PetBrain(
     fun feed(width: Double, text: String? = null) {
         if (food != null) return
         val snack = catalog.snacks.find { it.text == text } ?: catalog.snacks.random(random)
-        food = Food(snack, 20 + random.nextDouble() * max(1.0, width - 60), -14.0)
+        // Along the right edge the snack sinks down the pet's own column, from the top.
+        food = if (vertical) Food(snack, -10.0, 0.0) else Food(snack, 20 + random.nextDouble() * max(1.0, width - 60), -14.0)
         wake()
     }
 
@@ -239,13 +249,22 @@ class PetBrain(
         val snack = food
         if (snack != null && !dragging) {
             // The snack sinks to the pet's mouth line; the pet swims over to it.
-            val scale = spriteWidth / 120
-            val mouthLocal = if (pet.flip && dir < 0) 120 - pet.mouthX else pet.mouthX
-            val mouthX = x + mouthLocal * scale
-            val mouthY = spriteMouthTop + pet.mouthY * scale
-            snack.y = min(snack.y + 0.9 * dt, mouthY - 8)
-            val gap = snack.x - mouthX
-            if (kotlin.math.abs(gap) < 14 && snack.y >= mouthY - 20) eat()
+            val scale = artScale
+            val gap: Double
+            val reached: Boolean
+            if (vertical) {
+                // x is the snack's height here: it sinks, and the pet swims up or down to meet it.
+                snack.x += 0.9 * dt
+                gap = snack.x - (x + pet.mouthY * scale)
+                reached = kotlin.math.abs(gap) < 14
+            } else {
+                val mouthLocal = if (pet.flip && dir < 0) 120 - pet.mouthX else pet.mouthX
+                val mouthY = spriteMouthTop + pet.mouthY * scale
+                snack.y = min(snack.y + 0.9 * dt, mouthY - 8)
+                gap = snack.x - (x + mouthLocal * scale)
+                reached = kotlin.math.abs(gap) < 14 && snack.y >= mouthY - 20
+            }
+            if (reached) eat()
             else {
                 if (kotlin.math.abs(gap) > 6) dir = if (gap > 0) 1 else -1
                 speed += (2.0 * pet.speed - speed) * 0.1 * dt

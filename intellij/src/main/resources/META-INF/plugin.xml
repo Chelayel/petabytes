@@ -5,12 +5,13 @@
 
     <description><![CDATA[
         <h2>Tide Pets — sea creatures that keep you company while you code</h2>
-        <p>A pet lives at the bottom of your editor and reacts to what you do. Pick one:
-        <b>Shelly</b> the sea turtle, <b>Bloop</b> the jellyfish, <b>Inky</b> the octopus, <b>Pinchy</b> the crab,
-        <b>Puff</b> the pufferfish, <b>Blue</b> the whale, <b>Clem</b> the clownfish, <b>Sandy</b> the seahorse
-        or <b>Finn</b> the shark.</p>
-        <p><img src="https://raw.githubusercontent.com/Chelayel/tide-pets/main/docs/intellij-pet.png" alt="Shelly the sea turtle floating at the bottom of the editor in IntelliJ IDEA, asking for food" width="640"/></p>
-        <p><img src="https://raw.githubusercontent.com/Chelayel/tide-pets/main/docs/pets.png" alt="The nine pets" width="620"/></p>
+        <p>A pet swims up and down the right edge of your editor, out of the way of your code, and reacts to what
+        you do. Pick one: <b>Shelly</b> the sea turtle, <b>Bloop</b> the jellyfish, <b>Inky</b> the octopus,
+        <b>Pinchy</b> the crab, <b>Puff</b> the pufferfish, <b>Blue</b> the whale, <b>Clem</b> the clownfish,
+        <b>Sandy</b> the seahorse, <b>Finn</b> the shark, <b>Splash</b> the dolphin, <b>Angie</b> the angelfish
+        or <b>Indigo</b> the blue tang.</p>
+        <p><img src="https://raw.githubusercontent.com/Chelayel/tide-pets/main/docs/intellij-right-edge.png" alt="Splash the dolphin swimming at the right edge of the editor in IntelliJ IDEA, asking for a snack" width="640"/></p>
+        <p><img src="https://raw.githubusercontent.com/Chelayel/tide-pets/main/docs/pets.png" alt="The twelve pets" width="620"/></p>
         <ul>
             <li><b>Typing</b> — swims faster</li>
             <li><b>Saving</b> — a happy loop and a few bubbles</li>
@@ -30,16 +31,19 @@
         <p><b>Feed it:</b> right-click the pet and choose <b>Feed Pet</b>, and a <code>{ }</code>, <code>[ ]</code>,
         <code>( )</code>, <code>&lt; &gt;</code> or <code>;</code> sinks down for it to eat. Every 20th <code>{</code>
         you type drops a crumb too.</p>
-        <p>The pet sits in the bottom-right corner of the editor. <b>Drag it</b> anywhere along the bottom edge and it
-        stays there; turn on <b>Swim Around</b> to let it roam. It only takes clicks on itself, and while you work on a
-        line it covers it fades and lets your clicks through. Right-click it to choose a pet, let it swim, or hide it;
-        <b>Settings → Tools → Tide Pets</b> sets its size and name.</p>
+        <p>The pet swims up and down a strip at the editor's right edge, beside the scrollbar; you can move it to the
+        bottom edge instead. <b>Drag it</b> to where it should stay, or let it swim. It only takes clicks on itself,
+        and when your cursor is right beside it, it fades and lets your clicks through. Right-click it to feed it,
+        choose a pet or an edge, or hide it; <b>Settings → Tools → Tide Pets</b> sets its position, size and name.</p>
         <p>Made to go with the <a href="https://plugins.jetbrains.com/plugin/31513-midnight-tide">Midnight Tide</a>
         theme, and works with any theme.</p>
         <p>Free and open source (MIT): <a href="https://github.com/Chelayel/tide-pets">github.com/Chelayel/tide-pets</a>.</p>
     ]]></description>
 
     <change-notes><![CDATA[
+        <p><b>0.3.0</b> — The pet now swims up and down the editor's right edge, out of the way of your code
+        (the bottom edge is still an option, in its menu or the settings). Three new pets: Splash the dolphin,
+        Angie the angelfish and Indigo the blue tang.</p>
         <p><b>0.2.1</b> — Fix: the pet could end up underneath the editor and disappear (its layer was set as a
         list position). New screenshot of the pet in IntelliJ IDEA.</p>
         <p><b>0.2.0</b> — Eight new pets: Bloop the jellyfish, Inky the octopus, Pinchy the crab, Puff the

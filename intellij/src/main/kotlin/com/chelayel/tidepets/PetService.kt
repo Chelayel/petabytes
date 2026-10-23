@@ -83,6 +83,7 @@ class PetService(private val project: Project) : Disposable {
             current.brain.hello()
         }
         current!!.brain.roam = settings.roam
+        current.brain.vertical = settings.position != "bottom"
         current.brain.home = settings.home.toDouble()
         listen()
         if (!timer.isRunning) { lastTick = System.nanoTime(); timer.start() }
@@ -112,15 +113,22 @@ class PetService(private val project: Project) : Disposable {
             target.add(o, JLayeredPane.PALETTE_LAYER as Any)
             layer = target
         }
-        // The bottom strip of the editor, clear of the scrollbars.
+        // A strip along the editor's right edge or its bottom edge, clear of the scrollbars.
         val r = SwingUtilities.convertRectangle(editor.component.parent, editor.component.bounds, target)
         val gap = JBUI.scale(14)
-        val h = o.preferredHeight
-        val bounds = Rectangle(r.x, r.y + r.height - h - gap, (r.width - gap).coerceAtLeast(0), h)
+        val vertical = o.brain.vertical
+        val bounds = if (vertical) {
+            val w = o.preferredWidth.coerceAtMost(r.width)
+            Rectangle(r.x + r.width - w - gap, r.y + gap, w, (r.height - 2 * gap).coerceAtLeast(0))
+        } else {
+            val h = o.preferredHeight
+            Rectangle(r.x, r.y + r.height - h - gap, (r.width - gap).coerceAtLeast(0), h)
+        }
         if (o.bounds != bounds) o.bounds = bounds
         o.isVisible = true
         o.brain.avoid(caretOverPet(editor, o, target))
-        o.brain.update(dtMs, bounds.width.toDouble(), o.painter.spriteWidth, room = JBUI.scale(10).toDouble())
+        if (vertical) o.brain.update(dtMs, bounds.height.toDouble(), o.painter.spriteHeight, room = JBUI.scale(6).toDouble())
+        else o.brain.update(dtMs, bounds.width.toDouble(), o.painter.spriteWidth, room = JBUI.scale(10).toDouble())
         o.repaint()
     }
 
@@ -136,8 +144,12 @@ class PetService(private val project: Project) : Disposable {
         val pet = o.petBounds()
         val margin = JBUI.scale(24)
         val lineHit = p.y + editor.lineHeight > pet.y && p.y < pet.maxY
-        val nearby = !o.brain.roam && p.x > pet.x - margin && p.x < pet.maxX + margin
-        return if (lineHit && (o.brain.roam || nearby)) p.x.toDouble() else null
+        val besidePet = p.x > pet.x - margin && p.x < pet.maxX + margin
+        if (o.brain.vertical) {
+            // Only when the caret is right beside it; then it swims clear up or down.
+            return if (besidePet && p.y + editor.lineHeight > pet.y - margin && p.y < pet.maxY + margin) p.y.toDouble() else null
+        }
+        return if (lineHit && (o.brain.roam || besidePet)) p.x.toDouble() else null
     }
 
     private fun send(action: PetBrain.() -> Unit) {

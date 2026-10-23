@@ -16,8 +16,10 @@ class PetSettings : SimplePersistentStateComponent<PetSettings.Options>(Options(
         var pet by string("turtle")
         /** Empty: the pet's own name (Shelly, Bloop, ...). */
         var name by string("")
-        /** True: swims the width of the editor. False: stays where it was dropped. */
-        var roam by property(false)
+        /** right: swims up and down a strip at the editor's right edge. bottom: along the bottom edge. */
+        var position by string("right")
+        /** True: swims the length of its edge. False: stays where it was dropped. */
+        var roam by property(true)
         /** Where it stays when not roaming, as a fraction of the editor's width. */
         var home by property(0.95f)
         /** small, medium or large. */
