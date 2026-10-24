@@ -122,6 +122,7 @@
     // Where the art ends, so a pet on the ground stands on its lowest point, whatever its shape.
     const box = root.getBBox();
     state.artBottom = Math.min(80, box.y + box.height);
+    state.artBox = [box.x, box.y, box.width, box.height];
     document.documentElement.style.setProperty("--glow", pet.glow);
     const accent = pet.parts.find((p) => p.stroke && p.stroke.startsWith("#"));
     document.documentElement.style.setProperty("--bubble", accent ? accent.stroke : "#5EEAD4");
@@ -416,7 +417,15 @@
   build("turtle");
   name = pet.name;
   nameEl.textContent = name;
-  window.petabytes = { receive };
+  /** What the pet is up to, for a host that shows it somewhere small (the Mac's Dock icon). */
+  function status() {
+    const f = flags();
+    return {
+      box: state.artBox, saying: sayEl.classList.contains("on") ? sayEl.textContent : "", eating: !!state.food,
+      sleeping: f.sleeping, hiding: f.hiding, happy: f.happy, worried: f.worried, curious: f.curious,
+    };
+  }
+  window.petabytes = { receive, status };
   if (vscode) {
     window.addEventListener("message", (e) => receive(e.data));
     vscode.postMessage({ type: "ready" });

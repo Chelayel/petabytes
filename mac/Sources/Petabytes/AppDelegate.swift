@@ -62,7 +62,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         if inDock {
             window.orderFrontRegardless()
             NSApp.dockTile.contentView = tileView
-            tileTimer = Timer.scheduledTimer(withTimeInterval: 1.0 / 6, repeats: true) { [weak self] _ in self?.drawTile() }
+            tileTimer = Timer.scheduledTimer(withTimeInterval: 1.0 / 12, repeats: true) { [weak self] _ in self?.drawTile() }
         } else {
             NSApp.dockTile.contentView = nil
             NSApp.dockTile.display()
@@ -73,18 +73,45 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     private func drawTile() {
         window.snapshotPet(attempts: 0) { [weak self] image in
             guard let self, let image else { return }
-            self.tileView.image = Self.dockIcon(with: image)
+            self.tileView.image = Self.dockIcon(with: image, emote: Self.emote(for: self.window.status))
             NSApp.dockTile.display()
         }
     }
 
-    /** Just the pet, no tile, as big as a Dock icon allows and standing at its bottom: it lives in the Dock. */
-    private static func dockIcon(with pet: NSImage) -> NSImage {
+    /**
+     A one-glyph speech bubble for the Dock icon, where a sentence wouldn't be readable: what the pet is feeling,
+     or "…" while it talks.
+     */
+    private static func emote(for status: [String: Any]) -> String? {
+        func on(_ key: String) -> Bool { status[key] as? Bool ?? false }
+        if on("sleeping") { return "z" }
+        if on("hiding") || on("worried") { return "!" }
+        if on("happy") || on("eating") { return "♥" }
+        if on("curious") { return "?" }
+        if let saying = status["saying"] as? String, !saying.isEmpty { return "…" }
+        return nil
+    }
+
+    /** Just the pet, no tile, as big as a Dock icon allows and standing at its bottom, with its emote bubble. */
+    private static func dockIcon(with pet: NSImage, emote: String? = nil) -> NSImage {
         NSImage(size: NSSize(width: 1024, height: 1024), flipped: false) { _ in
-            let room = NSRect(x: 0, y: 40, width: 1024, height: 944)
+            let room = NSRect(x: 16, y: 24, width: 992, height: emote == nil ? 984 : 760)
             let scale = min(room.width / pet.size.width, room.height / pet.size.height)
             let size = NSSize(width: pet.size.width * scale, height: pet.size.height * scale)
             pet.draw(in: NSRect(x: room.midX - size.width / 2, y: room.minY, width: size.width, height: size.height))
+            guard let emote else { return true }
+            let bubble = NSRect(x: 664, y: 704, width: 320, height: 280)
+            NSColor.white.setFill()
+            NSBezierPath(roundedRect: bubble, xRadius: 130, yRadius: 130).fill()
+            let tail = NSBezierPath()
+            tail.move(to: NSPoint(x: 720, y: 740))
+            tail.line(to: NSPoint(x: 660, y: 660))
+            tail.line(to: NSPoint(x: 800, y: 712))
+            tail.fill()
+            let color = emote == "♥" ? NSColor.systemPink : NSColor(srgbRed: 0.1, green: 0.11, blue: 0.13, alpha: 1)
+            let text = NSAttributedString(string: emote, attributes: [.font: NSFont.systemFont(ofSize: 200, weight: .heavy), .foregroundColor: color])
+            let textSize = text.size()
+            text.draw(at: NSPoint(x: bubble.midX - textSize.width / 2, y: bubble.midY - textSize.height / 2))
             return true
         }
     }

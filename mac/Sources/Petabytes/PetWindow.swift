@@ -17,6 +17,10 @@ final class PetWindow: NSPanel {
     private var queued: [String] = []
     /** The pet's box on the page, in CSS pixels from the top left, as the page last reported it. */
     private var petRect = CGRect.zero
+    /** Where the pet's art is inside its box, in the box's 120x80 units, the same either way it faces. */
+    private var artBox = CGRect(x: 0, y: 0, width: 120, height: 80)
+    /** What the pet is doing, as pet.html's status() reports it. */
+    private(set) var status: [String: Any] = [:]
     private var dragStart: CGPoint?
     private var frameStart = CGPoint.zero
     private var dragging = false
@@ -128,8 +132,8 @@ final class PetWindow: NSPanel {
       const host = window.webkit.messageHandlers.host, pet = document.getElementById("pet");
       setInterval(() => {
         const r = pet.getBoundingClientRect();
-        host.postMessage({ type: "rect", x: r.left, y: r.top, w: r.width, h: r.height });
-      }, 100);
+        host.postMessage({ type: "rect", x: r.left, y: r.top, w: r.width, h: r.height, status: window.petabytes.status() });
+      }, 80);
       host.postMessage({ type: "ready" });
     })();
     """
@@ -151,7 +155,7 @@ final class PetWindow: NSPanel {
         if ready { webView.evaluateJavaScript(script) } else { queued.append(script) }
     }
 
-    /** A picture of the pet as it is right now, for the Dock icon. */
+    /** A picture of the pet as it is right now, cropped to its art, for the Dock icon. */
     func snapshotPet(attempts: Int = 20, _ done: @escaping (NSImage?) -> Void) {
         guard ready, !petRect.isEmpty else {
             // The page is still loading; try again shortly.
@@ -160,7 +164,10 @@ final class PetWindow: NSPanel {
             return
         }
         let config = WKSnapshotConfiguration()
-        config.rect = CGRect(x: petRect.minX * zoom, y: petRect.minY * zoom, width: petRect.width * zoom, height: petRect.height * zoom)
+        let unit = petRect.width / 120, margin: CGFloat = 3
+        let art = CGRect(x: petRect.minX + artBox.minX * unit - margin, y: petRect.minY + artBox.minY * unit - margin,
+                         width: artBox.width * unit + 2 * margin, height: artBox.height * unit + 2 * margin)
+        config.rect = CGRect(x: art.minX * zoom, y: art.minY * zoom, width: art.width * zoom, height: art.height * zoom)
         webView.takeSnapshot(with: config) { image, _ in done(image) }
     }
 
@@ -179,6 +186,11 @@ final class PetWindow: NSPanel {
         case "rect":
             func number(_ key: String) -> CGFloat { CGFloat((message[key] as? NSNumber)?.doubleValue ?? 0) }
             petRect = CGRect(x: number("x"), y: number("y"), width: number("w"), height: number("h"))
+            status = message["status"] as? [String: Any] ?? [:]
+            if let box = (status["box"] as? [NSNumber])?.map({ CGFloat($0.doubleValue) }), box.count == 4 {
+                let half = max(60 - box[0], box[0] + box[2] - 60)
+                artBox = CGRect(x: 60 - half, y: box[1], width: 2 * half, height: box[3])
+            }
         default:
             break
         }
