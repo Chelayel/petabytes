@@ -2,16 +2,15 @@ import AppKit
 import ServiceManagement
 
 /**
- Petabytes for Mac: a pet that swims along the top of your Dock and reacts to what your Mac is doing.
- Its icon is in the menu bar, or, after Move to Dock, in the Dock (drawn from the pet, and it can be kept there;
- clicking it feeds the pet). The menu is on that icon and on the pet, by right-click.
+ Petabytes for Mac: a pet that walks along the top of your Dock and reacts to what your Mac is doing.
+ Its icon is in the menu bar, or, after Move to Dock, the pet itself lives in its Dock icon (where it can be
+ kept; clicking it feeds the pet). The menu is on that icon and on the pet, by right-click.
  */
 final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     private var window: PetWindow!
     private var signals: Signals!
     private var statusItem: NSStatusItem!
-    private var tileTimer: Timer?
-    private let tileView = NSImageView()
+    private let dockPet = DockPet()
 
     private static let sizes: [(String, CGFloat)] = [("Small", 1.0), ("Medium", 1.3), ("Large", 1.7)]
     private static let sets = ["tide": "Tide", "home": "Home"]
@@ -20,9 +19,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         window = PetWindow()
         window.menuProvider = { [unowned self] in self.petMenu(withQuit: true) }
         window.zoom = CGFloat(UserDefaults.standard.object(forKey: "size") as? Double ?? 1.3)
-        if Settings.visible { window.orderFrontRegardless() }
 
-        signals = Signals { [weak self] message in self?.window.send(message) }
+        signals = Signals { [weak self] message in self?.send(message) }
         signals.start()
 
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
@@ -32,12 +30,24 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         menu.delegate = self
         statusItem.menu = menu
         applyDockIcon()
+        // A full menu bar (on a MacBook, whatever doesn't fit beside the notch) hides new items without a word.
+        // Then the app shows its icon in the Dock too, so its menu can always be found.
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) { [weak self] in
+            guard let self, !Settings.showInDock, let button = self.statusItem.button,
+                  button.window?.occlusionState.contains(.visible) != true else { return }
+            NSApp.setActivationPolicy(.regular)
+        }
+    }
+
+    /** Where the Mac's news goes: the pet on the Dock (its web page), or the one in the Dock icon. */
+    private func send(_ message: [String: Any]) {
+        if Settings.showInDock { dockPet.receive(message) } else { window.send(message) }
     }
 
     // ---- Dock icon ---------------------------------------------------------
 
     func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
-        if !Settings.visible { setVisible(true) }
+        if !Settings.showInDock && !Settings.visible { setVisible(true) }
         feed()
         return false
     }
@@ -47,72 +57,20 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     }
 
     /**
-     In the menu bar, the pet walks along the Dock (or floats). Moved to the Dock, it lives inside its own Dock
-     tile instead: its window stays up but invisible and click-through (WebKit stops drawing a hidden one),
-     and the tile shows the pet a few times a second.
+     In the menu bar, the pet walks along the Dock (or floats), drawn by web/pet.html. Moved to the Dock, it lives
+     inside its own Dock icon instead, drawn natively; its window and web page are put away meanwhile.
      */
     private func applyDockIcon() {
         let inDock = Settings.showInDock
         NSApp.setActivationPolicy(inDock ? .regular : .accessory)
         statusItem.isVisible = !inDock
-        tileTimer?.invalidate()
-        tileTimer = nil
-        window.configure()
-        window.invisible = inDock
+        window.wanted = !inDock && Settings.visible
         if inDock {
-            window.orderFrontRegardless()
-            NSApp.dockTile.contentView = tileView
-            tileTimer = Timer.scheduledTimer(withTimeInterval: 1.0 / 12, repeats: true) { [weak self] _ in self?.drawTile() }
+            window.orderOut(nil)
+            dockPet.start()
         } else {
-            NSApp.dockTile.contentView = nil
-            NSApp.dockTile.display()
+            dockPet.stop()
             if Settings.visible { window.orderFrontRegardless() }
-        }
-    }
-
-    private func drawTile() {
-        window.snapshotPet(attempts: 0) { [weak self] image in
-            guard let self, let image else { return }
-            self.tileView.image = Self.dockIcon(with: image, emote: Self.emote(for: self.window.status))
-            NSApp.dockTile.display()
-        }
-    }
-
-    /**
-     A one-glyph speech bubble for the Dock icon, where a sentence wouldn't be readable: what the pet is feeling,
-     or "…" while it talks.
-     */
-    private static func emote(for status: [String: Any]) -> String? {
-        func on(_ key: String) -> Bool { status[key] as? Bool ?? false }
-        if on("sleeping") { return "z" }
-        if on("hiding") || on("worried") { return "!" }
-        if on("happy") || on("eating") { return "♥" }
-        if on("curious") { return "?" }
-        if let saying = status["saying"] as? String, !saying.isEmpty { return "…" }
-        return nil
-    }
-
-    /** Just the pet, no tile, as big as a Dock icon allows and standing at its bottom, with its emote bubble. */
-    private static func dockIcon(with pet: NSImage, emote: String? = nil) -> NSImage {
-        NSImage(size: NSSize(width: 1024, height: 1024), flipped: false) { _ in
-            let room = NSRect(x: 16, y: 24, width: 992, height: emote == nil ? 984 : 760)
-            let scale = min(room.width / pet.size.width, room.height / pet.size.height)
-            let size = NSSize(width: pet.size.width * scale, height: pet.size.height * scale)
-            pet.draw(in: NSRect(x: room.midX - size.width / 2, y: room.minY, width: size.width, height: size.height))
-            guard let emote else { return true }
-            let bubble = NSRect(x: 664, y: 704, width: 320, height: 280)
-            NSColor.white.setFill()
-            NSBezierPath(roundedRect: bubble, xRadius: 130, yRadius: 130).fill()
-            let tail = NSBezierPath()
-            tail.move(to: NSPoint(x: 720, y: 740))
-            tail.line(to: NSPoint(x: 660, y: 660))
-            tail.line(to: NSPoint(x: 800, y: 712))
-            tail.fill()
-            let color = emote == "♥" ? NSColor.systemPink : NSColor(srgbRed: 0.1, green: 0.11, blue: 0.13, alpha: 1)
-            let text = NSAttributedString(string: emote, attributes: [.font: NSFont.systemFont(ofSize: 200, weight: .heavy), .foregroundColor: color])
-            let textSize = text.size()
-            text.draw(at: NSPoint(x: bubble.midX - textSize.width / 2, y: bubble.midY - textSize.height / 2))
-            return true
         }
     }
 
@@ -205,7 +163,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     // ---- Actions -----------------------------------------------------------
 
     @objc private func feed() {
-        window.send(["type": "feed", "key": "feed"])
+        send(["type": "feed", "key": "feed"])
     }
 
     @objc private func choosePet(_ sender: NSMenuItem) {
@@ -213,6 +171,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         Settings.pet = id
         Settings.name = ""
         window.configure()
+        dockPet.choose(id)
     }
 
     @objc private func rename() {
@@ -249,6 +208,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
 
     private func setVisible(_ visible: Bool) {
         Settings.visible = visible
+        window.wanted = visible && !Settings.showInDock
         if visible || Settings.showInDock { window.orderFrontRegardless() } else { window.orderOut(nil) }
     }
 

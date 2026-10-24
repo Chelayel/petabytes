@@ -78,6 +78,8 @@ Adding a pet means adding it to `tools/pets.py`; every renderer picks it up (VS 
 
 ![Every pet in every mood, drawn by the JetBrains painter](docs/intellij-moods.png)
 
+`python3 tools/gallery.py` redraws this README's pictures of the pets and their moods from `web/pet.html`, in headless Chrome.
+
 Run locally:
 
 ```

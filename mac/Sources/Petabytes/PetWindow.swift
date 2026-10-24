@@ -17,10 +17,6 @@ final class PetWindow: NSPanel {
     private var queued: [String] = []
     /** The pet's box on the page, in CSS pixels from the top left, as the page last reported it. */
     private var petRect = CGRect.zero
-    /** Where the pet's art is inside its box, in the box's 120x80 units, the same either way it faces. */
-    private var artBox = CGRect(x: 0, y: 0, width: 120, height: 80)
-    /** What the pet is doing, as pet.html's status() reports it. */
-    private(set) var status: [String: Any] = [:]
     private var dragStart: CGPoint?
     private var frameStart = CGPoint.zero
     private var dragging = false
@@ -29,20 +25,24 @@ final class PetWindow: NSPanel {
 
     var menuProvider: () -> NSMenu = { NSMenu() }
 
-    /** Drawn but not seen, and never in the way: for the pet living in its Dock tile. */
-    var invisible = false {
-        didSet { updateAlpha() }
-    }
-
     /** True while an app is full screen and the pet should step aside. */
     private var fullScreenApp = false {
         didSet { if fullScreenApp != oldValue { updateAlpha() } }
     }
 
-    /** Hidden by transparency rather than ordered out: WebKit stops drawing a hidden window, and the Dock tile needs it. */
+    /** Hidden by transparency rather than ordered out, so it comes back exactly where it was. */
     private func updateAlpha() {
-        alphaValue = invisible || fullScreenApp ? 0 : 1
+        alphaValue = fullScreenApp ? 0 : 1
         ignoresMouseEvents = true
+    }
+
+    /** Whether the pet should be out here: AppDelegate sets it (hidden, or living in the Dock icon instead). */
+    var wanted = true
+
+    private func followToActiveSpace() {
+        checkFullScreen()
+        guard wanted, !(Settings.hideInFullScreen && fullScreenApp) else { return }
+        orderFrontRegardless() // moves it to this Space
     }
 
     /** Whether the app in front has a window covering a whole screen: full screen, or a game or video player. */
@@ -53,20 +53,19 @@ final class PetWindow: NSPanel {
             return
         }
         let windows = CGWindowListCopyWindowInfo([.optionOnScreenOnly, .excludeDesktopElements], kCGNullWindowID) as? [[String: Any]] ?? []
-        let sizes = NSScreen.screens.map(\.frame.size)
+        // A full-screen window spans the screen's width and its height below the notch, if it has one.
+        let screens = NSScreen.screens.map { ($0.frame.width, $0.frame.height - $0.safeAreaInsets.top) }
         fullScreenApp = windows.contains { window in
             guard window[kCGWindowOwnerPID as String] as? pid_t == front.processIdentifier,
                   window[kCGWindowLayer as String] as? Int == 0,
                   let raw = window[kCGWindowBounds as String] as? NSDictionary,
                   let bounds = CGRect(dictionaryRepresentation: raw) else { return false }
-            return sizes.contains(bounds.size)
+            return screens.contains { width, height in bounds.width >= width && bounds.height >= height - 1 }
         }
     }
 
     init() {
         let config = WKWebViewConfiguration()
-        // Keep the page running while the window is hidden, for the pet living in its Dock tile.
-        if #available(macOS 14, *) { config.preferences.inactiveSchedulingPolicy = .none }
         config.userContentController.add(bridge, name: "host")
         config.userContentController.addUserScript(WKUserScript(source: Self.hostScript, injectionTime: .atDocumentEnd, forMainFrameOnly: true))
         webView = WKWebView(frame: .zero, configuration: config)
@@ -76,9 +75,11 @@ final class PetWindow: NSPanel {
         isOpaque = false
         backgroundColor = .clear
         hasShadow = false
-        level = .floating
-        // Every Space, but not over full-screen apps.
-        collectionBehavior = [.canJoinAllSpaces, .stationary, .ignoresCycle]
+        // Above the Dock, so Dock icons (magnified ones too) never cover the pet standing on it.
+        level = NSWindow.Level(rawValue: Int(CGWindowLevelForKey(.dockWindow)) + 1)
+        // Not on every Space at once: macOS would put it into a full-screen Space before the app hears of it,
+        // and it would flicker there. It follows you to each desktop instead (see the Space observer below).
+        collectionBehavior = [.moveToActiveSpace, .stationary, .ignoresCycle]
         hidesOnDeactivate = false
         isMovable = false
         ignoresMouseEvents = true
@@ -108,9 +109,12 @@ final class PetWindow: NSPanel {
         }
         let check: (Notification) -> Void = { [weak self] _ in self?.checkFullScreen() }
         workspace.addObserver(forName: NSWorkspace.didActivateApplicationNotification, object: nil, queue: .main, using: check)
-        workspace.addObserver(forName: NSWorkspace.activeSpaceDidChangeNotification, object: nil, queue: .main, using: check)
+        // On a new desktop, come along once it's clear the Space isn't a full-screen app's.
+        workspace.addObserver(forName: NSWorkspace.activeSpaceDidChangeNotification, object: nil, queue: .main) { [weak self] _ in
+            self?.followToActiveSpace()
+        }
         // An app can also go full screen without switching apps or Spaces being announced in time.
-        Timer.scheduledTimer(withTimeInterval: 2, repeats: true) { [weak self] _ in self?.checkFullScreen() }
+        Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in self?.checkFullScreen() }
         load()
         place()
     }
@@ -132,8 +136,8 @@ final class PetWindow: NSPanel {
       const host = window.webkit.messageHandlers.host, pet = document.getElementById("pet");
       setInterval(() => {
         const r = pet.getBoundingClientRect();
-        host.postMessage({ type: "rect", x: r.left, y: r.top, w: r.width, h: r.height, status: window.petabytes.status() });
-      }, 80);
+        host.postMessage({ type: "rect", x: r.left, y: r.top, w: r.width, h: r.height });
+      }, 100);
       host.postMessage({ type: "ready" });
     })();
     """
@@ -155,24 +159,8 @@ final class PetWindow: NSPanel {
         if ready { webView.evaluateJavaScript(script) } else { queued.append(script) }
     }
 
-    /** A picture of the pet as it is right now, cropped to its art, for the Dock icon. */
-    func snapshotPet(attempts: Int = 20, _ done: @escaping (NSImage?) -> Void) {
-        guard ready, !petRect.isEmpty else {
-            // The page is still loading; try again shortly.
-            guard attempts > 0 else { return done(nil) }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) { [weak self] in self?.snapshotPet(attempts: attempts - 1, done) }
-            return
-        }
-        let config = WKSnapshotConfiguration()
-        let unit = petRect.width / 120, margin: CGFloat = 3
-        let art = CGRect(x: petRect.minX + artBox.minX * unit - margin, y: petRect.minY + artBox.minY * unit - margin,
-                         width: artBox.width * unit + 2 * margin, height: artBox.height * unit + 2 * margin)
-        config.rect = CGRect(x: art.minX * zoom, y: art.minY * zoom, width: art.width * zoom, height: art.height * zoom)
-        webView.takeSnapshot(with: config) { image, _ in done(image) }
-    }
-
     func configure() {
-        send(["type": "config", "pet": Settings.pet, "name": Settings.name, "ground": Settings.place == .dock || Settings.showInDock, "fps": fps])
+        send(["type": "config", "pet": Settings.pet, "name": Settings.name, "ground": Settings.place == .dock, "fps": fps])
     }
 
     fileprivate func received(_ body: Any) {
@@ -186,11 +174,6 @@ final class PetWindow: NSPanel {
         case "rect":
             func number(_ key: String) -> CGFloat { CGFloat((message[key] as? NSNumber)?.doubleValue ?? 0) }
             petRect = CGRect(x: number("x"), y: number("y"), width: number("w"), height: number("h"))
-            status = message["status"] as? [String: Any] ?? [:]
-            if let box = (status["box"] as? [NSNumber])?.map({ CGFloat($0.doubleValue) }), box.count == 4 {
-                let half = max(60 - box[0], box[0] + box[2] - 60)
-                artBox = CGRect(x: 60 - half, y: box[1], width: 2 * half, height: box[3])
-            }
         default:
             break
         }
