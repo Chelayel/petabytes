@@ -34,7 +34,8 @@
     "dolphin",
     "fish",
     "dog",
-    "cat"
+    "cat",
+    "food"
   ],
   "main": "./extension.js",
   "activationEvents": [
@@ -128,7 +129,11 @@
             "cat",
             "bunny",
             "hamster",
-            "burger"
+            "burger",
+            "sushi",
+            "pizza",
+            "donut",
+            "taco"
           ],
           "enumDescriptions": [
             "Shelly the sea turtle",
@@ -147,14 +152,18 @@
             "Byte the cat",
             "Clover the bunny",
             "Nugget the hamster",
-            "Patty the burger"
+            "Patty the burger",
+            "Nori the sushi",
+            "Pepe the pizza",
+            "Sprinkles the donut",
+            "Tuesday the taco"
           ],
-          "description": "Which pet lives in the Explorer: a sea creature from the Tide set, a dog, cat, bunny or hamster from the Home set, or Patty the burger from the Snacks set."
+          "description": "Which pet lives in the Explorer: a sea creature from the Tide set, a dog, cat, bunny or hamster from the Home set, or a burger, sushi, pizza, donut or taco from the Snacks set."
         },
         "petabytes.name": {
           "type": "string",
           "default": "",
-          "description": "Your pet's name. Leave empty for its own (Shelly, Bloop, Inky, Pinchy, Puff, Blue, Clem, Sandy, Finn, Splash, Angie, Indigo, Biscuit, Byte, Clover, Nugget or Patty)."
+          "description": "Your pet's name. Leave empty for its own (Shelly, Bloop, Inky, Pinchy, Puff, Blue, Clem, Sandy, Finn, Splash, Angie, Indigo, Biscuit, Byte, Clover, Nugget, Patty, Nori, Pepe, Sprinkles or Tuesday)."
         }
       }
     }

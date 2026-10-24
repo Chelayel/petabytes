@@ -603,6 +603,151 @@ PETS["burger"] = {
             "full": ["I'm stuffed.", "No room, I'm a single patty."]},
 }
 
+def snack_face(x1, x2, y, group, mouth_dy=7):
+    """Two big eyes, a smile and worried brows, the way every snack wears them."""
+    mx = (x1 + x2) / 2
+    return [*eye_set(x1, y, 2.5, group, ink, sclera="#FFFFFF"), *eye_set(x2, y, 2.5, group, ink, sclera="#FFFFFF"),
+            p(f"M{mx-4} {y+mouth_dy} q4 3.5 8 0", group, stroke=ink, sw=1.5),
+            p(f"M{x1-4} {y-6} l6 1.5 M{x2+4} {y-6} l-6 1.5", group, stroke=ink, sw=1.4, when=["worried"])]
+
+def circle_path(cx, cy, r, reverse=False):
+    """A circle as path commands, so two can make a ring (a hole needs the inner one drawn the other way)."""
+    k = 0.5523 * r
+    if not reverse:
+        return (f"M{cx+r} {cy} C{cx+r} {cy+k} {cx+k} {cy+r} {cx} {cy+r} C{cx-k} {cy+r} {cx-r} {cy+k} {cx-r} {cy} "
+                f"C{cx-r} {cy-k} {cx-k} {cy-r} {cx} {cy-r} C{cx+k} {cy-r} {cx+r} {cy-k} {cx+r} {cy}Z")
+    return (f"M{cx+r} {cy} C{cx+r} {cy-k} {cx+k} {cy-r} {cx} {cy-r} C{cx-k} {cy-r} {cx-r} {cy-k} {cx-r} {cy} "
+            f"C{cx-r} {cy+k} {cx-k} {cy+r} {cx} {cy+r} C{cx+k} {cy+r} {cx+r} {cy+k} {cx+r} {cy}Z")
+
+# ---- Sushi --------------------------------------------------------------
+PETS["sushi"] = {
+  "label": "Sushi", "name": "Nori", "set": "snacks", "flip": True, "floor": True, "speed": 0.9,
+  "bob": [1.2, 0.5], "glow": "rgba(251,146,60,0.4)", "mouth": [74, 55], "head": [72, 22],
+  "parts": [
+    leg_stroke(46, 56, -1, "#CBD5E1", 6, 0, 0.75), leg_stroke(76, 56, 1, "#CBD5E1", 6, 0.5, 0.75),
+    p("M30 44 Q30 36 40 36 L80 36 Q90 36 90 44 L90 56 Q90 64 80 64 L40 64 Q30 64 30 56 Z", "body", fill="#F8FAFC", stroke=ink, sw=1.5),
+    e(38, 56, 2, 1.1, "body", fill="#E2E8F0"), e(84, 58, 2, 1.1, "body", fill="#E2E8F0"), e(50, 60, 2, 1.1, "body", fill="#E2E8F0"),
+    p("M40 34 L50 34 L50 64 L40 64 Z", "body", fill="#14532D", stroke=ink, sw=1.2),
+    *snack_face(68, 80, 48, "face"),
+    c(63, 55, 2.6, "face", fill="#F9A8D4", opacity=0.7), c(85, 55, 2.6, "face", fill="#F9A8D4", opacity=0.7),
+    p("M25 39 Q28 22 60 22 Q93 20 97 34 Q95 41 86 39 Q60 34 35 43 Q26 45 25 39Z", "top", fill="#FB923C", stroke=ink, sw=1.5),
+    p("M38 33 q9 -5 18 -3 M58 28 q10 -3 18 0 M78 27 q8 -1 13 3", "top", stroke="#FFEDD5", sw=2.2),
+    p("M40 22 L50 22 L50 38 L40 40 Z", "top", fill="#14532D", stroke=ink, sw=1.2),
+    sweat(92, 44),
+    *lens(106, 56),
+  ],
+  "poses": {
+    "hiding":   {"top": {"ty": 9, "s": 1.05, "p": [60, 36]}, "face": {"s": 0.9, "ty": 2, "p": [74, 52]}},
+    "sleeping": {"top": {"ty": 4, "p": [60, 36]}, "face": {"ty": 1}, "legs": {"s": 0.4, "p": [60, 76]}},
+    "curious":  {"face": {"r": -8, "p": [74, 52]}, "top": {"r": -4, "p": [60, 36]}},
+  },
+  "lines": {"click": ["Rice to meet you!", "Fresh!", "Roll with it.", "Soy happy to see you!"],
+            "pet": ["*happy wiggle*", "Careful, I'm raw."],
+            "yikes": ["*hides under the salmon*", "Wasabi! Too spicy!"],
+            "typing": ["Rolling, rolling!", "Raw speed!", "Ooh, typing!"],
+            "save": ["Saved! Rolled up tight.", "Saved!"],
+            "fixed": ["Rice work!", "All clear!"],
+            "lateNight": ["Late-night sushi? Bold.", "Coding past midnight? I'll keep you company."],
+            "eatCurly": ["Braces? I was expecting chopsticks.", "Crunchy!"]},
+}
+
+# ---- Pizza --------------------------------------------------------------
+PETS["pizza"] = {
+  "label": "Pizza", "name": "Pepe", "set": "snacks", "flip": True, "floor": True, "speed": 1.0,
+  "bob": [1.2, 0.5], "glow": "rgba(252,211,77,0.4)", "mouth": [66, 46], "head": [64, 18],
+  "parts": [
+    leg_stroke(46, 52, -1, "#D97706", 6, 0, 0.7), leg_stroke(70, 52, 1, "#D97706", 6, 0.5, 0.7),
+    p("M32 16 Q24 40 32 64 L98 42 Q101 40 98 38 Z", "body", fill="#FCD34D", stroke=ink, sw=1.5),
+    p("M70 51 q3 7 -1 10 q-4 -2 -2 -9z", "body", fill="#FCD34D", stroke=ink, sw=1.2),
+    c(44, 27, 5, "body", fill="#DC2626", stroke=ink, sw=1.2), c(45, 53, 5, "body", fill="#DC2626", stroke=ink, sw=1.2),
+    c(86, 40, 3.5, "body", fill="#DC2626", stroke=ink, sw=1.2),
+    p("M32 16 Q22 40 32 64", "body", stroke=ink, sw=11), p("M32 16 Q22 40 32 64", "body", stroke="#E8A050", sw=8),
+    *snack_face(60, 72, 38, "face"),
+    c(56, 45, 2.4, "face", fill="#F9A8D4", opacity=0.7), c(76, 44, 2.2, "face", fill="#F9A8D4", opacity=0.7),
+    sweat(80, 28),
+    *lens(106, 52),
+  ],
+  "poses": {
+    "hiding":   {"body": {"r": 12, "p": [30, 40]}, "face": {"r": 12, "s": 0.9, "p": [30, 40]}},
+    "sleeping": {"body": {"r": 6, "p": [30, 40]}, "face": {"r": 6, "p": [30, 40]}, "legs": {"s": 0.4, "p": [58, 72]}},
+    "curious":  {"face": {"r": -8, "p": [66, 40]}},
+  },
+  "lines": {"click": ["Slice to meet you!", "Extra cheese!", "Pizza my heart.", "Cheesy, I know."],
+            "pet": ["*cheese stretches*", "Hehe, don't fold me."],
+            "yikes": ["*curls up its crust*", "Pineapple?! Oh, it's just an error."],
+            "typing": ["Hot and fresh!", "Code delivered in 30 minutes!", "Ooh, typing!"],
+            "save": ["Saved! Hot out of the oven.", "Saved!"],
+            "fixed": ["That's a-more like it!", "All clear!"],
+            "hungry": ["I'm hungry. Weird for a pizza.", "Snack break?"],
+            "lateNight": ["Midnight pizza? Classic.", "Night shift, huh?"]},
+}
+
+# ---- Donut --------------------------------------------------------------
+sprinkle = lambda x, y, angle, color: p(f"M{x} {y} l{3 * math.cos(math.radians(angle)):.2f} {3 * math.sin(math.radians(angle)):.2f}", "body", stroke=color, sw=1.8)
+PETS["donut"] = {
+  "label": "Donut", "name": "Sprinkles", "set": "snacks", "flip": False, "floor": True, "speed": 0.8,
+  "bob": [2, 0.5], "glow": "rgba(244,114,182,0.45)", "mouth": [60, 57], "head": [60, 16],
+  "parts": [
+    leg_stroke(50, 56, -1, "#C2783A", 6, 0, 0.7), leg_stroke(70, 56, 1, "#C2783A", 6, 0.5, 0.7),
+    p(circle_path(60, 40, 22) + " " + circle_path(60, 36, 6.5, reverse=True), "body", fill="#E8A35E", stroke=ink, sw=1.5),
+    p("M41 34 Q42 18 60 17 Q78 18 79 34 Q80 42 74 40 Q72 46 66 42 Q60 48 54 42 Q48 46 46 40 Q40 42 41 34Z " + circle_path(60, 36, 8.5, reverse=True),
+      "body", fill="#F472B6", stroke=ink, sw=1.3),
+    p(circle_path(60, 36, 8.5) + " " + circle_path(60, 36, 6.5, reverse=True), "body", fill="#D98E48"),
+    sprinkle(46, 28, 30, "#FDE047"), sprinkle(52, 22, -40, "#60A5FA"), sprinkle(68, 22, 20, "#FFFFFF"),
+    sprinkle(74, 30, -60, "#4ADE80"), sprinkle(48, 36, 80, "#60A5FA"), sprinkle(72, 37, 10, "#FDE047"),
+    *snack_face(54, 66, 50, "face", mouth_dy=6),
+    sweat(80, 26),
+    *lens(96, 50),
+  ],
+  "groupMotion": {"body": {"sy": [0.03, 0.9, 0], "sx": [-0.02, 0.9, 0], "p": [60, 62]}},
+  "poses": {
+    "hiding":   {"body": {"s": 0.88, "p": [60, 62]}, "face": {"s": 0.8, "p": [60, 62]}},
+    "sleeping": {"body": {"ty": 3}, "face": {"ty": 3}, "legs": {"s": 0.4, "p": [60, 76]}},
+    "curious":  {"body": {"r": -8, "p": [60, 40]}, "face": {"r": -8, "p": [60, 40]}},
+  },
+  "lines": {"click": ["Donut worry!", "Hole-y moly!", "Glazed and amazed.", "Sweet!"],
+            "pet": ["*sprinkles sparkle*", "So sweet of you."],
+            "worried": ["Donut panic...", "Uh oh."],
+            "yikes": ["Donut panic!", "*glaze melts*"],
+            "typing": ["Sugar rush!", "Glazing through it!", "Ooh, typing!"],
+            "save": ["Saved! Sweet.", "Saved!"],
+            "fixed": ["Donut worry, all fixed!", "All clear!"],
+            "lateNight": ["Midnight snack? I won't tell.", "Night shift, huh?"]},
+}
+
+# ---- Taco ---------------------------------------------------------------
+PETS["taco"] = {
+  "label": "Taco", "name": "Tuesday", "set": "snacks", "flip": False, "floor": True, "speed": 1.0,
+  "bob": [1.5, 0.45], "glow": "rgba(251,191,36,0.45)", "mouth": [60, 53], "head": [60, 12],
+  "parts": [
+    leg_stroke(48, 58, -1, "#D97706", 6, 0, 0.7), leg_stroke(72, 58, 1, "#D97706", 6, 0.5, 0.7),
+    e(60, 33, 32, 7, "filling", fill="#7C4A2D", stroke=ink, sw=1.2),
+    c(38, 29, 4.5, "filling", fill="#EF4444", stroke=ink, sw=1.1), c(80, 28, 4.5, "filling", fill="#EF4444", stroke=ink, sw=1.1),
+    p("M24 35" + " q4 -8 8 0" * 9 + " Z", "filling", fill="#4ADE80", stroke=ink, sw=1.2),
+    p("M66 28 l4 -6 l3 6 M50 27 l3 -5 l3 5", "filling", stroke="#FDE047", sw=2.2),
+    p("M23 34 Q23 66 60 66 Q97 66 97 34 Z", "body", fill="#FBBF24", stroke=ink, sw=1.6),
+    e(34, 46, 1.6, 1, "body", fill="#D97706"), e(84, 44, 1.6, 1, "body", fill="#D97706"), e(42, 58, 1.6, 1, "body", fill="#D97706"),
+    e(80, 56, 1.6, 1, "body", fill="#D97706"),
+    *snack_face(54, 66, 46, "face"),
+    c(48, 53, 2.6, "face", fill="#F9A8D4", opacity=0.7), c(72, 53, 2.6, "face", fill="#F9A8D4", opacity=0.7),
+    sweat(86, 38),
+    *lens(106, 54),
+  ],
+  "groupMotion": {"filling": {"sy": [0.05, 0.9, 0], "p": [60, 35]}},
+  "poses": {
+    "hiding":   {"filling": {"ty": 7, "s": 0.85, "p": [60, 36]}, "face": {"s": 0.9, "ty": 2, "p": [60, 50]}},
+    "sleeping": {"filling": {"ty": 3, "p": [60, 36]}, "legs": {"s": 0.4, "p": [60, 76]}},
+    "curious":  {"face": {"r": -8, "p": [60, 50]}, "filling": {"r": -5, "p": [60, 36]}},
+  },
+  "lines": {"click": ["It's taco time!", "Let's taco 'bout it.", "Crunch!", "Every day is Tuesday."],
+            "pet": ["*happy crunch*", "Hehe, don't spill me."],
+            "yikes": ["*spills lettuce*", "Hot sauce! Too hot!"],
+            "typing": ["Spicy typing!", "Crunch time!", "Ooh, typing!"],
+            "save": ["Saved! All wrapped up.", "Saved!"],
+            "fixed": ["Nacho problem anymore!", "All clear!"],
+            "lateNight": ["Late-night taco run?", "Night shift, huh?"]},
+}
+
 for pet in PETS.values():
     pet.setdefault("set", "tide")
     if pet["set"] in ("home", "snacks"):

@@ -56,6 +56,10 @@ const PETS = [
   { id: "bunny", label: "Bunny", detail: "Clover: hops, wiggles its nose, and flattens its ears" },
   { id: "hamster", label: "Hamster", detail: "Nugget: scurries, and stuffs its cheeks with snacks" },
   { id: "burger", label: "Burger", detail: "Patty: a burger with legs, and a thumbs-up for your code" },
+  { id: "sushi", label: "Sushi", detail: "Nori: rolls along, and hides under its salmon" },
+  { id: "pizza", label: "Pizza", detail: "Pepe: a pepperoni slice that droops when it's scared" },
+  { id: "donut", label: "Donut", detail: "Sprinkles: sweet, sprinkled, and full of donut puns" },
+  { id: "taco", label: "Taco", detail: "Tuesday: crunchy, and every day is its day" },
 ];
 
 // Terminal commands worth a reaction, checked in order.

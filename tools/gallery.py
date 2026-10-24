@@ -91,7 +91,7 @@ moods = [
     ("hamster", "You fed it five snacks", "setTimeout(() => send({ type: 'react', key: 'full' }), 5000);", "My cheeks are full."),
     ("bunny", "You double-clicked it", "setTimeout(() => send({ type: 'react', key: 'pet' }), 4900);", "*happy nose wiggles*"),
     ("burger", "You saved a file", "setTimeout(() => send({ type: 'save' }), 4800);", "Saved! Fresh off the grill."),
-    ("dolphin", "You took a screenshot", "setTimeout(() => send({ type: 'react', key: 'screenshot' }), 4900);", "Did you get my good side?"),
+    ("pizza", "You took a screenshot", "setTimeout(() => send({ type: 'react', key: 'screenshot' }), 4900);", "Cheese!"),
     ("clownfish", "You switched to the terminal", "setTimeout(() => send({ type: 'react', key: 'terminal' }), 4800);", "Command line time!"),
 ]
 sheet(moods, ROOT / "docs/moods.png")

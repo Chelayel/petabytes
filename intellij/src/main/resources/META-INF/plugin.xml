@@ -10,7 +10,8 @@
         <b>Pinchy</b> the crab, <b>Puff</b> the pufferfish, <b>Blue</b> the whale, <b>Clem</b> the clownfish,
         <b>Sandy</b> the seahorse, <b>Finn</b> the shark, <b>Splash</b> the dolphin, <b>Angie</b> the angelfish
         <b>Indigo</b> the blue tang, <b>Biscuit</b> the golden retriever, <b>Byte</b> the cat, <b>Clover</b> the bunny
-        <b>Nugget</b> the hamster or <b>Patty</b> the burger.</p>
+        <b>Nugget</b> the hamster, <b>Patty</b> the burger, <b>Nori</b> the sushi, <b>Pepe</b> the pizza,
+        <b>Sprinkles</b> the donut or <b>Tuesday</b> the taco.</p>
         <p><img src="https://raw.githubusercontent.com/Chelayel/petabytes/main/docs/intellij-right-edge.png" alt="Splash the dolphin swimming at the right edge of the editor in IntelliJ IDEA, asking for a snack" width="640"/></p>
         <p><img src="https://raw.githubusercontent.com/Chelayel/petabytes/main/docs/demo.gif" alt="A pet swimming faster while you type, celebrating a fix, hiding from failed tests, eating and napping" width="620"/></p>
         <p><img src="https://raw.githubusercontent.com/Chelayel/petabytes/main/docs/pets.png" alt="All sixteen pets" width="620"/></p>
@@ -44,7 +45,7 @@
     ]]></description>
 
     <change-notes><![CDATA[
-        <p><b>0.4.1</b> — A new set, Snacks: Patty the burger, with a thumbs-up for your code.</p>
+        <p><b>0.4.1</b> — A new set, Snacks: Patty the burger, Nori the sushi, Pepe the pizza, Sprinkles the donut and Tuesday the taco.</p>
         <p><b>0.4.0</b> — Tide Pets is now Petabytes, with pets beyond the sea: the new Home set brings Biscuit the golden retriever, Byte the cat, Clover the bunny and Nugget the hamster. Settings start fresh under the new name.</p>
         <p><b>0.3.0</b> — The pet now swims up and down the editor's right edge, out of the way of your code
         (the bottom edge is still an option, in its menu or the settings). Three new pets: Splash the dolphin,
