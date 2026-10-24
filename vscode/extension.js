@@ -1,4 +1,4 @@
-// Petabytes: a sea creature in the Explorer that reacts to what you do.
+// Petabytes: a pet in the Explorer that reacts to what you do.
 const vscode = require("vscode");
 const crypto = require("crypto");
 const fs = require("fs");
