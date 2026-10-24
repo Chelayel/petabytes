@@ -45,6 +45,10 @@ Works with any theme. In [JetBrains IDEs](https://plugins.jetbrains.com/search?s
 
 There's also [a Mac app](https://github.com/Chelayel/petabytes#on-your-mac) whose pet walks along your Dock and reacts to your Mac (the app in front, battery, Wi-Fi, screenshots). It's separate: it can't see your code, so keep this extension for that.
 
+## Support
+
+Petabytes is free. If it makes you smile while you code, you can [buy me a coffee](https://buymeacoffee.com/chelayel) ☕
+
 ## License
 
 MIT. Built by [Chelayel](https://www.chelayel.com). Source: [github.com/Chelayel/petabytes](https://github.com/Chelayel/petabytes).

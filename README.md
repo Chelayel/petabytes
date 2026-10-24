@@ -108,6 +108,10 @@ cd intellij && ./gradlew runIde                 # an IDE sandbox with the plugin
 mac/build.sh && open mac/build/Petabytes.app    # the Mac app, and mac/build/Petabytes-<version>.dmg
 ```
 
+## Support
+
+Petabytes is free. If it makes you smile while you code, you can [buy me a coffee](https://buymeacoffee.com/chelayel) ☕
+
 ## License
 
 MIT. Built by [Chelayel](https://www.chelayel.com).

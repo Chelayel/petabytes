@@ -126,6 +126,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         let login = item("Open at Login", #selector(toggleLogin))
         login.state = SMAppService.mainApp.status == .enabled ? .on : .off
         menu.addItem(login)
+        menu.addItem(.separator())
+        menu.addItem(item("Buy Me a Coffee…", #selector(buyCoffee)))
         if withQuit { menu.addItem(item("Quit Petabytes", #selector(NSApplication.terminate(_:)), key: "q")) }
         return menu
     }
@@ -147,6 +149,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     }
 
     @objc private func showPicker() { picker.show() }
+
+    @objc private func buyCoffee() {
+        NSWorkspace.shared.open(URL(string: "https://buymeacoffee.com/chelayel")!)
+    }
 
     private func choose(_ id: String) {
         Settings.pet = id
