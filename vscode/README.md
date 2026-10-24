@@ -2,7 +2,9 @@
 
 Small companions with a big appetite. A pet lives in a **Petabytes** panel in your Explorer and reacts to what you're doing. Pick a sea creature from the **Tide** set or a pet from the **Home** set: **Shelly** the sea turtle, **Bloop** the jellyfish, **Inky** the octopus, **Pinchy** the crab, **Puff** the pufferfish, **Blue** the whale, **Clem** the clownfish, **Sandy** the seahorse, **Finn** the shark, **Splash** the dolphin, **Angie** the angelfish, **Indigo** the blue tang, **Biscuit** the golden retriever, **Byte** the cat, **Clover** the bunny or **Nugget** the hamster.
 
-![The twelve pets](https://raw.githubusercontent.com/Chelayel/petabytes/main/docs/pets.png)
+![A pet swimming faster while you type, celebrating a fix, hiding from failed tests, eating and napping](https://raw.githubusercontent.com/Chelayel/petabytes/main/docs/demo.gif)
+
+![All sixteen pets](https://raw.githubusercontent.com/Chelayel/petabytes/main/docs/pets.png)
 
 - **Typing:** swims faster
 - **Saving:** does a happy loop and blows bubbles
@@ -37,7 +39,7 @@ Small companions with a big appetite. A pet lives in a **Petabytes** panel in yo
 | `petabytes.pet` | `"turtle"` | `turtle`, `jellyfish`, `octopus`, `crab`, `pufferfish`, `whale`, `clownfish`, `seahorse`, `shark`, `dolphin`, `angelfish`, `tang`, `retriever`, `cat`, `bunny` or `hamster` |
 | `petabytes.name` | `""` | Your pet's name; empty for its own (Shelly, Bloop, Inky, Pinchy, Puff, Blue, Clem, Sandy, Finn, Splash, Angie, Indigo, Biscuit, Byte, Clover or Nugget) |
 
-Made to go with the [Midnight Tide](https://marketplace.visualstudio.com/items?itemName=Chelayel.midnight-tide-vscode) theme, and works with any theme. In [JetBrains IDEs](https://plugins.jetbrains.com/search?search=tide%20pets) the pet floats along the bottom of the editor.
+Made to go with the [Midnight Tide](https://marketplace.visualstudio.com/items?itemName=Chelayel.midnight-tide-vscode) theme, and works with any theme. In [JetBrains IDEs](https://plugins.jetbrains.com/search?search=petabytes) the pet floats along the bottom of the editor.
 
 ## License
 
