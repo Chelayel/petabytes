@@ -2,7 +2,7 @@
   "name": "petabytes",
   "displayName": "Petabytes",
   "description": "Small companions with a big appetite. Sea creatures that live in your Explorer and react to what you do: they swim faster while you type, celebrate saves, commits and passing tests, notice the terminal and your AI assistant, eat the curly braces you feed them, and nap when you're away.",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "publisher": "chelayel",
   "author": { "name": "Chelayel", "url": "https://www.chelayel.com" },
   "license": "MIT",
@@ -127,7 +127,8 @@
             "retriever",
             "cat",
             "bunny",
-            "hamster"
+            "hamster",
+            "burger"
           ],
           "enumDescriptions": [
             "Shelly the sea turtle",
@@ -145,14 +146,15 @@
             "Biscuit the golden retriever",
             "Byte the cat",
             "Clover the bunny",
-            "Nugget the hamster"
+            "Nugget the hamster",
+            "Patty the burger"
           ],
-          "description": "Which pet lives in the Explorer: a sea creature from the Tide set, or a dog, cat, bunny or hamster from the Home set."
+          "description": "Which pet lives in the Explorer: a sea creature from the Tide set, a dog, cat, bunny or hamster from the Home set, or Patty the burger from the Snacks set."
         },
         "petabytes.name": {
           "type": "string",
           "default": "",
-          "description": "Your pet's name. Leave empty for its own (Shelly, Bloop, Inky, Pinchy, Puff, Blue, Clem, Sandy, Finn, Splash, Angie, Indigo, Biscuit, Byte, Clover or Nugget)."
+          "description": "Your pet's name. Leave empty for its own (Shelly, Bloop, Inky, Pinchy, Puff, Blue, Clem, Sandy, Finn, Splash, Angie, Indigo, Biscuit, Byte, Clover, Nugget or Patty)."
         }
       }
     }

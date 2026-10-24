@@ -90,7 +90,7 @@ moods = [
     ("shark", "You opened Copilot", "setTimeout(() => send({ type: 'react', key: 'ai' }), 4800);", "Two assistants are better than one."),
     ("hamster", "You fed it five snacks", "setTimeout(() => send({ type: 'react', key: 'full' }), 5000);", "My cheeks are full."),
     ("bunny", "You double-clicked it", "setTimeout(() => send({ type: 'react', key: 'pet' }), 4900);", "*happy nose wiggles*"),
-    ("whale", "Your Mac's battery is low", "setTimeout(() => send({ type: 'react', key: 'batteryLow', vars: { percent: '12%' } }), 4800);", "12% battery left."),
+    ("burger", "You saved a file", "setTimeout(() => send({ type: 'save' }), 4800);", "Saved! Fresh off the grill."),
     ("dolphin", "You took a screenshot", "setTimeout(() => send({ type: 'react', key: 'screenshot' }), 4900);", "Did you get my good side?"),
     ("clownfish", "You switched to the terminal", "setTimeout(() => send({ type: 'react', key: 'terminal' }), 4800);", "Command line time!"),
 ]

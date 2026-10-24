@@ -556,9 +556,56 @@ PETS["hamster"] = {
             "typing": ["Running on my wheel!", "Go go go!", "Full speed ahead."]},
 }
 
+# ---- Snacks: food with feet ------------------------------------------------
+
+# ---- Burger -------------------------------------------------------------
+ink, bun, bun_dark, seed = "#2B1D12", "#F7A928", "#D9861A", "#FFF3D6"
+PETS["burger"] = {
+  "label": "Burger", "name": "Patty", "set": "snacks", "flip": True, "floor": True, "speed": 1.0,
+  "bob": [1.5, 0.45], "glow": "rgba(247,169,40,0.45)", "mouth": [68, 34], "head": [62, 12],
+  "parts": [
+    leg_stroke(48, 60, -2, bun_dark, 6.5, 0, 0.7), leg_stroke(72, 60, 2, bun_dark, 6.5, 0.5, 0.7),
+    p("M30 56 Q30 66 60 66 Q90 66 90 56 Z", "body", fill=bun, stroke=ink, sw=1.6),
+    p("M28 50 l7 7 l7 -6 l8 8 l7 -7 l8 8 l7 -7 l8 7 l7 -6 l5 3 l-2 -7 z", "fill", fill="#FDE047", stroke=ink, sw=1.2),
+    e(60, 50, 32, 5.5, "fill", fill="#7C4A2D", stroke=ink, sw=1.4),
+    e(44, 46, 9, 3.2, "fill", fill="#EF4444", stroke=ink, sw=1.2), e(74, 46, 10, 3.2, "fill", fill="#EF4444", stroke=ink, sw=1.2),
+    p("M93 41 L27 41 L27 44" + " q4 6 8 0" * 8 + " L93 44 Z", "fill", fill="#4ADE80", stroke=ink, sw=1.2),
+    p("M27 42 Q27 10 60 10 Q93 10 93 42 Z", "top", fill=bun, stroke=ink, sw=1.6),
+    p("M33 34 Q36 18 52 14", "top", stroke="#FFD27A", sw=2.2, opacity=0.8),
+    e(42, 22, 1.8, 1, "top", fill=seed), e(50, 16, 1.8, 1, "top", fill=seed), e(76, 18, 1.8, 1, "top", fill=seed),
+    e(84, 26, 1.8, 1, "top", fill=seed), e(38, 30, 1.8, 1, "top", fill=seed),
+    *eye_set(57, 27, 2.6, "top", ink, sclera="#FFFFFF"), *eye_set(70, 27, 2.6, "top", ink, sclera="#FFFFFF"),
+    p("M63 34 q4 3.5 8 0", "top", stroke=ink, sw=1.5),
+    p("M53 21 l6 1.5 M74 21 l-6 1.5", "top", stroke=ink, sw=1.4, when=["worried"]),
+    sweat(86, 18),
+    # A thumbs-up arm, and one hugging its middle.
+    p("M92 38 q10 -4 10 -16", "arms", stroke=bun, sw=6, pivot=[92, 38], rot=[10, 1.4, 0]),
+    c(102, 19, 4.5, "arms", fill=bun, stroke=ink, sw=1.2, pivot=[92, 38], rot=[10, 1.4, 0]),
+    p("M101.5 15 l0.5 -6", "arms", stroke=bun, sw=3.5, pivot=[92, 38], rot=[10, 1.4, 0]),
+    p("M28 40 q-8 6 -2 12 q5 3 10 -1", "arms", stroke=bun, sw=6),
+    *lens(108, 52),
+  ],
+  "groupMotion": {"fill": {"sy": [0.06, 0.9, 0], "p": [60, 46]}},
+  "poses": {
+    "hiding":   {"top": {"ty": 5, "s": 0.95, "p": [60, 42]}, "fill": {"sy": 0.6, "s": 0.9, "p": [60, 50]}, "arms": {"s": 0.6, "p": [60, 44]}},
+    "sleeping": {"top": {"ty": 3, "r": 4, "p": [60, 42]}, "legs": {"s": 0.4, "p": [60, 70]}, "arms": {"s": 0.8, "p": [60, 44]}},
+    "curious":  {"top": {"r": -9, "p": [60, 42]}},
+  },
+  "lines": {"click": ["Nom!", "I'm on a roll!", "Extra cheese, please.", "Lettuce celebrate!"],
+            "pet": ["*happy sizzle*", "Hehe, careful, I'm saucy.", "*thumbs up*"],
+            "yikes": ["*clamps buns shut*", "Don't eat me!"],
+            "typing": ["Sizzling!", "Fast food, fast code.", "Ooh, typing!"],
+            "save": ["Saved! Fresh off the grill.", "Order up!", "Saved!"],
+            "fixed": ["Well done! Like my patty.", "All clear!", "Order up: no errors!"],
+            "hungry": ["I'm hungry. Ironic, I know.", "Snack break?"],
+            "lateNight": ["Midnight snack time?", "It's late. Kitchen's closing."],
+            "eatCurly": ["Curly fries! Wait, braces.", "Crunchy!"],
+            "full": ["I'm stuffed.", "No room, I'm a single patty."]},
+}
+
 for pet in PETS.values():
     pet.setdefault("set", "tide")
-    if pet["set"] == "home":
+    if pet["set"] in ("home", "snacks"):
         pet["lines"] = {**HOME_LINES, **pet["lines"]}
 
 LINES = {

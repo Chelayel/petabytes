@@ -13,7 +13,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     private let dockPet = DockPet()
 
     private static let sizes: [(String, CGFloat)] = [("Small", 1.0), ("Medium", 1.3), ("Large", 1.7)]
-    private static let sets = ["tide": "Tide", "home": "Home"]
+    private static let sets = ["tide": "Tide", "home": "Home", "snacks": "Snacks"]
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         window = PetWindow()

@@ -668,7 +668,8 @@
   "retriever",
   "cat",
   "bunny",
-  "hamster"
+  "hamster",
+  "burger"
  ],
  "pets": {
   "turtle": {
@@ -5668,6 +5669,536 @@
      "Running on my wheel!",
      "Go go go!",
      "Full speed ahead."
+    ]
+   }
+  },
+  "burger": {
+   "label": "Burger",
+   "name": "Patty",
+   "set": "snacks",
+   "flip": true,
+   "floor": true,
+   "speed": 1.0,
+   "bob": [
+    1.5,
+    0.45
+   ],
+   "glow": "rgba(247,169,40,0.45)",
+   "mouth": [
+    68,
+    34
+   ],
+   "head": [
+    62,
+    12
+   ],
+   "parts": [
+    {
+     "path": "M48 60 l-2 20",
+     "group": "legs",
+     "stroke": "#D9861A",
+     "sw": 6.5,
+     "pivot": [
+      48,
+      60
+     ],
+     "rot": [
+      14,
+      0.7,
+      0
+     ]
+    },
+    {
+     "path": "M72 60 l2 20",
+     "group": "legs",
+     "stroke": "#D9861A",
+     "sw": 6.5,
+     "pivot": [
+      72,
+      60
+     ],
+     "rot": [
+      14,
+      0.7,
+      0.5
+     ]
+    },
+    {
+     "path": "M30 56 Q30 66 60 66 Q90 66 90 56 Z",
+     "group": "body",
+     "fill": "#F7A928",
+     "stroke": "#2B1D12",
+     "sw": 1.6
+    },
+    {
+     "path": "M28 50 l7 7 l7 -6 l8 8 l7 -7 l8 8 l7 -7 l8 7 l7 -6 l5 3 l-2 -7 z",
+     "group": "fill",
+     "fill": "#FDE047",
+     "stroke": "#2B1D12",
+     "sw": 1.2
+    },
+    {
+     "ellipse": [
+      60,
+      50,
+      32,
+      5.5
+     ],
+     "group": "fill",
+     "fill": "#7C4A2D",
+     "stroke": "#2B1D12",
+     "sw": 1.4
+    },
+    {
+     "ellipse": [
+      44,
+      46,
+      9,
+      3.2
+     ],
+     "group": "fill",
+     "fill": "#EF4444",
+     "stroke": "#2B1D12",
+     "sw": 1.2
+    },
+    {
+     "ellipse": [
+      74,
+      46,
+      10,
+      3.2
+     ],
+     "group": "fill",
+     "fill": "#EF4444",
+     "stroke": "#2B1D12",
+     "sw": 1.2
+    },
+    {
+     "path": "M93 41 L27 41 L27 44 q4 6 8 0 q4 6 8 0 q4 6 8 0 q4 6 8 0 q4 6 8 0 q4 6 8 0 q4 6 8 0 q4 6 8 0 L93 44 Z",
+     "group": "fill",
+     "fill": "#4ADE80",
+     "stroke": "#2B1D12",
+     "sw": 1.2
+    },
+    {
+     "path": "M27 42 Q27 10 60 10 Q93 10 93 42 Z",
+     "group": "top",
+     "fill": "#F7A928",
+     "stroke": "#2B1D12",
+     "sw": 1.6
+    },
+    {
+     "path": "M33 34 Q36 18 52 14",
+     "group": "top",
+     "stroke": "#FFD27A",
+     "sw": 2.2,
+     "opacity": 0.8
+    },
+    {
+     "ellipse": [
+      42,
+      22,
+      1.8,
+      1
+     ],
+     "group": "top",
+     "fill": "#FFF3D6"
+    },
+    {
+     "ellipse": [
+      50,
+      16,
+      1.8,
+      1
+     ],
+     "group": "top",
+     "fill": "#FFF3D6"
+    },
+    {
+     "ellipse": [
+      76,
+      18,
+      1.8,
+      1
+     ],
+     "group": "top",
+     "fill": "#FFF3D6"
+    },
+    {
+     "ellipse": [
+      84,
+      26,
+      1.8,
+      1
+     ],
+     "group": "top",
+     "fill": "#FFF3D6"
+    },
+    {
+     "ellipse": [
+      38,
+      30,
+      1.8,
+      1
+     ],
+     "group": "top",
+     "fill": "#FFF3D6"
+    },
+    {
+     "circle": [
+      55.5,
+      27,
+      5.2
+     ],
+     "group": "top",
+     "fill": "#FFFFFF",
+     "when": [
+      "eyesOpen"
+     ]
+    },
+    {
+     "circle": [
+      57,
+      27,
+      2.6
+     ],
+     "group": "top",
+     "fill": "#2B1D12",
+     "when": [
+      "eyesOpen"
+     ]
+    },
+    {
+     "circle": [
+      58.04,
+      25.96,
+      0.8320000000000001
+     ],
+     "group": "top",
+     "fill": "#FFFFFF",
+     "when": [
+      "eyesOpen"
+     ]
+    },
+    {
+     "path": "M53.75 27 q3.25 2.6 6.5 0",
+     "group": "top",
+     "stroke": "#2B1D12",
+     "sw": 1.6,
+     "when": [
+      "eyesClosed"
+     ]
+    },
+    {
+     "path": "M53.75 27.8 q3.25 -3.9000000000000004 6.5 0",
+     "group": "top",
+     "stroke": "#2B1D12",
+     "sw": 1.6,
+     "when": [
+      "eyesHappy"
+     ]
+    },
+    {
+     "circle": [
+      68.5,
+      27,
+      5.2
+     ],
+     "group": "top",
+     "fill": "#FFFFFF",
+     "when": [
+      "eyesOpen"
+     ]
+    },
+    {
+     "circle": [
+      70,
+      27,
+      2.6
+     ],
+     "group": "top",
+     "fill": "#2B1D12",
+     "when": [
+      "eyesOpen"
+     ]
+    },
+    {
+     "circle": [
+      71.04,
+      25.96,
+      0.8320000000000001
+     ],
+     "group": "top",
+     "fill": "#FFFFFF",
+     "when": [
+      "eyesOpen"
+     ]
+    },
+    {
+     "path": "M66.75 27 q3.25 2.6 6.5 0",
+     "group": "top",
+     "stroke": "#2B1D12",
+     "sw": 1.6,
+     "when": [
+      "eyesClosed"
+     ]
+    },
+    {
+     "path": "M66.75 27.8 q3.25 -3.9000000000000004 6.5 0",
+     "group": "top",
+     "stroke": "#2B1D12",
+     "sw": 1.6,
+     "when": [
+      "eyesHappy"
+     ]
+    },
+    {
+     "path": "M63 34 q4 3.5 8 0",
+     "group": "top",
+     "stroke": "#2B1D12",
+     "sw": 1.5
+    },
+    {
+     "path": "M53 21 l6 1.5 M74 21 l-6 1.5",
+     "group": "top",
+     "stroke": "#2B1D12",
+     "sw": 1.4,
+     "when": [
+      "worried"
+     ]
+    },
+    {
+     "path": "M86 18 q-2.5 4.5 0 5.5 q2.5 -1 0 -5.5z",
+     "group": "face",
+     "fill": "#7DD3FC",
+     "when": [
+      "worried"
+     ]
+    },
+    {
+     "path": "M92 38 q10 -4 10 -16",
+     "group": "arms",
+     "stroke": "#F7A928",
+     "sw": 6,
+     "pivot": [
+      92,
+      38
+     ],
+     "rot": [
+      10,
+      1.4,
+      0
+     ]
+    },
+    {
+     "circle": [
+      102,
+      19,
+      4.5
+     ],
+     "group": "arms",
+     "fill": "#F7A928",
+     "stroke": "#2B1D12",
+     "sw": 1.2,
+     "pivot": [
+      92,
+      38
+     ],
+     "rot": [
+      10,
+      1.4,
+      0
+     ]
+    },
+    {
+     "path": "M101.5 15 l0.5 -6",
+     "group": "arms",
+     "stroke": "#F7A928",
+     "sw": 3.5,
+     "pivot": [
+      92,
+      38
+     ],
+     "rot": [
+      10,
+      1.4,
+      0
+     ]
+    },
+    {
+     "path": "M28 40 q-8 6 -2 12 q5 3 10 -1",
+     "group": "arms",
+     "stroke": "#F7A928",
+     "sw": 6
+    },
+    {
+     "circle": [
+      108,
+      52,
+      5
+     ],
+     "group": "tool",
+     "fill": "rgba(253,230,138,0.15)",
+     "stroke": "#FACC15",
+     "sw": 1.8,
+     "when": [
+      "debugging"
+     ]
+    },
+    {
+     "path": "M104.5 55.5 l-5 5",
+     "group": "tool",
+     "stroke": "#FACC15",
+     "sw": 2.2,
+     "when": [
+      "debugging"
+     ]
+    }
+   ],
+   "groupMotion": {
+    "fill": {
+     "sy": [
+      0.06,
+      0.9,
+      0
+     ],
+     "p": [
+      60,
+      46
+     ]
+    }
+   },
+   "poses": {
+    "hiding": {
+     "top": {
+      "ty": 5,
+      "s": 0.95,
+      "p": [
+       60,
+       42
+      ]
+     },
+     "fill": {
+      "sy": 0.6,
+      "s": 0.9,
+      "p": [
+       60,
+       50
+      ]
+     },
+     "arms": {
+      "s": 0.6,
+      "p": [
+       60,
+       44
+      ]
+     }
+    },
+    "sleeping": {
+     "top": {
+      "ty": 3,
+      "r": 4,
+      "p": [
+       60,
+       42
+      ]
+     },
+     "legs": {
+      "s": 0.4,
+      "p": [
+       60,
+       70
+      ]
+     },
+     "arms": {
+      "s": 0.8,
+      "p": [
+       60,
+       44
+      ]
+     }
+    },
+    "curious": {
+     "top": {
+      "r": -9,
+      "p": [
+       60,
+       42
+      ]
+     }
+    }
+   },
+   "lines": {
+    "fixed": [
+     "Well done! Like my patty.",
+     "All clear!",
+     "Order up: no errors!"
+    ],
+    "longSession": [
+     "You've been at it a while. Stretch break?",
+     "Walk break? I'll come.",
+     "Blink a few times. Eyes need breaks too."
+    ],
+    "lateNight": [
+     "Midnight snack time?",
+     "It's late. Kitchen's closing."
+    ],
+    "morning": [
+     "Good morning!",
+     "Morning! Breakfast first?",
+     "Rise and shine!"
+    ],
+    "music": [
+     "Ooh, music!",
+     "*dances*",
+     "Is this my song?"
+    ],
+    "hot": [
+     "It's getting hot in here.",
+     "Your Mac's working hard.",
+     "*pants*"
+    ],
+    "file": [
+     "Ooh, a new file.",
+     "*sniffs around*",
+     "What's in here?"
+    ],
+    "click": [
+     "Nom!",
+     "I'm on a roll!",
+     "Extra cheese, please.",
+     "Lettuce celebrate!"
+    ],
+    "pet": [
+     "*happy sizzle*",
+     "Hehe, careful, I'm saucy.",
+     "*thumbs up*"
+    ],
+    "yikes": [
+     "*clamps buns shut*",
+     "Don't eat me!"
+    ],
+    "typing": [
+     "Sizzling!",
+     "Fast food, fast code.",
+     "Ooh, typing!"
+    ],
+    "save": [
+     "Saved! Fresh off the grill.",
+     "Order up!",
+     "Saved!"
+    ],
+    "hungry": [
+     "I'm hungry. Ironic, I know.",
+     "Snack break?"
+    ],
+    "eatCurly": [
+     "Curly fries! Wait, braces.",
+     "Crunchy!"
+    ],
+    "full": [
+     "I'm stuffed.",
+     "No room, I'm a single patty."
     ]
    }
   }
