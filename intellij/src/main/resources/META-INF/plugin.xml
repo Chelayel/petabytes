@@ -6,10 +6,11 @@
     <description><![CDATA[
         <h2>Petabytes — small companions with a big appetite</h2>
         <p>A pet swims up and down the right edge of your editor, out of the way of your code, and reacts to what
-        you do. The first set is <b>Tide</b>, twelve sea creatures. Pick one: <b>Shelly</b> the sea turtle, <b>Bloop</b> the jellyfish, <b>Inky</b> the octopus,
+        you do. Pick a sea creature from the <b>Tide</b> set or a pet from the <b>Home</b> set: <b>Shelly</b> the sea turtle, <b>Bloop</b> the jellyfish, <b>Inky</b> the octopus,
         <b>Pinchy</b> the crab, <b>Puff</b> the pufferfish, <b>Blue</b> the whale, <b>Clem</b> the clownfish,
         <b>Sandy</b> the seahorse, <b>Finn</b> the shark, <b>Splash</b> the dolphin, <b>Angie</b> the angelfish
-        or <b>Indigo</b> the blue tang.</p>
+        <b>Indigo</b> the blue tang, <b>Biscuit</b> the golden retriever, <b>Byte</b> the cat, <b>Clover</b> the bunny
+        or <b>Nugget</b> the hamster.</p>
         <p><img src="https://raw.githubusercontent.com/Chelayel/petabytes/main/docs/intellij-right-edge.png" alt="Splash the dolphin swimming at the right edge of the editor in IntelliJ IDEA, asking for a snack" width="640"/></p>
         <p><img src="https://raw.githubusercontent.com/Chelayel/petabytes/main/docs/pets.png" alt="The twelve pets" width="620"/></p>
         <ul>
@@ -41,7 +42,7 @@
     ]]></description>
 
     <change-notes><![CDATA[
-        <p><b>0.4.0</b> — Tide Pets is now Petabytes, ready for pets beyond the sea. Settings start fresh under the new name.</p>
+        <p><b>0.4.0</b> — Tide Pets is now Petabytes, with pets beyond the sea: the new Home set brings Biscuit the golden retriever, Byte the cat, Clover the bunny and Nugget the hamster. Settings start fresh under the new name.</p>
         <p><b>0.3.0</b> — The pet now swims up and down the editor's right edge, out of the way of your code
         (the bottom edge is still an option, in its menu or the settings). Three new pets: Splash the dolphin,
         Angie the angelfish and Indigo the blue tang.</p>

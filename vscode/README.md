@@ -1,6 +1,6 @@
 # Petabytes
 
-Small companions with a big appetite. A pet lives in a **Petabytes** panel in your Explorer and reacts to what you're doing. The first set is **Tide**, twelve sea creatures. Pick one: **Shelly** the sea turtle, **Bloop** the jellyfish, **Inky** the octopus, **Pinchy** the crab, **Puff** the pufferfish, **Blue** the whale, **Clem** the clownfish, **Sandy** the seahorse, **Finn** the shark, **Splash** the dolphin, **Angie** the angelfish or **Indigo** the blue tang.
+Small companions with a big appetite. A pet lives in a **Petabytes** panel in your Explorer and reacts to what you're doing. Pick a sea creature from the **Tide** set or a pet from the **Home** set: **Shelly** the sea turtle, **Bloop** the jellyfish, **Inky** the octopus, **Pinchy** the crab, **Puff** the pufferfish, **Blue** the whale, **Clem** the clownfish, **Sandy** the seahorse, **Finn** the shark, **Splash** the dolphin, **Angie** the angelfish, **Indigo** the blue tang, **Biscuit** the golden retriever, **Byte** the cat, **Clover** the bunny or **Nugget** the hamster.
 
 ![The twelve pets](https://raw.githubusercontent.com/Chelayel/petabytes/main/docs/pets.png)
 
@@ -34,8 +34,8 @@ Small companions with a big appetite. A pet lives in a **Petabytes** panel in yo
 | Setting | Default | |
 | --- | --- | --- |
 | `petabytes.enabled` | `true` | Show the pet in the Explorer |
-| `petabytes.pet` | `"turtle"` | `turtle`, `jellyfish`, `octopus`, `crab`, `pufferfish`, `whale`, `clownfish`, `seahorse`, `shark`, `dolphin`, `angelfish` or `tang` |
-| `petabytes.name` | `""` | Your pet's name; empty for its own (Shelly, Bloop, Inky, Pinchy, Puff, Blue, Clem, Sandy, Finn, Splash, Angie or Indigo) |
+| `petabytes.pet` | `"turtle"` | `turtle`, `jellyfish`, `octopus`, `crab`, `pufferfish`, `whale`, `clownfish`, `seahorse`, `shark`, `dolphin`, `angelfish`, `tang`, `retriever`, `cat`, `bunny` or `hamster` |
+| `petabytes.name` | `""` | Your pet's name; empty for its own (Shelly, Bloop, Inky, Pinchy, Puff, Blue, Clem, Sandy, Finn, Splash, Angie, Indigo, Biscuit, Byte, Clover or Nugget) |
 
 Made to go with the [Midnight Tide](https://marketplace.visualstudio.com/items?itemName=Chelayel.midnight-tide-vscode) theme, and works with any theme. In [JetBrains IDEs](https://plugins.jetbrains.com/search?search=tide%20pets) the pet floats along the bottom of the editor.
 
