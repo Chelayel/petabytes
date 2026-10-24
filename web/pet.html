@@ -84,7 +84,7 @@
     x: 20, dir: 1, speed: 0.4, clock: 0, errors: 0, debugging: false, sleeping: false, ground: false, artBottom: 80, fps: 0,
     until: { excited: 0, happy: 0, curious: 0, hiding: 0, spin: 0 }, happyAt: 0, spinAt: 0,
     lastActivity: now(), lastTypingLine: 0, sayTimer: 0, poses: {},
-    lastReact: {}, sessionMark: now(), lastFed: now(), eaten: 0, food: null, foodEl: null,
+    lastReact: {}, sessionMark: now(), lastFed: now(), eaten: 0, food: null, foodEl: null, goal: null, restUntil: 0,
   };
 
   // ---- Building the pet from pets.json ---------------------------------
@@ -382,13 +382,22 @@
     else if (excited) target = 1.7 * pet.speed;
     else if (state.debugging) target = 0.8 * pet.speed;
     else if (f.worried) target = 0.22 * pet.speed;
+    // With nothing else to do it heads for a spot anywhere along the width, rests there a moment, then picks
+    // another: it gets around a wide strip (the Mac's Dock) instead of pacing near where it started.
+    const maxX = Math.max(0, width - W - 4);
+    if (!food) {
+      if (state.goal == null || Math.abs(state.goal - state.x) < 8) {
+        if (state.goal != null) state.restUntil = now() + 800 + Math.random() * 2500;
+        state.goal = 4 + Math.random() * Math.max(0, maxX - 4);
+      }
+      if (now() < state.restUntil && !excited) target = 0;
+      else state.dir = state.goal > state.x ? 1 : -1;
+    }
     if (reduced) target = 0;
     state.speed += (target - state.speed) * 0.06 * dt;
     state.x += state.speed * state.dir * dt;
-    const maxX = Math.max(0, width - W - 4);
     if (state.x > maxX) { state.x = maxX; state.dir = -1; }
     if (state.x < 4) { state.x = 4; state.dir = 1; }
-    if (state.speed > 0.1 && Math.random() < 0.0015 * dt) state.dir *= -1;
 
     // Limbs move faster when excited, slower when worried or asleep, not at all when hiding.
     const tempo = f.hiding || reduced ? 0 : excited ? 3.5 : state.sleeping ? 0.25 : f.worried ? 0.65 : 1;
