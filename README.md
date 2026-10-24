@@ -11,6 +11,15 @@ Small companions with a big appetite. They keep you company while you code, in V
 
 ![All sixteen pets](docs/pets.png)
 
+## Which one do I need?
+
+There are three, and they don't depend on each other:
+
+- **In your editor**, to react to your code (saves, errors, tests, runs, debugging, commits): install the plugin in each IDE you use, the [VS Code extension](https://marketplace.visualstudio.com/items?itemName=chelayel.petabytes) or the [JetBrains plugin](https://plugins.jetbrains.com/search?search=petabytes). The pet lives inside that IDE.
+- **On your Mac desktop**, to react to your Mac (the app in front, typing, battery, Wi-Fi, downloads, screenshots): [the Mac app](#on-your-mac). It walks along your Dock, but it can't see your code; for that, add the editor plugin too.
+
+## In your editor
+
 | You | Your pet |
 | --- | --- |
 | Type | Swims faster |
