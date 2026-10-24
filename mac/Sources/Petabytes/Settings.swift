@@ -25,6 +25,18 @@ enum Settings {
         set { defaults.set(newValue.rawValue, forKey: "place") }
     }
 
+    /** Whether the app's icon is in the Dock (where it can be kept) instead of the menu bar. */
+    static var showInDock: Bool {
+        get { defaults.bool(forKey: "showInDock") }
+        set { defaults.set(newValue, forKey: "showInDock") }
+    }
+
+    /** Whether the pet steps aside while an app is full screen. */
+    static var hideInFullScreen: Bool {
+        get { defaults.object(forKey: "hideInFullScreen") as? Bool ?? true }
+        set { defaults.set(newValue, forKey: "hideInFullScreen") }
+    }
+
     static var visible: Bool {
         get { defaults.object(forKey: "visible") as? Bool ?? true }
         set { defaults.set(newValue, forKey: "visible") }
@@ -48,6 +60,8 @@ struct Catalog: Decodable {
     struct Pet: Decodable {
         let name: String
         let label: String?
+        /** tide (sea creatures) or home (dogs, cats and friends). */
+        let set: String?
     }
 
     let order: [String]

@@ -81,7 +81,7 @@
 
   let pet, name, parts = [], groups = {};
   const state = {
-    x: 20, dir: 1, speed: 0.4, clock: 0, errors: 0, debugging: false, sleeping: false, ground: false, artBottom: 80,
+    x: 20, dir: 1, speed: 0.4, clock: 0, errors: 0, debugging: false, sleeping: false, ground: false, artBottom: 80, fps: 0,
     until: { excited: 0, happy: 0, curious: 0, hiding: 0, spin: 0 }, happyAt: 0, spinAt: 0,
     lastActivity: now(), lastTypingLine: 0, sayTimer: 0, poses: {},
     lastReact: {}, sessionMark: now(), lastFed: now(), eaten: 0, food: null, foodEl: null,
@@ -290,7 +290,8 @@
       name = msg.name || pet.name;
       nameEl.textContent = name;
       if (msg.background) document.body.style.background = msg.background;
-      // The Mac app sets ground while the pet walks along the top of the Dock.
+      // The Mac app caps the frame rate (0: the display's) and sets ground while the pet walks along the Dock.
+      if (msg.fps != null) state.fps = msg.fps;
       if (msg.ground != null && msg.ground !== state.ground) { state.ground = msg.ground; newDepth(); }
       for (const [k, v] of Object.entries(msg.vars || {})) document.documentElement.style.setProperty(k, v);
       return;
@@ -403,7 +404,13 @@
     zzz.style.left = state.x + (pet.flip && state.dir < 0 ? 120 - hx : hx) * SCALE + "px";
     zzz.style.top = top + hy * SCALE + "px";
     zzz.classList.toggle("on", state.sleeping);
-    requestAnimationFrame(frame);
+    nextFrame();
+  }
+
+  /** Every display frame, or, with a frame rate cap, fewer: a pet doesn't need 60 a second, least of all asleep. */
+  function nextFrame() {
+    if (!state.fps) { requestAnimationFrame(frame); return; }
+    setTimeout(() => requestAnimationFrame(frame), 1000 / (state.sleeping ? Math.min(6, state.fps) : state.fps));
   }
 
   build("turtle");

@@ -275,6 +275,83 @@
    "Welcome back!",
    "You're back!",
    "Missed you."
+  ],
+  "browser": [
+   "Just one tab, right?",
+   "Researching? Or scrolling?",
+   "Look it up, I won't judge."
+  ],
+  "chat": [
+   "Say hi from me!",
+   "Back to the chats?",
+   "Who's messaging?"
+  ],
+  "mail": [
+   "Inbox zero?",
+   "Any good emails?",
+   "Reply-all with care."
+  ],
+  "design": [
+   "Ooh, pretty!",
+   "Make it pop.",
+   "Can you draw me next?"
+  ],
+  "notes": [
+   "Taking notes?",
+   "Write that down.",
+   "Writing something?"
+  ],
+  "calendar": [
+   "Another meeting?",
+   "What's on today?",
+   "Is there time for a snack?"
+  ],
+  "game": [
+   "Game time! Can I play?",
+   "Break time!",
+   "One more round?"
+  ],
+  "video": [
+   "Movie time? I'll be quiet.",
+   "Popcorn?",
+   "Ooh, what are we watching?"
+  ],
+  "activity": [
+   "Who's using all the memory?",
+   "Something hogging the CPU?",
+   "It wasn't me."
+  ],
+  "docker": [
+   "Containers! Cozy.",
+   "Spinning up the whales?",
+   "It works on my container."
+  ],
+  "database": [
+   "Careful with that DROP TABLE.",
+   "Back up first?",
+   "*peeks at the rows*"
+  ],
+  "api": [
+   "Sending requests?",
+   "200 OK, I hope.",
+   "Fingers crossed for no 500s."
+  ],
+  "simulator": [
+   "It's alive! On a tiny phone.",
+   "Running it on the simulator!"
+  ],
+  "settings": [
+   "Tweaking things?",
+   "Don't turn me off!",
+   "Fiddling with settings?"
+  ],
+  "appStore": [
+   "Shopping?",
+   "Ooh, a new app?"
+  ],
+  "passwords": [
+   "*covers eyes*",
+   "I'm not looking!"
   ]
  },
  "reactions": {
@@ -457,6 +534,100 @@
    "ms": 1100,
    "hearts": 2,
    "cooldown": 60
+  },
+  "browser": {
+   "mood": "curious",
+   "ms": 1200,
+   "chance": 0.3,
+   "cooldown": 1800
+  },
+  "chat": {
+   "mood": "curious",
+   "ms": 1200,
+   "chance": 0.4,
+   "cooldown": 900
+  },
+  "mail": {
+   "mood": "curious",
+   "ms": 1200,
+   "chance": 0.5,
+   "cooldown": 1800
+  },
+  "design": {
+   "mood": "happy",
+   "ms": 1100,
+   "bubbles": 3,
+   "chance": 0.6,
+   "cooldown": 900
+  },
+  "notes": {
+   "mood": "curious",
+   "ms": 1200,
+   "chance": 0.4,
+   "cooldown": 900
+  },
+  "calendar": {
+   "mood": "curious",
+   "ms": 1200,
+   "chance": 0.5,
+   "cooldown": 1800
+  },
+  "game": {
+   "mood": "excited",
+   "ms": 3000,
+   "cooldown": 900
+  },
+  "video": {
+   "mood": "happy",
+   "ms": 1100,
+   "chance": 0.6,
+   "cooldown": 1800
+  },
+  "activity": {
+   "mood": "curious",
+   "ms": 1500,
+   "cooldown": 600
+  },
+  "docker": {
+   "mood": "curious",
+   "ms": 1200,
+   "chance": 0.6,
+   "cooldown": 900
+  },
+  "database": {
+   "mood": "hiding",
+   "ms": 1500,
+   "chance": 0.6,
+   "cooldown": 900
+  },
+  "api": {
+   "mood": "curious",
+   "ms": 1200,
+   "chance": 0.5,
+   "cooldown": 900
+  },
+  "simulator": {
+   "mood": "spin",
+   "ms": 800,
+   "bubbles": 3,
+   "cooldown": 300
+  },
+  "settings": {
+   "mood": "curious",
+   "ms": 1200,
+   "chance": 0.5,
+   "cooldown": 900
+  },
+  "appStore": {
+   "mood": "curious",
+   "ms": 1200,
+   "chance": 0.5,
+   "cooldown": 1800
+  },
+  "passwords": {
+   "mood": "hiding",
+   "ms": 1500,
+   "cooldown": 600
   }
  },
  "snacks": [
@@ -493,7 +664,11 @@
   "shark",
   "dolphin",
   "angelfish",
-  "tang"
+  "tang",
+  "retriever",
+  "cat",
+  "bunny",
+  "hamster"
  ],
  "pets": {
   "turtle": {
@@ -733,7 +908,8 @@
     "longSession": [
      "Even turtles take breaks. Stretch?"
     ]
-   }
+   },
+   "set": "tide"
   },
   "jellyfish": {
    "label": "Jellyfish",
@@ -1102,7 +1278,8 @@
     "lateNight": [
      "It's late. Good thing I glow."
     ]
-   }
+   },
+   "set": "tide"
   },
   "octopus": {
    "label": "Octopus",
@@ -1526,7 +1703,8 @@
     "ai": [
      "An AI? I have eight arms, it has a million parameters."
     ]
-   }
+   },
+   "set": "tide"
   },
   "crab": {
    "label": "Crab",
@@ -1960,7 +2138,8 @@
      "Scuttling into action!",
      "It's alive! *clack clack*"
     ]
-   }
+   },
+   "set": "tide"
   },
   "pufferfish": {
    "label": "Pufferfish",
@@ -2318,7 +2497,8 @@
      "*PUFF* Careful!",
      "*maximum puff*"
     ]
-   }
+   },
+   "set": "tide"
   },
   "whale": {
    "label": "Whale",
@@ -2550,7 +2730,8 @@
      "*spouts* All clear!",
      "Fixed it! Whale done."
     ]
-   }
+   },
+   "set": "tide"
   },
   "clownfish": {
    "label": "Clownfish",
@@ -2797,7 +2978,8 @@
      "Zoom zoom!",
      "Faster, faster!"
     ]
-   }
+   },
+   "set": "tide"
   },
   "seahorse": {
    "label": "Seahorse",
@@ -3018,7 +3200,8 @@
      "*curls tail happily*",
      "Aww, thank you!"
     ]
-   }
+   },
+   "set": "tide"
   },
   "shark": {
    "label": "Shark",
@@ -3245,7 +3428,8 @@
      "Chomp! Curly braces.",
      "Mmm, crunchy braces."
     ]
-   }
+   },
+   "set": "tide"
   },
   "dolphin": {
    "label": "Dolphin",
@@ -3471,7 +3655,8 @@
      "Here we go! *splash*",
      "It's alive! Ee-ee!"
     ]
-   }
+   },
+   "set": "tide"
   },
   "angelfish": {
    "label": "Angelfish",
@@ -3728,7 +3913,8 @@
      "*flutters fins*",
      "You're an angel too."
     ]
-   }
+   },
+   "set": "tide"
   },
   "tang": {
    "label": "Blue tang",
@@ -3952,6 +4138,1536 @@
     "file": [
      "Ooh, a new file! Or have I seen it?",
      "Where are we again?"
+    ]
+   },
+   "set": "tide"
+  },
+  "retriever": {
+   "label": "Golden retriever",
+   "name": "Biscuit",
+   "set": "home",
+   "flip": true,
+   "floor": true,
+   "speed": 1.1,
+   "bob": [
+    1.5,
+    0.5
+   ],
+   "glow": "rgba(232,168,74,0.45)",
+   "mouth": [
+    111,
+    38
+   ],
+   "head": [
+    92,
+    16
+   ],
+   "parts": [
+    {
+     "path": "M34 40 q-12 -4 -18 -16 q8 3 18 9z",
+     "group": "tail",
+     "fill": "#C98A2B",
+     "pivot": [
+      34,
+      40
+     ],
+     "rot": [
+      22,
+      0.45,
+      0
+     ]
+    },
+    {
+     "path": "M40 50 l-2 20",
+     "group": "legs",
+     "stroke": "#C98A2B",
+     "sw": 7,
+     "pivot": [
+      40,
+      50
+     ],
+     "rot": [
+      14,
+      0.8,
+      0.5
+     ]
+    },
+    {
+     "path": "M82 50 l2 20",
+     "group": "legs",
+     "stroke": "#C98A2B",
+     "sw": 7,
+     "pivot": [
+      82,
+      50
+     ],
+     "rot": [
+      14,
+      0.8,
+      0
+     ]
+    },
+    {
+     "ellipse": [
+      62,
+      44,
+      28,
+      13
+     ],
+     "group": "body",
+     "fill": "#E8A84A"
+    },
+    {
+     "path": "M78 36 q10 2 12 14 q-6 4 -12 2z",
+     "group": "body",
+     "fill": "#F3C77A",
+     "opacity": 0.8
+    },
+    {
+     "path": "M46 50 l1 20",
+     "group": "legs",
+     "stroke": "#E8A84A",
+     "sw": 7,
+     "pivot": [
+      46,
+      50
+     ],
+     "rot": [
+      14,
+      0.8,
+      0
+     ]
+    },
+    {
+     "path": "M88 50 l-1 20",
+     "group": "legs",
+     "stroke": "#E8A84A",
+     "sw": 7,
+     "pivot": [
+      88,
+      50
+     ],
+     "rot": [
+      14,
+      0.8,
+      0.5
+     ]
+    },
+    {
+     "circle": [
+      92,
+      30,
+      13
+     ],
+     "group": "face",
+     "fill": "#EDB458"
+    },
+    {
+     "ellipse": [
+      104,
+      35,
+      9,
+      6.5
+     ],
+     "group": "face",
+     "fill": "#F3C77A"
+    },
+    {
+     "circle": [
+      112,
+      33,
+      2.6
+     ],
+     "group": "face",
+     "fill": "#2B1B10"
+    },
+    {
+     "path": "M86 20 q-9 2 -9 15 q5 5 9 -1 q2 -7 0 -14z",
+     "group": "face",
+     "fill": "#C98A2B",
+     "pivot": [
+      86,
+      21
+     ],
+     "rot": [
+      8,
+      1.2,
+      0
+     ]
+    },
+    {
+     "circle": [
+      96,
+      27,
+      2.3
+     ],
+     "group": "face",
+     "fill": "#2B1B10",
+     "when": [
+      "eyesOpen"
+     ]
+    },
+    {
+     "circle": [
+      96.92,
+      26.08,
+      0.736
+     ],
+     "group": "face",
+     "fill": "#FFFFFF",
+     "when": [
+      "eyesOpen"
+     ]
+    },
+    {
+     "path": "M93.125 27 q2.875 2.3 5.75 0",
+     "group": "face",
+     "stroke": "#2B1B10",
+     "sw": 1.6,
+     "when": [
+      "eyesClosed"
+     ]
+    },
+    {
+     "path": "M93.125 27.8 q2.875 -3.4499999999999997 5.75 0",
+     "group": "face",
+     "stroke": "#2B1B10",
+     "sw": 1.6,
+     "when": [
+      "eyesHappy"
+     ]
+    },
+    {
+     "path": "M104 39.5 q3.5 2.5 7 -0.5",
+     "group": "face",
+     "stroke": "#2B1B10",
+     "sw": 1.3
+    },
+    {
+     "path": "M106 40.5 q1 6 4 5 q2 -2 0 -5.5z",
+     "group": "face",
+     "fill": "#F472B6",
+     "when": [
+      "eyesHappy"
+     ]
+    },
+    {
+     "path": "M92 22 l7 1.5",
+     "group": "face",
+     "stroke": "#2B1B10",
+     "sw": 1.4,
+     "when": [
+      "worried"
+     ]
+    },
+    {
+     "path": "M84 15 q-2.5 4.5 0 5.5 q2.5 -1 0 -5.5z",
+     "group": "face",
+     "fill": "#7DD3FC",
+     "when": [
+      "worried"
+     ]
+    },
+    {
+     "circle": [
+      116,
+      50,
+      5
+     ],
+     "group": "tool",
+     "fill": "rgba(253,230,138,0.15)",
+     "stroke": "#FACC15",
+     "sw": 1.8,
+     "when": [
+      "debugging"
+     ]
+    },
+    {
+     "path": "M112.5 53.5 l-5 5",
+     "group": "tool",
+     "stroke": "#FACC15",
+     "sw": 2.2,
+     "when": [
+      "debugging"
+     ]
+    }
+   ],
+   "poses": {
+    "hiding": {
+     "face": {
+      "tx": -6,
+      "ty": 7,
+      "s": 0.85,
+      "p": [
+       90,
+       38
+      ]
+     },
+     "tail": {
+      "s": 0.5,
+      "p": [
+       34,
+       40
+      ]
+     }
+    },
+    "sleeping": {
+     "body": {
+      "ty": 9
+     },
+     "face": {
+      "tx": -2,
+      "ty": 12,
+      "r": 10,
+      "p": [
+       88,
+       38
+      ]
+     },
+     "legs": {
+      "s": 0.35,
+      "p": [
+       64,
+       70
+      ]
+     },
+     "tail": {
+      "ty": 10
+     }
+    },
+    "curious": {
+     "face": {
+      "r": -14,
+      "p": [
+       90,
+       36
+      ]
+     }
+    }
+   },
+   "lines": {
+    "fixed": [
+     "Good job! Good job!",
+     "All clear! Treat?"
+    ],
+    "longSession": [
+     "You've been at it a while. Stretch break?",
+     "Walk break? I'll come.",
+     "Blink a few times. Eyes need breaks too."
+    ],
+    "lateNight": [
+     "It's late. I'm sleepy.",
+     "Coding past midnight? I'll keep you company.",
+     "Night shift, huh?"
+    ],
+    "morning": [
+     "Good morning!",
+     "Morning! Breakfast first?",
+     "Rise and shine!"
+    ],
+    "music": [
+     "Ooh, music!",
+     "*dances*",
+     "Is this my song?"
+    ],
+    "hot": [
+     "It's getting hot in here.",
+     "Your Mac's working hard.",
+     "*pants*"
+    ],
+    "file": [
+     "Ooh, a new file.",
+     "*sniffs around*",
+     "What's in here?"
+    ],
+    "click": [
+     "Woof!",
+     "*wags*",
+     "Ball? Did someone say ball?",
+     "Best day ever!"
+    ],
+    "pet": [
+     "*happy tail thumps*",
+     "Good human!",
+     "More scritches please."
+    ],
+    "yikes": [
+     "*whimpers*",
+     "I'll hide under the desk."
+    ],
+    "eatCurly": [
+     "Crunchy! Like kibble.",
+     "Mmm, curly braces!"
+    ]
+   }
+  },
+  "cat": {
+   "label": "Cat",
+   "name": "Byte",
+   "set": "home",
+   "flip": true,
+   "floor": true,
+   "speed": 0.8,
+   "bob": [
+    1,
+    0.6
+   ],
+   "glow": "rgba(190,242,100,0.35)",
+   "mouth": [
+    93,
+    38
+   ],
+   "head": [
+    90,
+    16
+   ],
+   "parts": [
+    {
+     "path": "M34 44 q-14 -2 -14 -16 q0 -10 8 -13",
+     "group": "tail",
+     "stroke": "#6B7280",
+     "sw": 5,
+     "pivot": [
+      34,
+      44
+     ],
+     "rot": [
+      10,
+      2.2,
+      0
+     ]
+    },
+    {
+     "path": "M40 50 l-1 20",
+     "group": "legs",
+     "stroke": "#6B7280",
+     "sw": 5,
+     "pivot": [
+      40,
+      50
+     ],
+     "rot": [
+      14,
+      1.0,
+      0.5
+     ]
+    },
+    {
+     "path": "M78 50 l1 20",
+     "group": "legs",
+     "stroke": "#6B7280",
+     "sw": 5,
+     "pivot": [
+      78,
+      50
+     ],
+     "rot": [
+      14,
+      1.0,
+      0
+     ]
+    },
+    {
+     "ellipse": [
+      60,
+      45,
+      26,
+      10
+     ],
+     "group": "body",
+     "fill": "#9CA3AF"
+    },
+    {
+     "path": "M48 36 q2 5 0 9 M56 35 q2 5 0 10 M64 35 q2 5 0 10",
+     "group": "body",
+     "stroke": "#6B7280",
+     "sw": 2,
+     "opacity": 0.8
+    },
+    {
+     "path": "M45 50 l1 20",
+     "group": "legs",
+     "stroke": "#9CA3AF",
+     "sw": 5,
+     "pivot": [
+      45,
+      50
+     ],
+     "rot": [
+      14,
+      1.0,
+      0
+     ]
+    },
+    {
+     "path": "M84 50 l-1 20",
+     "group": "legs",
+     "stroke": "#9CA3AF",
+     "sw": 5,
+     "pivot": [
+      84,
+      50
+     ],
+     "rot": [
+      14,
+      1.0,
+      0.5
+     ]
+    },
+    {
+     "path": "M80 26 l2 -13 l9 8z",
+     "group": "face",
+     "fill": "#9CA3AF"
+    },
+    {
+     "path": "M82.5 22 l1 -6 l4 4z",
+     "group": "face",
+     "fill": "#F9A8D4"
+    },
+    {
+     "path": "M94 21 l7 -10 l2 13z",
+     "group": "face",
+     "fill": "#9CA3AF"
+    },
+    {
+     "path": "M97 19 l3 -5 l1 6z",
+     "group": "face",
+     "fill": "#F9A8D4"
+    },
+    {
+     "circle": [
+      91,
+      32,
+      12
+     ],
+     "group": "face",
+     "fill": "#A3AAB5"
+    },
+    {
+     "path": "M86 22 l1.5 4 M91 21 l0 4.5 M96 22 l-1.5 4",
+     "group": "face",
+     "stroke": "#6B7280",
+     "sw": 1.5
+    },
+    {
+     "circle": [
+      85.5,
+      31,
+      4.800000000000001
+     ],
+     "group": "face",
+     "fill": "#BEF264",
+     "when": [
+      "eyesOpen"
+     ]
+    },
+    {
+     "circle": [
+      87,
+      31,
+      2.2
+     ],
+     "group": "face",
+     "fill": "#1F2937",
+     "when": [
+      "eyesOpen"
+     ]
+    },
+    {
+     "circle": [
+      87.88,
+      30.12,
+      0.7040000000000001
+     ],
+     "group": "face",
+     "fill": "#FFFFFF",
+     "when": [
+      "eyesOpen"
+     ]
+    },
+    {
+     "path": "M84.25 31 q2.75 2.2 5.5 0",
+     "group": "face",
+     "stroke": "#1F2937",
+     "sw": 1.6,
+     "when": [
+      "eyesClosed"
+     ]
+    },
+    {
+     "path": "M84.25 31.8 q2.75 -3.3000000000000003 5.5 0",
+     "group": "face",
+     "stroke": "#1F2937",
+     "sw": 1.6,
+     "when": [
+      "eyesHappy"
+     ]
+    },
+    {
+     "circle": [
+      94.5,
+      31,
+      4.800000000000001
+     ],
+     "group": "face",
+     "fill": "#BEF264",
+     "when": [
+      "eyesOpen"
+     ]
+    },
+    {
+     "circle": [
+      96,
+      31,
+      2.2
+     ],
+     "group": "face",
+     "fill": "#1F2937",
+     "when": [
+      "eyesOpen"
+     ]
+    },
+    {
+     "circle": [
+      96.88,
+      30.12,
+      0.7040000000000001
+     ],
+     "group": "face",
+     "fill": "#FFFFFF",
+     "when": [
+      "eyesOpen"
+     ]
+    },
+    {
+     "path": "M93.25 31 q2.75 2.2 5.5 0",
+     "group": "face",
+     "stroke": "#1F2937",
+     "sw": 1.6,
+     "when": [
+      "eyesClosed"
+     ]
+    },
+    {
+     "path": "M93.25 31.8 q2.75 -3.3000000000000003 5.5 0",
+     "group": "face",
+     "stroke": "#1F2937",
+     "sw": 1.6,
+     "when": [
+      "eyesHappy"
+     ]
+    },
+    {
+     "path": "M90.5 35.5 h3.5 l-1.75 2z",
+     "group": "face",
+     "fill": "#F472B6"
+    },
+    {
+     "path": "M92.25 37.5 q-1.5 2 -3 1 M92.25 37.5 q1.5 2 3 1",
+     "group": "face",
+     "stroke": "#1F2937",
+     "sw": 1
+    },
+    {
+     "path": "M84 36 l-9 -1.5 M84 38.5 l-9 2 M100 36 l9 -1.5 M100 38.5 l9 2",
+     "group": "face",
+     "stroke": "#E5E7EB",
+     "sw": 0.8
+    },
+    {
+     "path": "M83 26 l6 2 M100 26 l-6 2",
+     "group": "face",
+     "stroke": "#1F2937",
+     "sw": 1.3,
+     "when": [
+      "worried"
+     ]
+    },
+    {
+     "path": "M104 22 q-2.5 4.5 0 5.5 q2.5 -1 0 -5.5z",
+     "group": "face",
+     "fill": "#7DD3FC",
+     "when": [
+      "worried"
+     ]
+    },
+    {
+     "circle": [
+      115,
+      50,
+      5
+     ],
+     "group": "tool",
+     "fill": "rgba(253,230,138,0.15)",
+     "stroke": "#FACC15",
+     "sw": 1.8,
+     "when": [
+      "debugging"
+     ]
+    },
+    {
+     "path": "M111.5 53.5 l-5 5",
+     "group": "tool",
+     "stroke": "#FACC15",
+     "sw": 2.2,
+     "when": [
+      "debugging"
+     ]
+    }
+   ],
+   "poses": {
+    "hiding": {
+     "face": {
+      "ty": 6,
+      "s": 0.9,
+      "p": [
+       91,
+       40
+      ]
+     },
+     "body": {
+      "ty": 4
+     },
+     "legs": {
+      "s": 0.6,
+      "p": [
+       62,
+       70
+      ]
+     },
+     "tail": {
+      "s": 0.7,
+      "p": [
+       34,
+       44
+      ]
+     }
+    },
+    "sleeping": {
+     "body": {
+      "ty": 11
+     },
+     "face": {
+      "tx": -4,
+      "ty": 14,
+      "r": 14,
+      "p": [
+       90,
+       40
+      ]
+     },
+     "legs": {
+      "s": 0.3,
+      "p": [
+       62,
+       70
+      ]
+     },
+     "tail": {
+      "ty": 10
+     }
+    },
+    "curious": {
+     "face": {
+      "r": -10,
+      "p": [
+       91,
+       40
+      ]
+     }
+    }
+   },
+   "lines": {
+    "fixed": [
+     "All clear!",
+     "Fixed it!",
+     "No more errors!",
+     "Good job!"
+    ],
+    "longSession": [
+     "You've been at it a while. Stretch break?",
+     "Walk break? I'll come.",
+     "Blink a few times. Eyes need breaks too."
+    ],
+    "lateNight": [
+     "It's late. I'm sleepy.",
+     "Coding past midnight? I'll keep you company.",
+     "Night shift, huh?"
+    ],
+    "morning": [
+     "Good morning!",
+     "Morning! Breakfast first?",
+     "Rise and shine!"
+    ],
+    "music": [
+     "Ooh, music!",
+     "*dances*",
+     "Is this my song?"
+    ],
+    "hot": [
+     "It's getting hot in here.",
+     "Your Mac's working hard.",
+     "*pants*"
+    ],
+    "file": [
+     "Ooh, a new file.",
+     "*sniffs around*",
+     "What's in here?"
+    ],
+    "click": [
+     "Mrrp?",
+     "*purrs*",
+     "Meow.",
+     "I'll allow it."
+    ],
+    "pet": [
+     "*purrs loudly*",
+     "*headbutts your cursor*",
+     "Okay, that's enough. One more."
+    ],
+    "yikes": [
+     "*hisses*",
+     "*knocks errors off the desk*"
+    ],
+    "save": [
+     "Saved. I'm unimpressed, but saved.",
+     "Purrfect.",
+     "Saved!"
+    ],
+    "eatSemicolon": [
+     "A semicolon. Acceptable.",
+     "*crunch* Fine."
+    ],
+    "typing": [
+     "*sits on your keyboard*",
+     "Type faster, human.",
+     "Ooh, typing!"
+    ]
+   }
+  },
+  "bunny": {
+   "label": "Bunny",
+   "name": "Clover",
+   "set": "home",
+   "flip": true,
+   "floor": true,
+   "speed": 0.9,
+   "bob": [
+    3,
+    0.45
+   ],
+   "glow": "rgba(251,207,232,0.45)",
+   "mouth": [
+    89,
+    44
+   ],
+   "head": [
+    78,
+    14
+   ],
+   "parts": [
+    {
+     "circle": [
+      39,
+      46,
+      5.5
+     ],
+     "group": "body",
+     "fill": "#FFFFFF",
+     "stroke": "#D6D3D1",
+     "sw": 1
+    },
+    {
+     "ellipse": [
+      48,
+      62,
+      10,
+      5
+     ],
+     "group": "legs",
+     "fill": "#E7E5E4",
+     "stroke": "#D6D3D1",
+     "sw": 1,
+     "pivot": [
+      52,
+      60
+     ],
+     "rot": [
+      10,
+      0.45,
+      0
+     ]
+    },
+    {
+     "ellipse": [
+      58,
+      50,
+      20,
+      15
+     ],
+     "group": "body",
+     "fill": "#F5F5F4",
+     "stroke": "#D6D3D1",
+     "sw": 1
+    },
+    {
+     "path": "M70 56 l2 11",
+     "group": "legs",
+     "stroke": "#E7E5E4",
+     "sw": 5,
+     "pivot": [
+      70,
+      56
+     ],
+     "rot": [
+      12,
+      0.45,
+      0.5
+     ]
+    },
+    {
+     "path": "M74 31 q-4 -18 2 -24 q5 6 3 24z",
+     "group": "ears",
+     "fill": "#F5F5F4",
+     "stroke": "#D6D3D1",
+     "sw": 1,
+     "pivot": [
+      76,
+      31
+     ],
+     "rot": [
+      4,
+      1.6,
+      0
+     ]
+    },
+    {
+     "path": "M75.5 29 q-2 -12 1 -18 q2.5 5 1.5 18z",
+     "group": "ears",
+     "fill": "#FBCFE8",
+     "pivot": [
+      76,
+      31
+     ],
+     "rot": [
+      4,
+      1.6,
+      0
+     ]
+    },
+    {
+     "path": "M80 31 q2 -18 9 -22 q3 7 -5 23z",
+     "group": "ears",
+     "fill": "#F5F5F4",
+     "stroke": "#D6D3D1",
+     "sw": 1,
+     "pivot": [
+      80,
+      31
+     ],
+     "rot": [
+      5,
+      1.6,
+      0.4
+     ]
+    },
+    {
+     "path": "M81.5 29.5 q2 -12 6 -16 q1 5 -4 16z",
+     "group": "ears",
+     "fill": "#FBCFE8",
+     "pivot": [
+      80,
+      31
+     ],
+     "rot": [
+      5,
+      1.6,
+      0.4
+     ]
+    },
+    {
+     "circle": [
+      78,
+      40,
+      11
+     ],
+     "group": "face",
+     "fill": "#F5F5F4",
+     "stroke": "#D6D3D1",
+     "sw": 1
+    },
+    {
+     "circle": [
+      82,
+      38,
+      2.2
+     ],
+     "group": "face",
+     "fill": "#292524",
+     "when": [
+      "eyesOpen"
+     ]
+    },
+    {
+     "circle": [
+      82.88,
+      37.12,
+      0.7040000000000001
+     ],
+     "group": "face",
+     "fill": "#FFFFFF",
+     "when": [
+      "eyesOpen"
+     ]
+    },
+    {
+     "path": "M79.25 38 q2.75 2.2 5.5 0",
+     "group": "face",
+     "stroke": "#292524",
+     "sw": 1.6,
+     "when": [
+      "eyesClosed"
+     ]
+    },
+    {
+     "path": "M79.25 38.8 q2.75 -3.3000000000000003 5.5 0",
+     "group": "face",
+     "stroke": "#292524",
+     "sw": 1.6,
+     "when": [
+      "eyesHappy"
+     ]
+    },
+    {
+     "circle": [
+      88.5,
+      42,
+      1.5
+     ],
+     "group": "face",
+     "fill": "#F472B6"
+    },
+    {
+     "path": "M86 45 q1.5 1.5 3 0",
+     "group": "face",
+     "stroke": "#292524",
+     "sw": 1
+    },
+    {
+     "circle": [
+      83,
+      44,
+      2
+     ],
+     "group": "face",
+     "fill": "#FBCFE8",
+     "opacity": 0.7
+    },
+    {
+     "path": "M79 33.5 l5 1.5",
+     "group": "face",
+     "stroke": "#292524",
+     "sw": 1.3,
+     "when": [
+      "worried"
+     ]
+    },
+    {
+     "path": "M70 30 q-2.5 4.5 0 5.5 q2.5 -1 0 -5.5z",
+     "group": "face",
+     "fill": "#7DD3FC",
+     "when": [
+      "worried"
+     ]
+    },
+    {
+     "circle": [
+      100,
+      52,
+      5
+     ],
+     "group": "tool",
+     "fill": "rgba(253,230,138,0.15)",
+     "stroke": "#FACC15",
+     "sw": 1.8,
+     "when": [
+      "debugging"
+     ]
+    },
+    {
+     "path": "M96.5 55.5 l-5 5",
+     "group": "tool",
+     "stroke": "#FACC15",
+     "sw": 2.2,
+     "when": [
+      "debugging"
+     ]
+    }
+   ],
+   "poses": {
+    "hiding": {
+     "ears": {
+      "r": -55,
+      "p": [
+       77,
+       32
+      ]
+     },
+     "face": {
+      "s": 0.9,
+      "ty": 4,
+      "p": [
+       78,
+       46
+      ]
+     }
+    },
+    "sleeping": {
+     "ears": {
+      "r": -65,
+      "ty": 4,
+      "p": [
+       77,
+       32
+      ]
+     },
+     "face": {
+      "ty": 5,
+      "p": [
+       78,
+       46
+      ]
+     },
+     "legs": {
+      "s": 0.8,
+      "p": [
+       60,
+       66
+      ]
+     }
+    },
+    "curious": {
+     "face": {
+      "r": -10,
+      "p": [
+       78,
+       46
+      ]
+     },
+     "ears": {
+      "r": -6,
+      "p": [
+       77,
+       32
+      ]
+     }
+    }
+   },
+   "lines": {
+    "fixed": [
+     "All clear!",
+     "Fixed it!",
+     "No more errors!",
+     "Good job!"
+    ],
+    "longSession": [
+     "You've been at it a while. Stretch break?",
+     "Walk break? I'll come.",
+     "Blink a few times. Eyes need breaks too."
+    ],
+    "lateNight": [
+     "It's late. I'm sleepy.",
+     "Coding past midnight? I'll keep you company.",
+     "Night shift, huh?"
+    ],
+    "morning": [
+     "Good morning!",
+     "Morning! Breakfast first?",
+     "Rise and shine!"
+    ],
+    "music": [
+     "Ooh, music!",
+     "*dances*",
+     "Is this my song?"
+    ],
+    "hot": [
+     "It's getting hot in here.",
+     "Your Mac's working hard.",
+     "*pants*"
+    ],
+    "file": [
+     "Ooh, a new file.",
+     "*sniffs around*",
+     "What's in here?"
+    ],
+    "click": [
+     "*binky!*",
+     "*nose wiggle*",
+     "Hop hop!",
+     "Hi!"
+    ],
+    "pet": [
+     "*happy nose wiggles*",
+     "*flops over*"
+    ],
+    "yikes": [
+     "*thumps foot*",
+     "*freezes*"
+    ],
+    "eatParens": [
+     "Parentheses! Like little carrots.",
+     "(Crunch.)"
+    ]
+   }
+  },
+  "hamster": {
+   "label": "Hamster",
+   "name": "Nugget",
+   "set": "home",
+   "flip": true,
+   "floor": true,
+   "speed": 1.4,
+   "bob": [
+    1.2,
+    0.3
+   ],
+   "glow": "rgba(233,161,91,0.45)",
+   "mouth": [
+    82,
+    52
+   ],
+   "head": [
+    72,
+    26
+   ],
+   "parts": [
+    {
+     "ellipse": [
+      50,
+      67,
+      4.5,
+      2.5
+     ],
+     "group": "legs",
+     "fill": "#FBCFE8",
+     "pivot": [
+      50,
+      64
+     ],
+     "rot": [
+      18,
+      0.3,
+      0
+     ]
+    },
+    {
+     "ellipse": [
+      70,
+      67,
+      4.5,
+      2.5
+     ],
+     "group": "legs",
+     "fill": "#FBCFE8",
+     "pivot": [
+      70,
+      64
+     ],
+     "rot": [
+      18,
+      0.3,
+      0.5
+     ]
+    },
+    {
+     "circle": [
+      64,
+      34,
+      5
+     ],
+     "group": "body",
+     "fill": "#E9A15B"
+    },
+    {
+     "circle": [
+      64,
+      34,
+      2.8
+     ],
+     "group": "body",
+     "fill": "#FBCFE8"
+    },
+    {
+     "ellipse": [
+      58,
+      50,
+      23,
+      17
+     ],
+     "group": "body",
+     "fill": "#E9A15B"
+    },
+    {
+     "ellipse": [
+      64,
+      57,
+      15,
+      9
+     ],
+     "group": "body",
+     "fill": "#FFF7ED"
+    },
+    {
+     "path": "M44 40 q6 -4 12 -2",
+     "group": "body",
+     "stroke": "#C77E3A",
+     "sw": 1.5,
+     "opacity": 0.6
+    },
+    {
+     "circle": [
+      76,
+      37,
+      4.5
+     ],
+     "group": "face",
+     "fill": "#E9A15B"
+    },
+    {
+     "circle": [
+      76,
+      37,
+      2.4
+     ],
+     "group": "face",
+     "fill": "#FBCFE8"
+    },
+    {
+     "circle": [
+      75,
+      46,
+      2.3
+     ],
+     "group": "face",
+     "fill": "#1C1917",
+     "when": [
+      "eyesOpen"
+     ]
+    },
+    {
+     "circle": [
+      75.92,
+      45.08,
+      0.736
+     ],
+     "group": "face",
+     "fill": "#FFFFFF",
+     "when": [
+      "eyesOpen"
+     ]
+    },
+    {
+     "path": "M72.125 46 q2.875 2.3 5.75 0",
+     "group": "face",
+     "stroke": "#1C1917",
+     "sw": 1.6,
+     "when": [
+      "eyesClosed"
+     ]
+    },
+    {
+     "path": "M72.125 46.8 q2.875 -3.4499999999999997 5.75 0",
+     "group": "face",
+     "stroke": "#1C1917",
+     "sw": 1.6,
+     "when": [
+      "eyesHappy"
+     ]
+    },
+    {
+     "ellipse": [
+      78,
+      53,
+      6.5,
+      5
+     ],
+     "group": "face",
+     "fill": "#F7B98B",
+     "when": [
+      "eyesHappy"
+     ]
+    },
+    {
+     "circle": [
+      81.5,
+      49.5,
+      1.4
+     ],
+     "group": "face",
+     "fill": "#F472B6"
+    },
+    {
+     "path": "M79.5 52.5 q2 1.5 4 0",
+     "group": "face",
+     "stroke": "#1C1917",
+     "sw": 1
+    },
+    {
+     "path": "M84 50 l7 -1.5 M84 52 l7 1.5",
+     "group": "face",
+     "stroke": "#FFF7ED",
+     "sw": 0.8
+    },
+    {
+     "path": "M72 41.5 l5 1.5",
+     "group": "face",
+     "stroke": "#1C1917",
+     "sw": 1.3,
+     "when": [
+      "worried"
+     ]
+    },
+    {
+     "path": "M68 36 q-2.5 4.5 0 5.5 q2.5 -1 0 -5.5z",
+     "group": "face",
+     "fill": "#7DD3FC",
+     "when": [
+      "worried"
+     ]
+    },
+    {
+     "circle": [
+      96,
+      56,
+      5
+     ],
+     "group": "tool",
+     "fill": "rgba(253,230,138,0.15)",
+     "stroke": "#FACC15",
+     "sw": 1.8,
+     "when": [
+      "debugging"
+     ]
+    },
+    {
+     "path": "M92.5 59.5 l-5 5",
+     "group": "tool",
+     "stroke": "#FACC15",
+     "sw": 2.2,
+     "when": [
+      "debugging"
+     ]
+    }
+   ],
+   "poses": {
+    "hiding": {
+     "body": {
+      "s": 0.85,
+      "p": [
+       60,
+       68
+      ]
+     },
+     "face": {
+      "s": 0.8,
+      "tx": -4,
+      "ty": 4,
+      "p": [
+       60,
+       68
+      ]
+     }
+    },
+    "sleeping": {
+     "body": {
+      "s": 0.95,
+      "p": [
+       60,
+       68
+      ]
+     },
+     "face": {
+      "tx": -3,
+      "ty": 3,
+      "p": [
+       60,
+       68
+      ]
+     }
+    },
+    "curious": {
+     "body": {
+      "ty": -3
+     },
+     "face": {
+      "ty": -4,
+      "r": -8,
+      "p": [
+       76,
+       50
+      ]
+     }
+    }
+   },
+   "lines": {
+    "fixed": [
+     "All clear!",
+     "Fixed it!",
+     "No more errors!",
+     "Good job!"
+    ],
+    "longSession": [
+     "You've been at it a while. Stretch break?",
+     "Walk break? I'll come.",
+     "Blink a few times. Eyes need breaks too."
+    ],
+    "lateNight": [
+     "It's late. I'm sleepy.",
+     "Coding past midnight? I'll keep you company.",
+     "Night shift, huh?"
+    ],
+    "morning": [
+     "Good morning!",
+     "Morning! Breakfast first?",
+     "Rise and shine!"
+    ],
+    "music": [
+     "Ooh, music!",
+     "*dances*",
+     "Is this my song?"
+    ],
+    "hot": [
+     "It's getting hot in here.",
+     "Your Mac's working hard.",
+     "*pants*"
+    ],
+    "file": [
+     "Ooh, a new file.",
+     "*sniffs around*",
+     "What's in here?"
+    ],
+    "click": [
+     "Squeak!",
+     "*stuffs cheeks*",
+     "Wheel time?",
+     "Hi!"
+    ],
+    "pet": [
+     "*happy squeaks*",
+     "*cheeks puff up*"
+    ],
+    "yikes": [
+     "*hides in bedding*",
+     "Squeak!"
+    ],
+    "full": [
+     "My cheeks are full.",
+     "*saving the rest for later*"
+    ],
+    "typing": [
+     "Running on my wheel!",
+     "Go go go!",
+     "Full speed ahead."
     ]
    }
   }

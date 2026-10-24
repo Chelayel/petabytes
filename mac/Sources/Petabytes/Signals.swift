@@ -4,7 +4,7 @@ import Network
 
 /**
  What the Mac tells the pet, as the messages pet.html understands. Nothing here needs a permission:
- it reads how long ago a key was pressed (never which key), which app is in front, the battery, the network,
+ it reads how long ago a key was pressed (never which key), which kind of app is in front, the battery, the network,
  finished downloads, new screenshots, the clipboard's change count (never its contents), heat, appearance
  and the lock screen.
  */
@@ -75,31 +75,44 @@ final class Signals {
 
     // ---- Apps --------------------------------------------------------------
 
-    private static let terminals: Set<String> = [
-        "com.apple.Terminal", "com.googlecode.iterm2", "dev.warp.Warp-Stable", "com.mitchellh.ghostty",
-        "net.kovidgoyal.kitty", "org.alacritty", "com.github.wez.wezterm",
-    ]
-    private static let assistants: Set<String> = [
-        "com.anthropic.claudefordesktop", "com.openai.chat", "com.openai.codex", "com.openai.atlas",
-        "ai.perplexity.mac", "com.todesktop.230313mzl4w4u92",
-    ]
-    private static let editors: Set<String> = [
-        "com.microsoft.VSCode", "com.microsoft.VSCodeInsiders", "com.apple.dt.Xcode", "com.google.android.studio",
-        "dev.zed.Zed", "com.sublimetext.4", "com.exafunction.windsurf", "com.panic.Nova",
-    ]
-    private static let calls: Set<String> = [
-        "us.zoom.xos", "com.microsoft.teams2", "com.microsoft.teams", "com.apple.FaceTime", "com.cisco.webexmeetingsapp",
-    ]
-    private static let players: Set<String> = ["com.spotify.client", "com.apple.Music"]
+    /** Apps by bundle identifier, and the reaction (in pets.json) to bringing one to the front. */
+    private static let apps: [String: String] = {
+        let groups: [String: [String]] = [
+            "terminal": ["com.apple.Terminal", "com.googlecode.iterm2", "dev.warp.Warp-Stable", "com.mitchellh.ghostty",
+                         "net.kovidgoyal.kitty", "org.alacritty", "com.github.wez.wezterm", "co.zeit.hyper"],
+            "ai": ["com.anthropic.claudefordesktop", "com.openai.chat", "com.openai.codex", "com.openai.atlas",
+                   "ai.perplexity.mac", "com.todesktop.230313mzl4w4u92"],
+            "ide": ["com.microsoft.VSCode", "com.microsoft.VSCodeInsiders", "com.apple.dt.Xcode", "com.google.android.studio",
+                    "dev.zed.Zed", "com.sublimetext.4", "com.exafunction.windsurf", "com.panic.Nova", "com.barebones.bbedit"],
+            "meeting": ["us.zoom.xos", "com.microsoft.teams2", "com.microsoft.teams", "com.apple.FaceTime", "com.cisco.webexmeetingsapp"],
+            "music": ["com.spotify.client", "com.apple.Music", "com.apple.podcasts", "com.tidal.desktop"],
+            "browser": ["com.apple.Safari", "com.google.Chrome", "company.thebrowser.Browser", "org.mozilla.firefox",
+                        "com.brave.Browser", "com.microsoft.edgemac", "app.zen-browser.zen", "com.operasoftware.Opera"],
+            "chat": ["com.tinyspeck.slackmacgap", "com.hnc.Discord", "com.apple.MobileSMS", "net.whatsapp.WhatsApp",
+                     "ru.keepcoder.Telegram", "org.whispersystems.signal-desktop"],
+            "mail": ["com.apple.mail", "com.microsoft.Outlook", "com.readdle.smartemail-Mac", "com.superhuman.electron"],
+            "design": ["com.figma.Desktop", "com.bohemiancoding.sketch3", "com.seriflabs.affinitydesigner2", "com.seriflabs.affinityphoto2",
+                       "com.adobe.Photoshop", "com.adobe.illustrator", "com.pixelmatorteam.pixelmator.x", "com.canva.CanvaDesktop"],
+            "notes": ["notion.id", "md.obsidian", "com.apple.Notes", "net.shinyfrog.bear", "com.apple.iWork.Pages", "com.microsoft.Word"],
+            "calendar": ["com.apple.iCal", "com.flexibits.fantastical2.mac", "com.cron.electron"],
+            "game": ["com.valvesoftware.steam", "com.mojang.minecraftlauncher", "net.battle.app", "com.epicgames.EpicGamesLauncher"],
+            "video": ["com.apple.TV", "com.colliderli.iina", "org.videolan.vlc", "com.apple.QuickTimePlayerX"],
+            "activity": ["com.apple.ActivityMonitor"],
+            "docker": ["com.docker.docker", "com.electron.dockerdesktop", "dev.orbstack.OrbStack"],
+            "database": ["com.tinyapp.TablePlus", "org.jkiss.dbeaver.core.product", "com.sequel-ace.sequel-ace", "com.jetbrains.datagrip"],
+            "api": ["com.postmanlabs.mac", "com.insomnia.app", "com.usebruno.app"],
+            "simulator": ["com.apple.iphonesimulator"],
+            "settings": ["com.apple.systempreferences"],
+            "appStore": ["com.apple.AppStore"],
+            "passwords": ["com.apple.Passwords", "com.1password.1password", "com.bitwarden.desktop"],
+        ]
+        return Dictionary(groups.flatMap { key, ids in ids.map { ($0, key) } }, uniquingKeysWith: { first, _ in first })
+    }()
 
     private func watchApps() {
         NSWorkspace.shared.notificationCenter.addObserver(forName: NSWorkspace.didActivateApplicationNotification, object: nil, queue: .main) { [weak self] note in
             guard let app = note.userInfo?[NSWorkspace.applicationUserInfoKey] as? NSRunningApplication, let id = app.bundleIdentifier else { return }
-            if Self.terminals.contains(id) { self?.react("terminal") }
-            else if Self.assistants.contains(id) { self?.react("ai") }
-            else if Self.editors.contains(id) || id.hasPrefix("com.jetbrains.") { self?.react("ide") }
-            else if Self.calls.contains(id) { self?.react("meeting") }
-            else if Self.players.contains(id) { self?.react("music") }
+            if let key = Self.apps[id] ?? (id.hasPrefix("com.jetbrains.") ? "ide" : nil) { self?.react(key) }
         }
     }
 

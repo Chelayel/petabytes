@@ -33,7 +33,9 @@
     "midnight tide",
     "petabytes",
     "dolphin",
-    "fish"
+    "fish",
+    "dog",
+    "cat"
   ],
   "main": "./extension.js",
   "activationEvents": [
@@ -122,7 +124,11 @@
             "shark",
             "dolphin",
             "angelfish",
-            "tang"
+            "tang",
+            "retriever",
+            "cat",
+            "bunny",
+            "hamster"
           ],
           "enumDescriptions": [
             "Shelly the sea turtle",
@@ -136,14 +142,18 @@
             "Finn the shark",
             "Splash the dolphin",
             "Angie the angelfish",
-            "Indigo the blue tang"
+            "Indigo the blue tang",
+            "Biscuit the golden retriever",
+            "Byte the cat",
+            "Clover the bunny",
+            "Nugget the hamster"
           ],
-          "description": "Which pet lives in the Explorer."
+          "description": "Which pet lives in the Explorer: a sea creature from the Tide set, or a dog, cat, bunny or hamster from the Home set."
         },
         "petabytes.name": {
           "type": "string",
           "default": "",
-          "description": "Your pet's name. Leave empty for its own (Shelly, Bloop, Inky, Pinchy, Puff, Blue, Clem, Sandy, Finn, Splash, Angie or Indigo)."
+          "description": "Your pet's name. Leave empty for its own (Shelly, Bloop, Inky, Pinchy, Puff, Blue, Clem, Sandy, Finn, Splash, Angie, Indigo, Biscuit, Byte, Clover or Nugget)."
         }
       }
     }

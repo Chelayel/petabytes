@@ -403,6 +403,164 @@ PETS["tang"] = {
             "file": ["Ooh, a new file! Or have I seen it?", "Where are we again?"]},
 }
 
+# ---- Home: pets that walk instead of swim ---------------------------------
+# They live on the floor (or on top of the Mac's Dock) and get lines that don't mention water.
+HOME_LINES = {
+  "fixed": ["All clear!", "Fixed it!", "No more errors!", "Good job!"],
+  "longSession": ["You've been at it a while. Stretch break?", "Walk break? I'll come.", "Blink a few times. Eyes need breaks too."],
+  "lateNight": ["It's late. I'm sleepy.", "Coding past midnight? I'll keep you company.", "Night shift, huh?"],
+  "morning": ["Good morning!", "Morning! Breakfast first?", "Rise and shine!"],
+  "music": ["Ooh, music!", "*dances*", "Is this my song?"],
+  "hot": ["It's getting hot in here.", "Your Mac's working hard.", "*pants*"],
+  "file": ["Ooh, a new file.", "*sniffs around*", "What's in here?"],
+}
+
+def leg_stroke(x, y, dx, color, sw, ph, period=0.8):
+    return p(f"M{x} {y} l{dx} 20", "legs", stroke=color, sw=sw, pivot=[x, y], rot=[14, period, ph])
+
+# ---- Golden retriever ---------------------------------------------------
+deye, gold, gold_dark, gold_light = "#2B1B10", "#E8A84A", "#C98A2B", "#F3C77A"
+PETS["retriever"] = {
+  "label": "Golden retriever", "name": "Biscuit", "set": "home", "flip": True, "floor": True, "speed": 1.1,
+  "bob": [1.5, 0.5], "glow": "rgba(232,168,74,0.45)", "mouth": [111, 38], "head": [92, 16],
+  "parts": [
+    p("M34 40 q-12 -4 -18 -16 q8 3 18 9z", "tail", fill=gold_dark, pivot=[34, 40], rot=[22, 0.45, 0]),
+    leg_stroke(40, 50, -2, gold_dark, 7, 0.5), leg_stroke(82, 50, 2, gold_dark, 7, 0),
+    e(62, 44, 28, 13, "body", fill=gold),
+    p("M78 36 q10 2 12 14 q-6 4 -12 2z", "body", fill=gold_light, opacity=0.8),
+    leg_stroke(46, 50, 1, gold, 7, 0), leg_stroke(88, 50, -1, gold, 7, 0.5),
+    c(92, 30, 13, "face", fill="#EDB458"),
+    e(104, 35, 9, 6.5, "face", fill=gold_light),
+    c(112, 33, 2.6, "face", fill=deye),
+    p("M86 20 q-9 2 -9 15 q5 5 9 -1 q2 -7 0 -14z", "face", fill=gold_dark, pivot=[86, 21], rot=[8, 1.2, 0]),
+    *eye_set(96, 27, 2.3, "face", deye),
+    p("M104 39.5 q3.5 2.5 7 -0.5", "face", stroke=deye, sw=1.3),
+    p("M106 40.5 q1 6 4 5 q2 -2 0 -5.5z", "face", fill="#F472B6", when=["eyesHappy"]),
+    p("M92 22 l7 1.5", "face", stroke=deye, sw=1.4, when=["worried"]),
+    sweat(84, 15),
+    *lens(116, 50),
+  ],
+  "poses": {
+    "hiding":   {"face": {"tx": -6, "ty": 7, "s": 0.85, "p": [90, 38]}, "tail": {"s": 0.5, "p": [34, 40]}},
+    "sleeping": {"body": {"ty": 9}, "face": {"tx": -2, "ty": 12, "r": 10, "p": [88, 38]}, "legs": {"s": 0.35, "p": [64, 70]}, "tail": {"ty": 10}},
+    "curious":  {"face": {"r": -14, "p": [90, 36]}},
+  },
+  "lines": {"click": ["Woof!", "*wags*", "Ball? Did someone say ball?", "Best day ever!"],
+            "pet": ["*happy tail thumps*", "Good human!", "More scritches please."],
+            "yikes": ["*whimpers*", "I'll hide under the desk."],
+            "fixed": ["Good job! Good job!", "All clear! Treat?"],
+            "eatCurly": ["Crunchy! Like kibble.", "Mmm, curly braces!"]},
+}
+
+# ---- Cat ----------------------------------------------------------------
+keye, grey, grey_dark = "#1F2937", "#9CA3AF", "#6B7280"
+PETS["cat"] = {
+  "label": "Cat", "name": "Byte", "set": "home", "flip": True, "floor": True, "speed": 0.8,
+  "bob": [1, 0.6], "glow": "rgba(190,242,100,0.35)", "mouth": [93, 38], "head": [90, 16],
+  "parts": [
+    p("M34 44 q-14 -2 -14 -16 q0 -10 8 -13", "tail", stroke=grey_dark, sw=5, pivot=[34, 44], rot=[10, 2.2, 0]),
+    leg_stroke(40, 50, -1, grey_dark, 5, 0.5, 1.0), leg_stroke(78, 50, 1, grey_dark, 5, 0, 1.0),
+    e(60, 45, 26, 10, "body", fill=grey),
+    p("M48 36 q2 5 0 9 M56 35 q2 5 0 10 M64 35 q2 5 0 10", "body", stroke=grey_dark, sw=2, opacity=0.8),
+    leg_stroke(45, 50, 1, grey, 5, 0, 1.0), leg_stroke(84, 50, -1, grey, 5, 0.5, 1.0),
+    p("M80 26 l2 -13 l9 8z", "face", fill=grey), p("M82.5 22 l1 -6 l4 4z", "face", fill="#F9A8D4"),
+    p("M94 21 l7 -10 l2 13z", "face", fill=grey), p("M97 19 l3 -5 l1 6z", "face", fill="#F9A8D4"),
+    c(91, 32, 12, "face", fill="#A3AAB5"),
+    p("M86 22 l1.5 4 M91 21 l0 4.5 M96 22 l-1.5 4", "face", stroke=grey_dark, sw=1.5),
+    *eye_set(87, 31, 2.2, "face", keye, sclera="#BEF264"), *eye_set(96, 31, 2.2, "face", keye, sclera="#BEF264"),
+    p("M90.5 35.5 h3.5 l-1.75 2z", "face", fill="#F472B6"),
+    p("M92.25 37.5 q-1.5 2 -3 1 M92.25 37.5 q1.5 2 3 1", "face", stroke=keye, sw=1),
+    p("M84 36 l-9 -1.5 M84 38.5 l-9 2 M100 36 l9 -1.5 M100 38.5 l9 2", "face", stroke="#E5E7EB", sw=0.8),
+    p("M83 26 l6 2 M100 26 l-6 2", "face", stroke=keye, sw=1.3, when=["worried"]),
+    sweat(104, 22),
+    *lens(115, 50),
+  ],
+  "poses": {
+    "hiding":   {"face": {"ty": 6, "s": 0.9, "p": [91, 40]}, "body": {"ty": 4}, "legs": {"s": 0.6, "p": [62, 70]}, "tail": {"s": 0.7, "p": [34, 44]}},
+    "sleeping": {"body": {"ty": 11}, "face": {"tx": -4, "ty": 14, "r": 14, "p": [90, 40]}, "legs": {"s": 0.3, "p": [62, 70]}, "tail": {"ty": 10}},
+    "curious":  {"face": {"r": -10, "p": [91, 40]}},
+  },
+  "lines": {"click": ["Mrrp?", "*purrs*", "Meow.", "I'll allow it."],
+            "pet": ["*purrs loudly*", "*headbutts your cursor*", "Okay, that's enough. One more."],
+            "yikes": ["*hisses*", "*knocks errors off the desk*"],
+            "save": ["Saved. I'm unimpressed, but saved.", "Purrfect.", "Saved!"],
+            "eatSemicolon": ["A semicolon. Acceptable.", "*crunch* Fine."],
+            "typing": ["*sits on your keyboard*", "Type faster, human.", "Ooh, typing!"]},
+}
+
+# ---- Bunny --------------------------------------------------------------
+beye, fur, fur_line, pink = "#292524", "#F5F5F4", "#D6D3D1", "#FBCFE8"
+PETS["bunny"] = {
+  "label": "Bunny", "name": "Clover", "set": "home", "flip": True, "floor": True, "speed": 0.9,
+  "bob": [3, 0.45], "glow": "rgba(251,207,232,0.45)", "mouth": [89, 44], "head": [78, 14],
+  "parts": [
+    c(39, 46, 5.5, "body", fill="#FFFFFF", stroke=fur_line, sw=1),
+    e(48, 62, 10, 5, "legs", fill="#E7E5E4", stroke=fur_line, sw=1, pivot=[52, 60], rot=[10, 0.45, 0]),
+    e(58, 50, 20, 15, "body", fill=fur, stroke=fur_line, sw=1),
+    p("M70 56 l2 11", "legs", stroke="#E7E5E4", sw=5, pivot=[70, 56], rot=[12, 0.45, 0.5]),
+    p("M74 31 q-4 -18 2 -24 q5 6 3 24z", "ears", fill=fur, stroke=fur_line, sw=1, pivot=[76, 31], rot=[4, 1.6, 0]),
+    p("M75.5 29 q-2 -12 1 -18 q2.5 5 1.5 18z", "ears", fill=pink, pivot=[76, 31], rot=[4, 1.6, 0]),
+    p("M80 31 q2 -18 9 -22 q3 7 -5 23z", "ears", fill=fur, stroke=fur_line, sw=1, pivot=[80, 31], rot=[5, 1.6, 0.4]),
+    p("M81.5 29.5 q2 -12 6 -16 q1 5 -4 16z", "ears", fill=pink, pivot=[80, 31], rot=[5, 1.6, 0.4]),
+    c(78, 40, 11, "face", fill=fur, stroke=fur_line, sw=1),
+    *eye_set(82, 38, 2.2, "face", beye),
+    c(88.5, 42, 1.5, "face", fill="#F472B6"),
+    p("M86 45 q1.5 1.5 3 0", "face", stroke=beye, sw=1),
+    c(83, 44, 2, "face", fill=pink, opacity=0.7),
+    p("M79 33.5 l5 1.5", "face", stroke=beye, sw=1.3, when=["worried"]),
+    sweat(70, 30),
+    *lens(100, 52),
+  ],
+  "poses": {
+    "hiding":   {"ears": {"r": -55, "p": [77, 32]}, "face": {"s": 0.9, "ty": 4, "p": [78, 46]}},
+    "sleeping": {"ears": {"r": -65, "ty": 4, "p": [77, 32]}, "face": {"ty": 5, "p": [78, 46]}, "legs": {"s": 0.8, "p": [60, 66]}},
+    "curious":  {"face": {"r": -10, "p": [78, 46]}, "ears": {"r": -6, "p": [77, 32]}},
+  },
+  "lines": {"click": ["*binky!*", "*nose wiggle*", "Hop hop!", "Hi!"],
+            "pet": ["*happy nose wiggles*", "*flops over*"],
+            "yikes": ["*thumps foot*", "*freezes*"],
+            "eatParens": ["Parentheses! Like little carrots.", "(Crunch.)"]},
+}
+
+# ---- Hamster ------------------------------------------------------------
+heye, ham, ham_dark = "#1C1917", "#E9A15B", "#C77E3A"
+PETS["hamster"] = {
+  "label": "Hamster", "name": "Nugget", "set": "home", "flip": True, "floor": True, "speed": 1.4,
+  "bob": [1.2, 0.3], "glow": "rgba(233,161,91,0.45)", "mouth": [82, 52], "head": [72, 26],
+  "parts": [
+    e(50, 67, 4.5, 2.5, "legs", fill=pink, pivot=[50, 64], rot=[18, 0.3, 0]),
+    e(70, 67, 4.5, 2.5, "legs", fill=pink, pivot=[70, 64], rot=[18, 0.3, 0.5]),
+    c(64, 34, 5, "body", fill=ham), c(64, 34, 2.8, "body", fill=pink),
+    e(58, 50, 23, 17, "body", fill=ham),
+    e(64, 57, 15, 9, "body", fill="#FFF7ED"),
+    p("M44 40 q6 -4 12 -2", "body", stroke=ham_dark, sw=1.5, opacity=0.6),
+    c(76, 37, 4.5, "face", fill=ham), c(76, 37, 2.4, "face", fill=pink),
+    *eye_set(75, 46, 2.3, "face", heye),
+    e(78, 53, 6.5, 5, "face", fill="#F7B98B", when=["eyesHappy"]),
+    c(81.5, 49.5, 1.4, "face", fill="#F472B6"),
+    p("M79.5 52.5 q2 1.5 4 0", "face", stroke=heye, sw=1),
+    p("M84 50 l7 -1.5 M84 52 l7 1.5", "face", stroke="#FFF7ED", sw=0.8),
+    p("M72 41.5 l5 1.5", "face", stroke=heye, sw=1.3, when=["worried"]),
+    sweat(68, 36),
+    *lens(96, 56),
+  ],
+  "poses": {
+    "hiding":   {"body": {"s": 0.85, "p": [60, 68]}, "face": {"s": 0.8, "tx": -4, "ty": 4, "p": [60, 68]}},
+    "sleeping": {"body": {"s": 0.95, "p": [60, 68]}, "face": {"tx": -3, "ty": 3, "p": [60, 68]}},
+    "curious":  {"body": {"ty": -3}, "face": {"ty": -4, "r": -8, "p": [76, 50]}},
+  },
+  "lines": {"click": ["Squeak!", "*stuffs cheeks*", "Wheel time?", "Hi!"],
+            "pet": ["*happy squeaks*", "*cheeks puff up*"],
+            "yikes": ["*hides in bedding*", "Squeak!"],
+            "full": ["My cheeks are full.", "*saving the rest for later*"],
+            "typing": ["Running on my wheel!", "Go go go!", "Full speed ahead."]},
+}
+
+for pet in PETS.values():
+    pet.setdefault("set", "tide")
+    if pet["set"] == "home":
+        pet["lines"] = {**HOME_LINES, **pet["lines"]}
+
 LINES = {
   "hello": ["Hi! I'm {name}."],
   "wake": ["Oh! I'm up.", "Back to work?", "Mm, what did I miss?"],
@@ -507,6 +665,22 @@ REACTIONS.update({
   "hot":         {"mood": "worried", "ms": 2500, "cooldown": 900},
   "darkMode":    {"mood": "curious", "ms": 1200, "cooldown": 30},
   "unlock":      {"mood": "happy", "ms": 1100, "hearts": 2, "cooldown": 60},
+  "browser":     {"mood": "curious", "ms": 1200, "chance": 0.3, "cooldown": 1800},
+  "chat":        {"mood": "curious", "ms": 1200, "chance": 0.4, "cooldown": 900},
+  "mail":        {"mood": "curious", "ms": 1200, "chance": 0.5, "cooldown": 1800},
+  "design":      {"mood": "happy", "ms": 1100, "bubbles": 3, "chance": 0.6, "cooldown": 900},
+  "notes":       {"mood": "curious", "ms": 1200, "chance": 0.4, "cooldown": 900},
+  "calendar":    {"mood": "curious", "ms": 1200, "chance": 0.5, "cooldown": 1800},
+  "game":        {"mood": "excited", "ms": 3000, "cooldown": 900},
+  "video":       {"mood": "happy", "ms": 1100, "chance": 0.6, "cooldown": 1800},
+  "activity":    {"mood": "curious", "ms": 1500, "cooldown": 600},
+  "docker":      {"mood": "curious", "ms": 1200, "chance": 0.6, "cooldown": 900},
+  "database":    {"mood": "hiding", "ms": 1500, "chance": 0.6, "cooldown": 900},
+  "api":         {"mood": "curious", "ms": 1200, "chance": 0.5, "cooldown": 900},
+  "simulator":   {"mood": "spin", "ms": 800, "bubbles": 3, "cooldown": 300},
+  "settings":    {"mood": "curious", "ms": 1200, "chance": 0.5, "cooldown": 900},
+  "appStore":    {"mood": "curious", "ms": 1200, "chance": 0.5, "cooldown": 1800},
+  "passwords":   {"mood": "hiding", "ms": 1500, "cooldown": 600},
 })
 
 LINES.update({
@@ -523,6 +697,22 @@ LINES.update({
   "hot": ["It's getting hot in here.", "Your Mac's working hard.", "Is the water warming up?"],
   "darkMode": ["Lights out!", "Ooh, new look.", "Switching modes?"],
   "unlock": ["Welcome back!", "You're back!", "Missed you."],
+  "browser": ["Just one tab, right?", "Researching? Or scrolling?", "Look it up, I won't judge."],
+  "chat": ["Say hi from me!", "Back to the chats?", "Who's messaging?"],
+  "mail": ["Inbox zero?", "Any good emails?", "Reply-all with care."],
+  "design": ["Ooh, pretty!", "Make it pop.", "Can you draw me next?"],
+  "notes": ["Taking notes?", "Write that down.", "Writing something?"],
+  "calendar": ["Another meeting?", "What's on today?", "Is there time for a snack?"],
+  "game": ["Game time! Can I play?", "Break time!", "One more round?"],
+  "video": ["Movie time? I'll be quiet.", "Popcorn?", "Ooh, what are we watching?"],
+  "activity": ["Who's using all the memory?", "Something hogging the CPU?", "It wasn't me."],
+  "docker": ["Containers! Cozy.", "Spinning up the whales?", "It works on my container."],
+  "database": ["Careful with that DROP TABLE.", "Back up first?", "*peeks at the rows*"],
+  "api": ["Sending requests?", "200 OK, I hope.", "Fingers crossed for no 500s."],
+  "simulator": ["It's alive! On a tiny phone.", "Running it on the simulator!"],
+  "settings": ["Tweaking things?", "Don't turn me off!", "Fiddling with settings?"],
+  "appStore": ["Shopping?", "Ooh, a new app?"],
+  "passwords": ["*covers eyes*", "I'm not looking!"],
 })
 
 PETS["crab"]["lines"].update({"pet": ["*happy clacks*", "Snip! I mean, thanks!"], "run": ["Scuttling into action!", "It's alive! *clack clack*"]})

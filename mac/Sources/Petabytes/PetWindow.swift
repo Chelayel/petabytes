@@ -20,11 +20,49 @@ final class PetWindow: NSPanel {
     private var dragStart: CGPoint?
     private var frameStart = CGPoint.zero
     private var dragging = false
+    /** Frames a second: plenty for a pet, and a fraction of the display's 60 or 120. Almost none while nobody can see it. */
+    private var fps = 20
 
     var menuProvider: () -> NSMenu = { NSMenu() }
 
+    /** Drawn but not seen, and never in the way: for the pet living in its Dock tile. */
+    var invisible = false {
+        didSet { updateAlpha() }
+    }
+
+    /** True while an app is full screen and the pet should step aside. */
+    private var fullScreenApp = false {
+        didSet { if fullScreenApp != oldValue { updateAlpha() } }
+    }
+
+    /** Hidden by transparency rather than ordered out: WebKit stops drawing a hidden window, and the Dock tile needs it. */
+    private func updateAlpha() {
+        alphaValue = invisible || fullScreenApp ? 0 : 1
+        ignoresMouseEvents = true
+    }
+
+    /** Whether the app in front has a window covering a whole screen: full screen, or a game or video player. */
+    func checkFullScreen() {
+        guard Settings.hideInFullScreen, let front = NSWorkspace.shared.frontmostApplication,
+              front.processIdentifier != ProcessInfo.processInfo.processIdentifier else {
+            fullScreenApp = false
+            return
+        }
+        let windows = CGWindowListCopyWindowInfo([.optionOnScreenOnly, .excludeDesktopElements], kCGNullWindowID) as? [[String: Any]] ?? []
+        let sizes = NSScreen.screens.map(\.frame.size)
+        fullScreenApp = windows.contains { window in
+            guard window[kCGWindowOwnerPID as String] as? pid_t == front.processIdentifier,
+                  window[kCGWindowLayer as String] as? Int == 0,
+                  let raw = window[kCGWindowBounds as String] as? NSDictionary,
+                  let bounds = CGRect(dictionaryRepresentation: raw) else { return false }
+            return sizes.contains(bounds.size)
+        }
+    }
+
     init() {
         let config = WKWebViewConfiguration()
+        // Keep the page running while the window is hidden, for the pet living in its Dock tile.
+        if #available(macOS 14, *) { config.preferences.inactiveSchedulingPolicy = .none }
         config.userContentController.add(bridge, name: "host")
         config.userContentController.addUserScript(WKUserScript(source: Self.hostScript, injectionTime: .atDocumentEnd, forMainFrameOnly: true))
         webView = WKWebView(frame: .zero, configuration: config)
@@ -35,7 +73,8 @@ final class PetWindow: NSPanel {
         backgroundColor = .clear
         hasShadow = false
         level = .floating
-        collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary, .stationary, .ignoresCycle]
+        // Every Space, but not over full-screen apps.
+        collectionBehavior = [.canJoinAllSpaces, .stationary, .ignoresCycle]
         hidesOnDeactivate = false
         isMovable = false
         ignoresMouseEvents = true
@@ -46,13 +85,28 @@ final class PetWindow: NSPanel {
             guard let self, event.window === self else { return event }
             return self.handle(event)
         }
-        Timer.scheduledTimer(withTimeInterval: 1.0 / 30, repeats: true) { [weak self] _ in self?.updateClickThrough() }
+        Timer.scheduledTimer(withTimeInterval: 1.0 / 15, repeats: true) { [weak self] _ in self?.updateClickThrough() }
+        let workspace = NSWorkspace.shared.notificationCenter, distributed = DistributedNotificationCenter.default()
+        for (center, name, rate) in [
+            (workspace, NSWorkspace.screensDidSleepNotification, 1), (workspace, NSWorkspace.screensDidWakeNotification, 20),
+            (distributed, Notification.Name("com.apple.screenIsLocked"), 1), (distributed, Notification.Name("com.apple.screenIsUnlocked"), 20),
+        ] as [(NotificationCenter, Notification.Name, Int)] {
+            center.addObserver(forName: name, object: nil, queue: .main) { [weak self] _ in
+                self?.fps = rate
+                self?.configure()
+            }
+        }
         NotificationCenter.default.addObserver(forName: NSApplication.didChangeScreenParametersNotification, object: nil, queue: .main) { [weak self] _ in self?.place() }
         // The Dock can grow, shrink or move without the screen changing; check now and then.
         Timer.scheduledTimer(withTimeInterval: 3, repeats: true) { [weak self] _ in
             guard let self, Settings.place == .dock, self.frame != self.dockFrame() else { return }
             self.place()
         }
+        let check: (Notification) -> Void = { [weak self] _ in self?.checkFullScreen() }
+        workspace.addObserver(forName: NSWorkspace.didActivateApplicationNotification, object: nil, queue: .main, using: check)
+        workspace.addObserver(forName: NSWorkspace.activeSpaceDidChangeNotification, object: nil, queue: .main, using: check)
+        // An app can also go full screen without switching apps or Spaces being announced in time.
+        Timer.scheduledTimer(withTimeInterval: 2, repeats: true) { [weak self] _ in self?.checkFullScreen() }
         load()
         place()
     }
@@ -62,17 +116,20 @@ final class PetWindow: NSPanel {
 
     // ---- The page ----------------------------------------------------------
 
-    /** Runs inside the page: hides the panel's name label and reports where the pet is, for click-through. */
+    /**
+     Runs inside the page: hides the panel's name label, drops the glow (a filter redrawn every frame is the
+     most expensive thing on the page) and reports where the pet is, for click-through.
+     */
     private static let hostScript = """
     (() => {
       const style = document.createElement("style");
-      style.textContent = ".name { display: none; }";
+      style.textContent = ".name { display: none; } #pet svg { filter: none; }";
       document.head.appendChild(style);
       const host = window.webkit.messageHandlers.host, pet = document.getElementById("pet");
       setInterval(() => {
         const r = pet.getBoundingClientRect();
         host.postMessage({ type: "rect", x: r.left, y: r.top, w: r.width, h: r.height });
-      }, 50);
+      }, 100);
       host.postMessage({ type: "ready" });
     })();
     """
@@ -94,8 +151,21 @@ final class PetWindow: NSPanel {
         if ready { webView.evaluateJavaScript(script) } else { queued.append(script) }
     }
 
+    /** A picture of the pet as it is right now, for the Dock icon. */
+    func snapshotPet(attempts: Int = 20, _ done: @escaping (NSImage?) -> Void) {
+        guard ready, !petRect.isEmpty else {
+            // The page is still loading; try again shortly.
+            guard attempts > 0 else { return done(nil) }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) { [weak self] in self?.snapshotPet(attempts: attempts - 1, done) }
+            return
+        }
+        let config = WKSnapshotConfiguration()
+        config.rect = CGRect(x: petRect.minX * zoom, y: petRect.minY * zoom, width: petRect.width * zoom, height: petRect.height * zoom)
+        webView.takeSnapshot(with: config) { image, _ in done(image) }
+    }
+
     func configure() {
-        send(["type": "config", "pet": Settings.pet, "name": Settings.name, "ground": Settings.place == .dock])
+        send(["type": "config", "pet": Settings.pet, "name": Settings.name, "ground": Settings.place == .dock || Settings.showInDock, "fps": fps])
     }
 
     fileprivate func received(_ body: Any) {
@@ -164,8 +234,8 @@ final class PetWindow: NSPanel {
 
     /** Lets clicks through everywhere except on the pet. */
     private func updateClickThrough() {
-        guard isVisible, !dragging else { return }
         let mouse = NSEvent.mouseLocation
+        guard isVisible, alphaValue > 0, !dragging, frame.insetBy(dx: -10, dy: -10).contains(mouse) || !ignoresMouseEvents else { return }
         let onPage = CGPoint(x: (mouse.x - frame.minX) / zoom, y: (frame.maxY - mouse.y) / zoom)
         let overPet = petRect.insetBy(dx: -6, dy: -6).contains(onPage)
         if ignoresMouseEvents == overPet { ignoresMouseEvents = !overPet }

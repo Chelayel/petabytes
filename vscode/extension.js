@@ -51,6 +51,10 @@ const PETS = [
   { id: "dolphin", label: "Dolphin", detail: "Splash: fast, chatty and loves a flip" },
   { id: "angelfish", label: "Angelfish", detail: "Angie: glides gracefully, trailing long fins" },
   { id: "tang", label: "Blue tang", detail: "Indigo: friendly, if a little forgetful" },
+  { id: "retriever", label: "Golden retriever", detail: "Biscuit: wags, tilts its head, and loves a treat" },
+  { id: "cat", label: "Cat", detail: "Byte: purrs, judges, and sits on your keyboard" },
+  { id: "bunny", label: "Bunny", detail: "Clover: hops, wiggles its nose, and flattens its ears" },
+  { id: "hamster", label: "Hamster", detail: "Nugget: scurries, and stuffs its cheeks with snacks" },
 ];
 
 // Terminal commands worth a reaction, checked in order.
