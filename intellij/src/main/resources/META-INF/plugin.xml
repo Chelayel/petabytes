@@ -37,8 +37,9 @@
         bottom edge instead. <b>Drag it</b> to where it should stay, or let it swim. It only takes clicks on itself,
         and when your cursor is right beside it, it fades and lets your clicks through. Right-click it to feed it,
         choose a pet or an edge, or hide it; <b>Settings → Tools → Petabytes</b> sets its position, size and name.</p>
-        <p>Made to go with the <a href="https://plugins.jetbrains.com/plugin/31513-midnight-tide">Midnight Tide</a>
-        theme, and works with any theme.</p>
+        <p>Also for <a href="https://marketplace.visualstudio.com/items?itemName=chelayel.petabytes">VS Code</a>, and as
+        <a href="https://github.com/Chelayel/petabytes#on-your-mac">a Mac app</a> whose pet walks along your Dock and reacts to your Mac.
+        The Mac app is separate and can't see your code, so keep this plugin for that.</p>
         <p>Free and open source (MIT): <a href="https://github.com/Chelayel/petabytes">github.com/Chelayel/petabytes</a>.</p>
     ]]></description>
 

@@ -42,8 +42,6 @@ There are three, and they don't depend on each other:
 
 ![Pets reacting to typing, fixed errors, a new error, failed tests, debugging and being left alone](docs/moods.png)
 
-Made to go with the [Midnight Tide](https://github.com/Chelayel/Midnight-Tide) theme, and works with any theme.
-
 In IntelliJ IDEA, the pet swims up and down a strip at the editor's right edge, beside the scrollbar and out of the way of your code (or along the bottom edge, if you prefer):
 
 ![Splash the dolphin swimming at the right edge of the editor in IntelliJ IDEA, asking for a snack](docs/intellij-right-edge.png)
