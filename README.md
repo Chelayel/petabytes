@@ -9,7 +9,7 @@ Small companions with a big appetite. They keep you company while you code, in V
 - **Snacks**, food with feet: **Patty** the burger, **Nori** the sushi, **Pepe** the pizza, **Sprinkles** the donut or **Tuesday** the taco.
 - **Games**, original pixel-art characters: **Squish** the slime, **Boo** the ghost, **Sir Pix** the knight or **Bolt** the robot. They say "+1 coin!" when you save, "LEVEL UP!" when you fix every error and "GAME OVER" when tests fail.
 
-![Shelly swimming faster while you type, worrying about an error and celebrating the fix; Byte the cat hiding from failed tests; Biscuit eating a curly brace, napping and waking up](docs/demo.gif)
+![Shelly swimming faster while you type, worrying about an error and celebrating the fix; Byte the cat hiding from failed tests; Patty the burger eating a curly brace; Sir Pix the knight napping and waking up](docs/demo.gif)
 
 ![All twenty-five pets](docs/pets.png)
 
@@ -46,7 +46,11 @@ There are three, and they don't depend on each other:
 
 In IntelliJ IDEA, the pet swims up and down a strip at the editor's right edge, beside the scrollbar and out of the way of your code (or along the bottom edge, if you prefer):
 
-![Splash the dolphin swimming at the right edge of the editor in IntelliJ IDEA, asking for a snack](docs/intellij-right-edge.png)
+![Patty the burger at the right edge of the editor in IntelliJ IDEA, saying "All clear!"](docs/intellij-right-edge.png)
+
+In VS Code, the pet lives in a **Petabytes** panel in the Explorer:
+
+![Pepe the pizza in the Petabytes panel in VS Code, eating a curly brace](docs/vscode-panel.png)
 
 | Editor | Folder | Where the pet lives | Choose, show or hide |
 | --- | --- | --- | --- |
@@ -60,7 +64,11 @@ Download `Petabytes-<version>.dmg` from the [latest release](https://github.com/
 
 The pet walks along the top of your Dock, out of the way: clicks go through everywhere except on the pet itself. Drag it off the Dock to float it anywhere. **Move to Dock** puts it inside its own Dock icon instead, where you can keep it: it stays animated, a little bubble shows how it feels (z, !, ♥, ?) or that it's talking, and clicking the icon feeds it.
 
-![Inky the octopus living inside its own Dock icon](docs/mac-dock.png)
+![Bolt the robot standing on top of the Dock](docs/mac-walking.png) ![Inky the octopus living inside its own Dock icon](docs/mac-dock.png)
+
+**Choose Pet…** opens a picker, a tab per set:
+
+![The Choose a Pet window, showing the Games set](docs/mac-picker.png)
  It steps aside while an app is full screen (**Hide in Full Screen**, on by default).
 
 It reacts to your Mac, and none of it asks for a permission:
@@ -99,29 +107,6 @@ cd vscode && npx @vscode/vsce package           # petabytes-<version>.vsix
 cd intellij && ./gradlew runIde                 # an IDE sandbox with the plugin
 mac/build.sh && open mac/build/Petabytes.app    # the Mac app, and mac/build/Petabytes-<version>.dmg
 ```
-
-## Publishing
-
-A tag publishes all three at the tag's version:
-
-```
-git tag v0.2.0 && git push origin v0.2.0
-```
-
-[`release.yml`](.github/workflows/release.yml) builds and verifies the JetBrains plugin, the VS Code extension and the Mac DMG, attaches all three to a GitHub release, and uploads each to its marketplace only when that marketplace doesn't already have the version, so re-running a tag is safe. A push to `main` that touches any of them or the page builds them as a check and publishes nothing. Bump `pluginVersion` in `intellij/gradle.properties` and `version` in `vscode/package.json` alongside the tag.
-
-The JetBrains Marketplace only accepts updates through its API: upload the first version by hand at https://plugins.jetbrains.com/plugin/add, using the zip from the release. The VS Code Marketplace creates the extension on its first automated upload.
-
-Store tokens are repository secrets (`gh secret set NAME`, value on standard input):
-
-| Secret | For |
-| --- | --- |
-| `JETBRAINS_MARKETPLACE_TOKEN` | JetBrains Marketplace, a token from https://plugins.jetbrains.com/author/me/tokens |
-| `VSCE_PAT` | VS Code Marketplace, an Azure DevOps PAT with *Marketplace: Manage* on all accessible organizations (retired by Microsoft on 2026-12-01) |
-| `AZURE_CLIENT_ID`, `AZURE_TENANT_ID` | VS Code Marketplace through a managed identity instead of the PAT; its federated credential must trust this repository's `marketplace-publish` environment |
-| `OVSX_PAT` | Open VSX, optional |
-
-A missing token skips that store with a warning.
 
 ## License
 

@@ -4,6 +4,8 @@ Small companions with a big appetite. A pet lives in a **Petabytes** panel in yo
 
 ![A pet swimming faster while you type, celebrating a fix, hiding from failed tests, eating and napping](https://raw.githubusercontent.com/Chelayel/petabytes/main/docs/demo.gif)
 
+![Pepe the pizza in the Petabytes panel, eating a curly brace](https://raw.githubusercontent.com/Chelayel/petabytes/main/docs/vscode-panel.png)
+
 ![All sixteen pets](https://raw.githubusercontent.com/Chelayel/petabytes/main/docs/pets.png)
 
 - **Typing:** swims faster

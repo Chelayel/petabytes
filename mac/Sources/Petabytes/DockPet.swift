@@ -192,16 +192,7 @@ final class DockPet {
                 g.translateBy(x: -m.pivot.x, y: -m.pivot.y)
             }
             if let wave = part.rot { rotate(g, wave.at(clock), about: part.pivot) }
-            g.setAlpha(part.opacity)
-            g.addPath(part.path)
-            if let fill = part.fill { g.setFillColor(fill); g.fillPath() }
-            if let stroke = part.stroke {
-                g.addPath(part.path)
-                g.setStrokeColor(stroke)
-                g.setLineWidth(part.strokeWidth)
-                g.setLineCap(.round); g.setLineJoin(.round)
-                g.strokePath()
-            }
+            part.draw(in: g)
             g.restoreGState()
         }
         g.restoreGState()

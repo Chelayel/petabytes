@@ -31,6 +31,23 @@ struct ArtPart {
     let pivot: CGPoint
     let rot: Wave?
     let when: [String]?
+
+    /** Fills and outlines the part in art coordinates; the caller has set up the transform. */
+    func draw(in g: CGContext) {
+        g.setAlpha(opacity)
+        if let fill {
+            g.addPath(path)
+            g.setFillColor(fill)
+            g.fillPath()
+        }
+        if let stroke {
+            g.addPath(path)
+            g.setStrokeColor(stroke)
+            g.setLineWidth(strokeWidth)
+            g.setLineCap(.round); g.setLineJoin(.round)
+            g.strokePath()
+        }
+    }
 }
 
 struct PetArt {
@@ -78,6 +95,23 @@ struct PetArt {
         let box = parts.filter { $0.when == nil }.reduce(CGRect.null) { $0.union($1.path.boundingBoxOfPath.insetBy(dx: -$1.strokeWidth / 2, dy: -$1.strokeWidth / 2)) }
         let half = max(60 - box.minX, box.maxX - 60)
         bounds = CGRect(x: 60 - half, y: box.minY, width: 2 * half, height: box.height)
+    }
+
+    /** The pet standing still with its eyes open, as big as fits in the middle of the picture. */
+    func image(size: NSSize) -> NSImage {
+        NSImage(size: size, flipped: false) { rect in
+            guard let g = NSGraphicsContext.current?.cgContext else { return false }
+            let scale = min(rect.width * 0.92 / bounds.width, rect.height * 0.92 / bounds.height)
+            g.translateBy(x: rect.midX, y: rect.midY)
+            g.scaleBy(x: scale, y: -scale)
+            g.translateBy(x: -bounds.midX, y: -bounds.midY)
+            for part in parts where part.when?.contains("eyesOpen") ?? true {
+                g.saveGState()
+                part.draw(in: g)
+                g.restoreGState()
+            }
+            return true
+        }
     }
 
     private static func part(_ m: [String: Any]) -> ArtPart {

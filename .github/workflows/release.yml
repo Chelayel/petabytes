@@ -8,6 +8,16 @@
 # page builds and verifies both as a check and uploads nothing. "Run workflow" by hand is the
 # same dry run. A missing token skips that store with a warning; the built files
 # are in the run's `pets` artifact either way.
+#
+# Bump pluginVersion in intellij/gradle.properties and version in vscode/package.json
+# with the tag; the Mac app takes pluginVersion. A new JetBrains plugin's first
+# version is uploaded by hand (https://plugins.jetbrains.com/plugin/add); after that
+# this workflow updates it. Store tokens are repository secrets (gh secret set NAME):
+#   JETBRAINS_MARKETPLACE_TOKEN  https://plugins.jetbrains.com/author/me/tokens
+#   VSCE_PAT                     Azure DevOps PAT, Marketplace: Manage (retired 2026-12-01)
+#   AZURE_CLIENT_ID, AZURE_TENANT_ID  VS Code Marketplace through a managed identity
+#                                instead, trusted for the marketplace-publish environment
+#   OVSX_PAT                     Open VSX, optional
 name: release
 
 on:
@@ -107,7 +117,7 @@ jobs:
           fi
 
   # Each store gets the tag's version only when it does not have it already.
-  # Tokens: see the README's Publishing section.
+  # Tokens: see the top of this file.
   stores:
     needs: [build]
     if: startsWith(github.ref, 'refs/tags/v')

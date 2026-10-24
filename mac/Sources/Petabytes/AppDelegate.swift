@@ -11,14 +11,17 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     private var signals: Signals!
     private var statusItem: NSStatusItem!
     private let dockPet = DockPet()
+    private let picker = PetPicker()
 
     private static let sizes: [(String, CGFloat)] = [("Small", 1.0), ("Medium", 1.3), ("Large", 1.7)]
-    private static let sets = ["tide": "Tide", "home": "Home", "snacks": "Snacks", "games": "Games"]
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         window = PetWindow()
         window.menuProvider = { [unowned self] in self.petMenu(withQuit: true) }
         window.zoom = CGFloat(UserDefaults.standard.object(forKey: "size") as? Double ?? 1.3)
+
+        picker.onChoose = { [unowned self] id in self.choose(id) }
+        picker.onRename = { [unowned self] in self.window.configure() }
 
         signals = Signals { [weak self] message in self?.send(message) }
         signals.start()
@@ -30,6 +33,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         menu.delegate = self
         statusItem.menu = menu
         applyDockIcon()
+        // open -a Petabytes --args --choose-pet: start with the picker open.
+        if CommandLine.arguments.contains("--choose-pet") { picker.show() }
         // A full menu bar (on a MacBook, whatever doesn't fit beside the notch) hides new items without a word.
         // Then the app shows its icon in the Dock too, so its menu can always be found.
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) { [weak self] in
@@ -89,25 +94,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         let menu = NSMenu()
         menu.addItem(item("Feed \(petName())", #selector(feed)))
 
-        let choose = NSMenu()
-        let catalog = Catalog.shared
-        var lastSet: String?
-        for id in catalog.order {
-            guard let pet = catalog.pets[id] else { continue }
-            if pet.set != lastSet, let set = pet.set {
-                if lastSet != nil { choose.addItem(.separator()) }
-                choose.addItem(Self.header(Self.sets[set] ?? set.capitalized))
-                lastSet = set
-            }
-            let entry = item("\(pet.name) the \((pet.label ?? id).lowercased())", #selector(choosePet(_:)))
-            entry.representedObject = id
-            entry.state = id == Settings.pet ? .on : .off
-            choose.addItem(entry)
-        }
-        let chooseItem = NSMenuItem(title: "Choose Pet", action: nil, keyEquivalent: "")
-        chooseItem.submenu = choose
-        menu.addItem(chooseItem)
-        menu.addItem(item("Rename…", #selector(rename)))
+        menu.addItem(item("Choose Pet…", #selector(showPicker)))
 
         menu.addItem(.separator())
         if !Settings.showInDock {
@@ -143,13 +130,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         return menu
     }
 
-    private static func header(_ title: String) -> NSMenuItem {
-        if #available(macOS 14, *) { return .sectionHeader(title: title) }
-        let item = NSMenuItem(title: title, action: nil, keyEquivalent: "")
-        item.isEnabled = false
-        return item
-    }
-
     private func item(_ title: String, _ action: Selector, key: String = "") -> NSMenuItem {
         let item = NSMenuItem(title: title, action: action, keyEquivalent: key)
         item.target = action == #selector(NSApplication.terminate(_:)) ? NSApp : self
@@ -166,28 +146,13 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         send(["type": "feed", "key": "feed"])
     }
 
-    @objc private func choosePet(_ sender: NSMenuItem) {
-        guard let id = sender.representedObject as? String else { return }
+    @objc private func showPicker() { picker.show() }
+
+    private func choose(_ id: String) {
         Settings.pet = id
         Settings.name = ""
         window.configure()
         dockPet.choose(id)
-    }
-
-    @objc private func rename() {
-        let alert = NSAlert()
-        alert.messageText = "Rename \(petName())"
-        alert.informativeText = "Leave it empty for the pet's own name."
-        let field = NSTextField(frame: NSRect(x: 0, y: 0, width: 240, height: 24))
-        field.stringValue = Settings.name
-        alert.accessoryView = field
-        alert.addButton(withTitle: "Rename")
-        alert.addButton(withTitle: "Cancel")
-        alert.window.initialFirstResponder = field
-        NSApp.activate(ignoringOtherApps: true)
-        guard alert.runModal() == .alertFirstButtonReturn else { return }
-        Settings.name = field.stringValue.trimmingCharacters(in: .whitespaces)
-        window.configure()
     }
 
     @objc private func swimAlongDock() { move(to: .dock) }
