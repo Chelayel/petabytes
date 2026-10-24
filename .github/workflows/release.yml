@@ -1,19 +1,20 @@
-# Builds the pet for both IDEs and the Mac, and publishes it on a tag:
+# Builds the pet for both IDEs and the Mac, and releases a new version by itself:
+# bump pluginVersion in intellij/gradle.properties and version in vscode/package.json
+# to the same number and push to main. Once everything builds and verifies, a version
+# without a v<version> tag yet is published: the JetBrains plugin and the VS Code
+# extension to their marketplaces (each only when it doesn't have that version), and
+# a GitHub release, which creates the tag, with the Mac app's DMG only. The release
+# happens in this same run: a tag created by the workflow can't start another one.
 #
-#   git tag v1.2.3 && git push origin v1.2.3
+# Other pushes to main that touch the pets, and "Run workflow" by hand, build and
+# verify everything as a check and publish nothing. Pushing a v* tag by hand still
+# releases that version, and re-running a release is safe. The built files are in
+# the run's `pets` and `mac` artifacts either way; a missing token skips that store
+# with a warning.
 #
-# A tag ships the JetBrains plugin and the VS Code extension at the tag's
-# version, each only when its store does not have that version yet, so
-# re-running a tag is safe. Only the Mac app's DMG goes on the GitHub release. A push to main that touches either IDE or the shared
-# page builds and verifies both as a check and uploads nothing. "Run workflow" by hand is the
-# same dry run. A missing token skips that store with a warning; the built files
-# are in the run's `pets` artifact either way.
-#
-# Bump pluginVersion in intellij/gradle.properties and version in vscode/package.json
-# with the tag; the Mac app takes pluginVersion. A new JetBrains plugin's first
-# version is uploaded by hand from the run's pets artifact
-# (https://plugins.jetbrains.com/plugin/add); after that
-# this workflow updates it. Store tokens are repository secrets (gh secret set NAME):
+# A new JetBrains plugin's first version is uploaded by hand from the pets artifact
+# (https://plugins.jetbrains.com/plugin/add); after that this workflow updates it.
+# Store tokens are repository secrets (gh secret set NAME):
 #   JETBRAINS_MARKETPLACE_TOKEN  https://plugins.jetbrains.com/author/me/tokens
 #   VSCE_PAT                     Azure DevOps PAT, Marketplace: Manage (retired 2026-12-01)
 #   AZURE_CLIENT_ID, AZURE_TENANT_ID  VS Code Marketplace through a managed identity
@@ -39,6 +40,9 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.value }}
+      release: ${{ steps.version.outputs.release }}
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-java@v6
@@ -50,13 +54,31 @@ jobs:
         with:
           node-version: 24
 
+      # Which version this is, and whether to release it.
       - name: Version
         id: version
         shell: bash
         run: |
+          plugin=$(sed -n 's/^pluginVersion=//p' intellij/gradle.properties)
+          extension=$(node -p "require('./vscode/package.json').version")
           if [[ "$GITHUB_REF" == refs/tags/v* ]]; then
-            echo "value=${GITHUB_REF#refs/tags/v}" >> "$GITHUB_OUTPUT"
+            version="${GITHUB_REF#refs/tags/v}"
+            release=true
+          else
+            if [ "$plugin" != "$extension" ]; then
+              echo "::error::intellij/gradle.properties says $plugin but vscode/package.json says $extension. Bump both to the same version."
+              exit 1
+            fi
+            version="$plugin"
+            release=false
+            if [ "$GITHUB_EVENT_NAME" = push ] && [ "$GITHUB_REF" = refs/heads/main ] &&
+               ! git ls-remote --exit-code --tags origin "refs/tags/v$version" >/dev/null; then
+              release=true
+            fi
           fi
+          echo "value=$version" >> "$GITHUB_OUTPUT"
+          echo "release=$release" >> "$GITHUB_OUTPUT"
+          echo "Version $version; release: $release"
 
       - name: JetBrains plugin
         working-directory: intellij
@@ -95,8 +117,8 @@ jobs:
   # installed from their marketplaces, which also keep them up to date.
   # Idempotent: a rerun finds the release already there and refreshes its DMG.
   github-release:
-    needs: [mac]
-    if: startsWith(github.ref, 'refs/tags/v')
+    needs: [build, mac]
+    if: needs.build.outputs.release == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
@@ -108,17 +130,19 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          if gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
-            gh release upload "$GITHUB_REF_NAME" dist/* --clobber
+          tag="v${{ needs.build.outputs.version }}"
+          if gh release view "$tag" >/dev/null 2>&1; then
+            gh release upload "$tag" dist/* --clobber
           else
-            gh release create "$GITHUB_REF_NAME" dist/* --title "$GITHUB_REF_NAME" --generate-notes
+            # Creates the tag too, on the commit this run built.
+            gh release create "$tag" dist/* --target "$GITHUB_SHA" --title "$tag" --generate-notes
           fi
 
-  # Each store gets the tag's version only when it does not have it already.
+  # Each store gets the version only when it does not have it already.
   # Tokens: see the top of this file.
   stores:
     needs: [build]
-    if: startsWith(github.ref, 'refs/tags/v')
+    if: needs.build.outputs.release == 'true'
     runs-on: ubuntu-latest
     environment: marketplace-publish
     permissions:
@@ -146,7 +170,7 @@ jobs:
         shell: bash
         # `|| true`: a store that doesn't list the extension yet is "nothing", not a failure.
         run: |
-          version="${GITHUB_REF_NAME#v}"
+          version="${{ needs.build.outputs.version }}"
           jb=$(curl -sS "https://plugins.jetbrains.com/plugins/list?pluginId=com.chelayel.petabytes" | grep -o '<version>[^<]*</version>' | head -1 | sed 's/<[^>]*>//g' || true)
           ms=$(npx --yes @vscode/vsce show chelayel.petabytes --json 2>/dev/null | node -p "try{JSON.parse(require('fs').readFileSync(0,'utf8')).versions[0].version}catch(e){''}" || true)
           echo "version=$version" >> "$GITHUB_OUTPUT"
