@@ -4,14 +4,15 @@
 #
 # A tag ships the JetBrains plugin and the VS Code extension at the tag's
 # version, each only when its store does not have that version yet, so
-# re-running a tag is safe. The Mac app's DMG goes on the GitHub release. A push to main that touches either IDE or the shared
+# re-running a tag is safe. Only the Mac app's DMG goes on the GitHub release. A push to main that touches either IDE or the shared
 # page builds and verifies both as a check and uploads nothing. "Run workflow" by hand is the
 # same dry run. A missing token skips that store with a warning; the built files
 # are in the run's `pets` artifact either way.
 #
 # Bump pluginVersion in intellij/gradle.properties and version in vscode/package.json
 # with the tag; the Mac app takes pluginVersion. A new JetBrains plugin's first
-# version is uploaded by hand (https://plugins.jetbrains.com/plugin/add); after that
+# version is uploaded by hand from the run's pets artifact
+# (https://plugins.jetbrains.com/plugin/add); after that
 # this workflow updates it. Store tokens are repository secrets (gh secret set NAME):
 #   JETBRAINS_MARKETPLACE_TOKEN  https://plugins.jetbrains.com/author/me/tokens
 #   VSCE_PAT                     Azure DevOps PAT, Marketplace: Manage (retired 2026-12-01)
@@ -90,18 +91,15 @@ jobs:
           name: mac
           path: dist/*
 
-  # The GitHub release carries every file, for anyone installing from disk.
-  # Idempotent: a rerun finds the release already there and refreshes its assets.
+  # The GitHub release carries the Mac app only: the extension and the plugin are
+  # installed from their marketplaces, which also keep them up to date.
+  # Idempotent: a rerun finds the release already there and refreshes its DMG.
   github-release:
-    needs: [build, mac]
+    needs: [mac]
     if: startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - uses: actions/download-artifact@v8
-        with:
-          name: pets
-          path: dist
       - uses: actions/download-artifact@v8
         with:
           name: mac
