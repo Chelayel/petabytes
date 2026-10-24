@@ -7,10 +7,11 @@ Small companions with a big appetite. They keep you company while you code, in V
 - **Tide**, sea creatures that swim: **Shelly** the sea turtle, **Bloop** the jellyfish, **Inky** the octopus, **Pinchy** the crab, **Puff** the pufferfish, **Blue** the whale, **Clem** the clownfish, **Sandy** the seahorse, **Finn** the shark, **Splash** the dolphin, **Angie** the angelfish or **Indigo** the blue tang.
 - **Home**, pets that walk: **Biscuit** the golden retriever, **Byte** the cat, **Clover** the bunny or **Nugget** the hamster.
 - **Snacks**, food with feet: **Patty** the burger, **Nori** the sushi, **Pepe** the pizza, **Sprinkles** the donut or **Tuesday** the taco.
+- **Games**, original pixel-art characters: **Squish** the slime, **Boo** the ghost, **Sir Pix** the knight or **Bolt** the robot. They say "+1 coin!" when you save, "LEVEL UP!" when you fix every error and "GAME OVER" when tests fail.
 
 ![Shelly swimming faster while you type, worrying about an error and celebrating the fix; Byte the cat hiding from failed tests; Biscuit eating a curly brace, napping and waking up](docs/demo.gif)
 
-![All twenty-one pets](docs/pets.png)
+![All twenty-five pets](docs/pets.png)
 
 ## Which one do I need?
 

@@ -9,7 +9,7 @@ import glob, html, json, os, pathlib, subprocess, sys, tempfile
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 PAGE = (ROOT / "web/pet.html").read_text()
 DATA = json.loads((ROOT / "web/pets.json").read_text())
-COLUMNS, CARD_W, CARD_H, CAPTION, GAP, PAD = 4, 290, 190, 34, 22, 30
+COLUMNS, CARD_W, CARD_H, CAPTION, GAP, PAD = 5, 290, 190, 34, 22, 30
 
 
 def chrome():
@@ -82,7 +82,7 @@ sheet(pets, ROOT / "docs/pets.png")
 
 moods = [
     ("turtle", "You're typing", "setInterval(() => send({ type: 'typing' }), 1000);", "Ooh, typing!"),
-    ("jellyfish", "You fixed every error", "send({ type: 'errors', errors: 2, before: 0 }); setTimeout(() => send({ type: 'errors', errors: 0, before: 2 }), 4800);", "No more errors!"),
+    ("knight", "You fixed every error", "send({ type: 'errors', errors: 2, before: 0 }); setTimeout(() => send({ type: 'errors', errors: 0, before: 2 }), 4800);", "LEVEL UP!"),
     ("pufferfish", "A new error appeared", "setTimeout(() => send({ type: 'errors', errors: 1, before: 0 }), 4000);", "Uh oh."),
     ("cat", "Your tests failed", "setTimeout(() => send({ type: 'task', ok: false, name: 'npm test' }), 4800);", "Oof, npm test."),
     ("crab", "You're debugging", "send({ type: 'debug', active: true });", "Let's find it."),
@@ -93,5 +93,8 @@ moods = [
     ("burger", "You saved a file", "setTimeout(() => send({ type: 'save' }), 4800);", "Saved! Fresh off the grill."),
     ("pizza", "You took a screenshot", "setTimeout(() => send({ type: 'react', key: 'screenshot' }), 4900);", "Cheese!"),
     ("clownfish", "You switched to the terminal", "setTimeout(() => send({ type: 'react', key: 'terminal' }), 4800);", "Command line time!"),
+    ("slime", "You committed", "setTimeout(() => send({ type: 'react', key: 'commit' }), 4800);", "Achievement unlocked: Commit!"),
+    ("ghost", "It's past midnight", "", "Midnight? My favorite hour."),
+    ("robot", "You opened your AI assistant", "setTimeout(() => send({ type: 'react', key: 'ai' }), 4800);", "A fellow AI! Beep!"),
 ]
 sheet(moods, ROOT / "docs/moods.png")

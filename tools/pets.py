@@ -748,8 +748,212 @@ PETS["taco"] = {
             "lateNight": ["Late-night taco run?", "Night shift, huh?"]},
 }
 
+# ---- Games: original 8-bit characters ---------------------------------------
+# Drawn as pixel art: each map row is a row of pixels, each letter a color from the palette, "." empty.
+GAMES_LINES = {
+  "hello": ["{name} joined the game!", "Player 2 has entered!"],
+  "wake": ["Unpaused!", "Back in the game!"],
+  "save": ["+1 coin!", "Progress saved!", "Checkpoint!"],
+  "fixed": ["LEVEL UP!", "Boss defeated!", "Quest complete!"],
+  "worried": ["Enemy spotted!", "Uh oh, a bug!", "Something's off."],
+  "yikes": ["Too many enemies!", "Retreat!"],
+  "taskOk": ["{task}: victory!", "{task} cleared!"],
+  "taskFail": ["GAME OVER: {task}.", "{task} failed. Continue?"],
+  "commit": ["Achievement unlocked: Commit!", "Saved to the high scores."],
+  "typing": ["Combo!", "Button mashing!", "Ooh, typing!"],
+  "debugOn": ["Bug hunt! Equip magnifier.", "Let's find it."],
+  "feed": ["Power-up!", "Ooh, an item!"],
+  "eatCurly": ["1UP!", "Power-up acquired!"],
+  "eatSemicolon": ["+10 points!", "Crunchy semicolon!"],
+  "morning": ["Player 1, ready!", "Press start!"],
+  "lateNight": ["One more level? It's late.", "Night quest, huh?"],
+  "longSession": ["You've been playing a while. Stretch?", "Save and take a break?"],
+}
+
+def pixels(rows, x0, y0, s, palette, group, **kw):
+    """One part per color: runs of same-colored pixels in a row become one rectangle each."""
+    out = []
+    for key, color in palette.items():
+        d = []
+        for r, row in enumerate(rows):
+            c = 0
+            while c < len(row):
+                if row[c] != key:
+                    c += 1
+                    continue
+                start = c
+                while c < len(row) and row[c] == key:
+                    c += 1
+                d.append(f"M{x0 + start * s} {y0 + r * s}h{(c - start) * s}v{s}h{-(c - start) * s}z")
+        if d:
+            out.append(p(" ".join(d), group, fill=color, **kw))
+    return out
+
+def pixel_eyes(cols, row, x0, y0, s, group, white="#FFFFFF", pupil="#0E1012"):
+    """Pixel eyes two pixels wide: open (white with a pupil), closed (a line) and happy (^)."""
+    parts = []
+    for c in cols:
+        x, y = x0 + c * s, y0 + row * s
+        parts += [p(f"M{x} {y}h{2*s}v{2*s}h{-2*s}z", group, fill=white, when=["eyesOpen"]),
+                  p(f"M{x+s} {y}h{s}v{2*s}h{-s}z", group, fill=pupil, when=["eyesOpen"]),
+                  p(f"M{x} {y+s}h{2*s}v{s}h{-2*s}z", group, fill=pupil, when=["eyesClosed"]),
+                  p(f"M{x} {y+s}h{s}v{s}h{-s}z M{x+s} {y}h{s}v{s}h{-s}z", group, fill=pupil, when=["eyesHappy"])]
+    return parts
+
+def pixel_sweat(x, y, s=3):
+    return p(f"M{x} {y}h{s}v{s}h{-s}z M{x-s} {y+s}h{3*s}v{s}h{-3*s}z", "face", fill="#7DD3FC", when=["worried"])
+
+# ---- Slime --------------------------------------------------------------
+S4 = 4
+slime_rows = [
+  "......DDDD......",
+  "....DDGGGGDD....",
+  "...DGGLLGGGGD...",
+  "..DGGLLGGGGGGD..",
+  ".DGGGGGGGGGGGGD.",
+  ".DGGGGGGGGGGGGD.",
+  "DGGGGGGGGGGGGGGD",
+  "DGGGGGGGGGGGGGGD",
+  "DGGGGGGKKGGGGGGD",
+  ".DGGGGGGGGGGGGD.",
+  "..DDDDDDDDDDDD..",
+]
+PETS["slime"] = {
+  "label": "Slime", "name": "Squish", "set": "games", "flip": False, "floor": True, "speed": 0.7,
+  "bob": [3, 0.55], "glow": "rgba(74,222,128,0.45)", "mouth": [60, 62], "head": [60, 28],
+  "parts": [
+    *pixels(slime_rows, 28, 28, S4, {"D": "#166534", "G": "#4ADE80", "L": "#BBF7D0", "K": "#14532D"}, "body"),
+    *pixel_eyes([4, 10], 5, 28, 28, S4, "face"),
+    pixel_sweat(84, 34),
+    *lens(98, 58),
+  ],
+  "groupMotion": {"body": {"sy": [0.08, 0.55, 0], "sx": [-0.05, 0.55, 0], "p": [60, 72]},
+                  "face": {"sy": [0.08, 0.55, 0], "sx": [-0.05, 0.55, 0], "p": [60, 72]}},
+  "poses": {
+    "hiding":   {"body": {"s": 0.75, "p": [60, 72]}, "face": {"s": 0.75, "p": [60, 72]}},
+    "sleeping": {"body": {"s": 0.9, "p": [60, 72]}, "face": {"s": 0.9, "p": [60, 72]}},
+    "curious":  {"body": {"r": -6, "p": [60, 72]}, "face": {"r": -6, "p": [60, 72]}},
+  },
+  "lines": {"click": ["*squish*", "Boing!", "A wild slime appears!", "I'm level 1, be gentle."],
+            "pet": ["*happy wobble*", "Sticky hugs!"],
+            "yikes": ["*splits in two* Just kidding.", "*wobbles nervously*"]},
+}
+
+# ---- Ghost --------------------------------------------------------------
+ghost_rows = [
+  "....OOOOOO....",
+  "..OOWWWWWWOO..",
+  ".OWWWWWWWWWWO.",
+  ".OWWWWWWWWWWO.",
+  "OWWWWWWWWWWWWO",
+  "OWWWWWWWWWWWWO",
+  "OWWWWWWWWWWWWO",
+  "OWPWWWWWWWWPWO",
+  "OWWWWWKKWWWWWO",
+  "OWWWWWWWWWWWWO",
+  "OWWWWWWWWWWWWO",
+  "OWWOWWOOWWOWWO",
+  ".OO.OO..OO.OO.",
+]
+PETS["ghost"] = {
+  "label": "Ghost", "name": "Boo", "set": "games", "flip": False, "floor": False, "speed": 0.7,
+  "bob": [6, 2.6], "glow": "rgba(226,232,240,0.5)", "mouth": [60, 50], "head": [60, 14],
+  "parts": [
+    *pixels(ghost_rows, 32, 14, S4, {"O": "#64748B", "W": "#F1F5F9", "P": "#F9A8D4", "K": "#334155"}, "body", pivot=[60, 66], rot=[3, 2.6, 0]),
+    *pixel_eyes([3, 9], 4, 32, 14, S4, "face", white="#334155", pupil="#0E1012"),
+    pixel_sweat(90, 18),
+    *lens(96, 50),
+  ],
+  "poses": {
+    "hiding":   {"body": {"s": 0.8, "ty": 4, "p": [60, 40]}, "face": {"s": 0.8, "ty": 4, "p": [60, 40]}},
+    "sleeping": {"body": {"ty": 4}, "face": {"ty": 4}},
+    "curious":  {"body": {"r": -8, "p": [60, 40]}, "face": {"r": -8, "p": [60, 40]}},
+  },
+  "lines": {"click": ["Boo!", "Did I scare you?", "Wooo... hi.", "*floats happily*"],
+            "pet": ["*blushes*", "Your hand went right through me. Hehe."],
+            "yikes": ["*turns transparent*", "Eek! And I'm the ghost!"],
+            "lateNight": ["Midnight? My favorite hour.", "Spooky hours. I love it."]},
+}
+
+# ---- Knight -------------------------------------------------------------
+knight_rows = [
+  ".....RR.....",
+  "....RRR.....",
+  "...SSSSSS...",
+  "..SSSSSSSS..",
+  "..SSKKKKSS..",
+  "..SSSSSSSS..",
+  "...SSSSSS...",
+  "..BBBBBBBB..",
+  ".BBBBYYBBBB.",
+  ".BBBBYYBBBB.",
+  "..BBBBBBBB..",
+]
+PETS["knight"] = {
+  "label": "Knight", "name": "Sir Pix", "set": "games", "flip": True, "floor": True, "speed": 1.0,
+  "bob": [1.2, 0.5], "glow": "rgba(147,197,253,0.4)", "mouth": [66, 26], "head": [60, 10],
+  "parts": [
+    p("M48 56h8v16h-8z", "legs", fill="#475569", pivot=[52, 56], rot=[14, 0.7, 0]),
+    p("M64 56h8v16h-8z", "legs", fill="#475569", pivot=[68, 56], rot=[14, 0.7, 0.5]),
+    p("M82 20h4v24h-4z M78 40h12v4h-12z M82 44h4v8h-4z", "arms", fill="#CBD5E1", pivot=[84, 48], rot=[10, 1.4, 0]),
+    *pixels(knight_rows, 36, 12, S4, {"R": "#EF4444", "S": "#94A3B8", "K": "#1E293B", "B": "#3B82F6", "Y": "#FACC15"}, "body"),
+    p("M48 28h4v4h-4z M64 28h4v4h-4z", "face", fill="#FDE047", when=["eyesOpen", "eyesHappy"]),
+    pixel_sweat(84, 12),
+    *lens(100, 56),
+  ],
+  "poses": {
+    "hiding":   {"body": {"s": 0.9, "ty": 4, "p": [60, 56]}, "face": {"s": 0.9, "ty": 4, "p": [60, 56]}, "arms": {"s": 0.6, "p": [84, 48]}},
+    "sleeping": {"body": {"ty": 4}, "face": {"ty": 4}, "legs": {"s": 0.5, "p": [60, 72]}, "arms": {"r": 60, "p": [84, 48]}},
+    "curious":  {"body": {"r": -6, "p": [60, 56]}, "face": {"r": -6, "p": [60, 56]}},
+  },
+  "lines": {"click": ["For the codebase!", "Huzzah!", "En garde!", "*salutes*"],
+            "pet": ["*clank of joy*", "Thou art kind."],
+            "yikes": ["*hides behind shield*", "Retreat!"],
+            "debugOn": ["A quest! Find the bug.", "I shall slay this bug."],
+            "fixed": ["The bug is slain!", "LEVEL UP!"]},
+}
+
+# ---- Robot --------------------------------------------------------------
+robot_rows = [
+  "......A......",
+  "..GGGGGGGGG..",
+  "..GCCCCCCCG..",
+  "..GCCCCCCCG..",
+  "..GCCCCCCCG..",
+  "..GCCCCCCCG..",
+  "..GGGGGGGGG..",
+  "...BBBBBBB...",
+  "..BBBRRRBBB..",
+  "...BBBBBBB...",
+]
+PETS["robot"] = {
+  "label": "Robot", "name": "Bolt", "set": "games", "flip": False, "floor": True, "speed": 0.9,
+  "bob": [1, 0.6], "glow": "rgba(103,232,249,0.4)", "mouth": [60, 32], "head": [60, 8],
+  "parts": [
+    p("M48 58h8v14h-8z", "legs", fill="#64748B", pivot=[52, 58], rot=[12, 0.8, 0]),
+    p("M64 58h8v14h-8z", "legs", fill="#64748B", pivot=[68, 58], rot=[12, 0.8, 0.5]),
+    *pixels(robot_rows, 34, 18, S4, {"A": "#94A3B8", "G": "#CBD5E1", "C": "#0E7490", "B": "#94A3B8", "R": "#EF4444"}, "body"),
+    p("M58 10h4v4h-4z", "body", fill="#FDE047"),
+    *pixel_eyes([4, 8], 3, 34, 18, S4, "face", white="#67E8F9", pupil="#083344"),
+    p("M54 38h12v4h-12z", "face", fill="#67E8F9", when=["eyesOpen", "eyesHappy"]),
+    pixel_sweat(88, 16),
+    *lens(100, 56),
+  ],
+  "poses": {
+    "hiding":   {"body": {"s": 0.85, "p": [60, 58]}, "face": {"s": 0.85, "p": [60, 58]}},
+    "sleeping": {"body": {"ty": 3}, "face": {"ty": 3}, "legs": {"s": 0.5, "p": [60, 72]}},
+    "curious":  {"body": {"r": -6, "p": [60, 58]}, "face": {"r": -6, "p": [60, 58]}},
+  },
+  "lines": {"click": ["Beep boop!", "Hello, human.", "01101000 01101001!", "Battery: 100% happy."],
+            "pet": ["*happy whirring*", "Affection.exe running."],
+            "yikes": ["Error! Error!", "*reboots nervously*"],
+            "ai": ["A fellow AI! Beep!", "Hello, colleague."]},
+}
+
 for pet in PETS.values():
     pet.setdefault("set", "tide")
+    if pet["set"] == "games":
+        pet["lines"] = {**HOME_LINES, **GAMES_LINES, **pet["lines"]}
     if pet["set"] in ("home", "snacks"):
         pet["lines"] = {**HOME_LINES, **pet["lines"]}
 

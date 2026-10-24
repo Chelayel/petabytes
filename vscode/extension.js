@@ -60,6 +60,10 @@ const PETS = [
   { id: "pizza", label: "Pizza", detail: "Pepe: a pepperoni slice that droops when it's scared" },
   { id: "donut", label: "Donut", detail: "Sprinkles: sweet, sprinkled, and full of donut puns" },
   { id: "taco", label: "Taco", detail: "Tuesday: crunchy, and every day is its day" },
+  { id: "slime", label: "Slime", detail: "Squish: a bouncy pixel slime, level 1" },
+  { id: "ghost", label: "Ghost", detail: "Boo: a shy pixel ghost that floats and blushes" },
+  { id: "knight", label: "Knight", detail: "Sir Pix: a pixel knight on a quest to slay your bugs" },
+  { id: "robot", label: "Robot", detail: "Bolt: a pixel robot with a screen for a face" },
 ];
 
 // Terminal commands worth a reaction, checked in order.

@@ -2,7 +2,7 @@
   "name": "petabytes",
   "displayName": "Petabytes",
   "description": "Small companions with a big appetite. Sea creatures that live in your Explorer and react to what you do: they swim faster while you type, celebrate saves, commits and passing tests, notice the terminal and your AI assistant, eat the curly braces you feed them, and nap when you're away.",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "publisher": "chelayel",
   "author": { "name": "Chelayel", "url": "https://www.chelayel.com" },
   "license": "MIT",
@@ -35,7 +35,8 @@
     "fish",
     "dog",
     "cat",
-    "food"
+    "food",
+    "pixel art"
   ],
   "main": "./extension.js",
   "activationEvents": [
@@ -133,7 +134,11 @@
             "sushi",
             "pizza",
             "donut",
-            "taco"
+            "taco",
+            "slime",
+            "ghost",
+            "knight",
+            "robot"
           ],
           "enumDescriptions": [
             "Shelly the sea turtle",
@@ -156,14 +161,18 @@
             "Nori the sushi",
             "Pepe the pizza",
             "Sprinkles the donut",
-            "Tuesday the taco"
+            "Tuesday the taco",
+            "Squish the slime",
+            "Boo the ghost",
+            "Sir Pix the knight",
+            "Bolt the robot"
           ],
-          "description": "Which pet lives in the Explorer: a sea creature from the Tide set, a dog, cat, bunny or hamster from the Home set, or a burger, sushi, pizza, donut or taco from the Snacks set."
+          "description": "Which pet lives in the Explorer: a sea creature from the Tide set, a dog, cat, bunny or hamster from the Home set, a burger, sushi, pizza, donut or taco from the Snacks set, or a pixel slime, ghost, knight or robot from the Games set."
         },
         "petabytes.name": {
           "type": "string",
           "default": "",
-          "description": "Your pet's name. Leave empty for its own (Shelly, Bloop, Inky, Pinchy, Puff, Blue, Clem, Sandy, Finn, Splash, Angie, Indigo, Biscuit, Byte, Clover, Nugget, Patty, Nori, Pepe, Sprinkles or Tuesday)."
+          "description": "Your pet's name. Leave empty for its own (Shelly, Bloop, Inky, Pinchy, Puff, Blue, Clem, Sandy, Finn, Splash, Angie, Indigo, Biscuit, Byte, Clover, Nugget, Patty, Nori, Pepe, Sprinkles, Tuesday, Squish, Boo, Sir Pix or Bolt)."
         }
       }
     }

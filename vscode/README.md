@@ -1,6 +1,6 @@
 # Petabytes
 
-Small companions with a big appetite. A pet lives in a **Petabytes** panel in your Explorer and reacts to what you're doing. Pick a sea creature from the **Tide** set, a pet from the **Home** set, or a **Snack**: **Shelly** the sea turtle, **Bloop** the jellyfish, **Inky** the octopus, **Pinchy** the crab, **Puff** the pufferfish, **Blue** the whale, **Clem** the clownfish, **Sandy** the seahorse, **Finn** the shark, **Splash** the dolphin, **Angie** the angelfish, **Indigo** the blue tang, **Biscuit** the golden retriever, **Byte** the cat, **Clover** the bunny, **Nugget** the hamster, **Patty** the burger, **Nori** the sushi, **Pepe** the pizza, **Sprinkles** the donut or **Tuesday** the taco.
+Small companions with a big appetite. A pet lives in a **Petabytes** panel in your Explorer and reacts to what you're doing. Pick a sea creature from the **Tide** set, a pet from the **Home** set, a **Snack**, or a pixel character from the **Games** set: **Shelly** the sea turtle, **Bloop** the jellyfish, **Inky** the octopus, **Pinchy** the crab, **Puff** the pufferfish, **Blue** the whale, **Clem** the clownfish, **Sandy** the seahorse, **Finn** the shark, **Splash** the dolphin, **Angie** the angelfish, **Indigo** the blue tang, **Biscuit** the golden retriever, **Byte** the cat, **Clover** the bunny, **Nugget** the hamster, **Patty** the burger, **Nori** the sushi, **Pepe** the pizza, **Sprinkles** the donut, **Tuesday** the taco, **Squish** the slime, **Boo** the ghost, **Sir Pix** the knight or **Bolt** the robot.
 
 ![A pet swimming faster while you type, celebrating a fix, hiding from failed tests, eating and napping](https://raw.githubusercontent.com/Chelayel/petabytes/main/docs/demo.gif)
 
@@ -36,8 +36,8 @@ Small companions with a big appetite. A pet lives in a **Petabytes** panel in yo
 | Setting | Default | |
 | --- | --- | --- |
 | `petabytes.enabled` | `true` | Show the pet in the Explorer |
-| `petabytes.pet` | `"turtle"` | `turtle`, `jellyfish`, `octopus`, `crab`, `pufferfish`, `whale`, `clownfish`, `seahorse`, `shark`, `dolphin`, `angelfish`, `tang`, `retriever`, `cat`, `bunny`, `hamster`, `burger`, `sushi`, `pizza`, `donut` or `taco` |
-| `petabytes.name` | `""` | Your pet's name; empty for its own (Shelly, Bloop, Inky, Pinchy, Puff, Blue, Clem, Sandy, Finn, Splash, Angie, Indigo, Biscuit, Byte, Clover, Nugget, Patty, Nori, Pepe, Sprinkles or Tuesday) |
+| `petabytes.pet` | `"turtle"` | `turtle`, `jellyfish`, `octopus`, `crab`, `pufferfish`, `whale`, `clownfish`, `seahorse`, `shark`, `dolphin`, `angelfish`, `tang`, `retriever`, `cat`, `bunny`, `hamster`, `burger`, `sushi`, `pizza`, `donut`, `taco`, `slime`, `ghost`, `knight` or `robot` |
+| `petabytes.name` | `""` | Your pet's name; empty for its own (Shelly, Bloop, Inky, Pinchy, Puff, Blue, Clem, Sandy, Finn, Splash, Angie, Indigo, Biscuit, Byte, Clover, Nugget, Patty, Nori, Pepe, Sprinkles, Tuesday, Squish, Boo, Sir Pix or Bolt) |
 
 Works with any theme. In [JetBrains IDEs](https://plugins.jetbrains.com/search?search=petabytes) the pet swims along the editor's right edge.
 

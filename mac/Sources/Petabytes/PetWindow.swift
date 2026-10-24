@@ -20,8 +20,12 @@ final class PetWindow: NSPanel {
     private var dragStart: CGPoint?
     private var frameStart = CGPoint.zero
     private var dragging = false
-    /** Frames a second: plenty for a pet, and a fraction of the display's 60 or 120. Almost none while nobody can see it. */
-    private var fps = 20
+    /**
+     Frames a second: smooth enough for a pet at a fraction of the display's 60 or 120, which it gets only while
+     being dragged (0 means the display's rate). Almost none while nobody can see it.
+     */
+    private static let awakeFps = 30
+    private var fps = awakeFps
 
     var menuProvider: () -> NSMenu = { NSMenu() }
 
@@ -93,8 +97,8 @@ final class PetWindow: NSPanel {
         Timer.scheduledTimer(withTimeInterval: 1.0 / 15, repeats: true) { [weak self] _ in self?.updateClickThrough() }
         let workspace = NSWorkspace.shared.notificationCenter, distributed = DistributedNotificationCenter.default()
         for (center, name, rate) in [
-            (workspace, NSWorkspace.screensDidSleepNotification, 1), (workspace, NSWorkspace.screensDidWakeNotification, 20),
-            (distributed, Notification.Name("com.apple.screenIsLocked"), 1), (distributed, Notification.Name("com.apple.screenIsUnlocked"), 20),
+            (workspace, NSWorkspace.screensDidSleepNotification, 1), (workspace, NSWorkspace.screensDidWakeNotification, Self.awakeFps),
+            (distributed, Notification.Name("com.apple.screenIsLocked"), 1), (distributed, Notification.Name("com.apple.screenIsUnlocked"), Self.awakeFps),
         ] as [(NotificationCenter, Notification.Name, Int)] {
             center.addObserver(forName: name, object: nil, queue: .main) { [weak self] _ in
                 self?.fps = rate
@@ -160,7 +164,7 @@ final class PetWindow: NSPanel {
     }
 
     func configure() {
-        send(["type": "config", "pet": Settings.pet, "name": Settings.name, "ground": Settings.place == .dock, "fps": fps])
+        send(["type": "config", "pet": Settings.pet, "name": Settings.name, "ground": Settings.place == .dock, "fps": dragging ? 0 : fps])
     }
 
     fileprivate func received(_ body: Any) {
@@ -252,7 +256,7 @@ final class PetWindow: NSPanel {
             if !dragging {
                 guard hypot(mouse.x - start.x, mouse.y - start.y) > 4 else { return nil }
                 dragging = true
-                if Settings.place == .dock { leaveDock() }
+                if Settings.place == .dock { leaveDock() } else { configure() }
             }
             setFrameOrigin(CGPoint(x: frameStart.x + mouse.x - start.x, y: frameStart.y + mouse.y - start.y))
             return nil
@@ -260,6 +264,7 @@ final class PetWindow: NSPanel {
             if dragging {
                 dragging = false
                 Settings.floatOrigin = frame.origin
+                configure()
             }
             dragStart = nil
             return event

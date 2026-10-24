@@ -60,7 +60,7 @@ struct Catalog: Decodable {
     struct Pet: Decodable {
         let name: String
         let label: String?
-        /** tide (sea creatures), home (dogs, cats and friends) or snacks (food with feet). */
+        /** tide (sea creatures), home (dogs, cats and friends), snacks (food with feet) or games (pixel characters). */
         let set: String?
     }
 

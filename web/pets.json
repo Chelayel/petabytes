@@ -673,7 +673,11 @@
   "sushi",
   "pizza",
   "donut",
-  "taco"
+  "taco",
+  "slime",
+  "ghost",
+  "knight",
+  "robot"
  ],
  "pets": {
   "turtle": {
@@ -7845,6 +7849,1274 @@
     "save": [
      "Saved! All wrapped up.",
      "Saved!"
+    ]
+   }
+  },
+  "slime": {
+   "label": "Slime",
+   "name": "Squish",
+   "set": "games",
+   "flip": false,
+   "floor": true,
+   "speed": 0.7,
+   "bob": [
+    3,
+    0.55
+   ],
+   "glow": "rgba(74,222,128,0.45)",
+   "mouth": [
+    60,
+    62
+   ],
+   "head": [
+    60,
+    28
+   ],
+   "parts": [
+    {
+     "path": "M52 28h16v4h-16z M44 32h8v4h-8z M68 32h8v4h-8z M40 36h4v4h-4z M76 36h4v4h-4z M36 40h4v4h-4z M80 40h4v4h-4z M32 44h4v4h-4z M84 44h4v4h-4z M32 48h4v4h-4z M84 48h4v4h-4z M28 52h4v4h-4z M88 52h4v4h-4z M28 56h4v4h-4z M88 56h4v4h-4z M28 60h4v4h-4z M88 60h4v4h-4z M32 64h4v4h-4z M84 64h4v4h-4z M36 68h48v4h-48z",
+     "group": "body",
+     "fill": "#166534"
+    },
+    {
+     "path": "M52 32h16v4h-16z M44 36h8v4h-8z M60 36h16v4h-16z M40 40h8v4h-8z M56 40h24v4h-24z M36 44h48v4h-48z M36 48h48v4h-48z M32 52h56v4h-56z M32 56h56v4h-56z M32 60h24v4h-24z M64 60h24v4h-24z M36 64h48v4h-48z",
+     "group": "body",
+     "fill": "#4ADE80"
+    },
+    {
+     "path": "M52 36h8v4h-8z M48 40h8v4h-8z",
+     "group": "body",
+     "fill": "#BBF7D0"
+    },
+    {
+     "path": "M56 60h8v4h-8z",
+     "group": "body",
+     "fill": "#14532D"
+    },
+    {
+     "path": "M44 48h8v8h-8z",
+     "group": "face",
+     "fill": "#FFFFFF",
+     "when": [
+      "eyesOpen"
+     ]
+    },
+    {
+     "path": "M48 48h4v8h-4z",
+     "group": "face",
+     "fill": "#0E1012",
+     "when": [
+      "eyesOpen"
+     ]
+    },
+    {
+     "path": "M44 52h8v4h-8z",
+     "group": "face",
+     "fill": "#0E1012",
+     "when": [
+      "eyesClosed"
+     ]
+    },
+    {
+     "path": "M44 52h4v4h-4z M48 48h4v4h-4z",
+     "group": "face",
+     "fill": "#0E1012",
+     "when": [
+      "eyesHappy"
+     ]
+    },
+    {
+     "path": "M68 48h8v8h-8z",
+     "group": "face",
+     "fill": "#FFFFFF",
+     "when": [
+      "eyesOpen"
+     ]
+    },
+    {
+     "path": "M72 48h4v8h-4z",
+     "group": "face",
+     "fill": "#0E1012",
+     "when": [
+      "eyesOpen"
+     ]
+    },
+    {
+     "path": "M68 52h8v4h-8z",
+     "group": "face",
+     "fill": "#0E1012",
+     "when": [
+      "eyesClosed"
+     ]
+    },
+    {
+     "path": "M68 52h4v4h-4z M72 48h4v4h-4z",
+     "group": "face",
+     "fill": "#0E1012",
+     "when": [
+      "eyesHappy"
+     ]
+    },
+    {
+     "path": "M84 34h3v3h-3z M81 37h9v3h-9z",
+     "group": "face",
+     "fill": "#7DD3FC",
+     "when": [
+      "worried"
+     ]
+    },
+    {
+     "circle": [
+      98,
+      58,
+      5
+     ],
+     "group": "tool",
+     "fill": "rgba(253,230,138,0.15)",
+     "stroke": "#FACC15",
+     "sw": 1.8,
+     "when": [
+      "debugging"
+     ]
+    },
+    {
+     "path": "M94.5 61.5 l-5 5",
+     "group": "tool",
+     "stroke": "#FACC15",
+     "sw": 2.2,
+     "when": [
+      "debugging"
+     ]
+    }
+   ],
+   "groupMotion": {
+    "body": {
+     "sy": [
+      0.08,
+      0.55,
+      0
+     ],
+     "sx": [
+      -0.05,
+      0.55,
+      0
+     ],
+     "p": [
+      60,
+      72
+     ]
+    },
+    "face": {
+     "sy": [
+      0.08,
+      0.55,
+      0
+     ],
+     "sx": [
+      -0.05,
+      0.55,
+      0
+     ],
+     "p": [
+      60,
+      72
+     ]
+    }
+   },
+   "poses": {
+    "hiding": {
+     "body": {
+      "s": 0.75,
+      "p": [
+       60,
+       72
+      ]
+     },
+     "face": {
+      "s": 0.75,
+      "p": [
+       60,
+       72
+      ]
+     }
+    },
+    "sleeping": {
+     "body": {
+      "s": 0.9,
+      "p": [
+       60,
+       72
+      ]
+     },
+     "face": {
+      "s": 0.9,
+      "p": [
+       60,
+       72
+      ]
+     }
+    },
+    "curious": {
+     "body": {
+      "r": -6,
+      "p": [
+       60,
+       72
+      ]
+     },
+     "face": {
+      "r": -6,
+      "p": [
+       60,
+       72
+      ]
+     }
+    }
+   },
+   "lines": {
+    "fixed": [
+     "LEVEL UP!",
+     "Boss defeated!",
+     "Quest complete!"
+    ],
+    "longSession": [
+     "You've been playing a while. Stretch?",
+     "Save and take a break?"
+    ],
+    "lateNight": [
+     "One more level? It's late.",
+     "Night quest, huh?"
+    ],
+    "morning": [
+     "Player 1, ready!",
+     "Press start!"
+    ],
+    "music": [
+     "Ooh, music!",
+     "*dances*",
+     "Is this my song?"
+    ],
+    "hot": [
+     "It's getting hot in here.",
+     "Your Mac's working hard.",
+     "*pants*"
+    ],
+    "file": [
+     "Ooh, a new file.",
+     "*sniffs around*",
+     "What's in here?"
+    ],
+    "hello": [
+     "{name} joined the game!",
+     "Player 2 has entered!"
+    ],
+    "wake": [
+     "Unpaused!",
+     "Back in the game!"
+    ],
+    "save": [
+     "+1 coin!",
+     "Progress saved!",
+     "Checkpoint!"
+    ],
+    "worried": [
+     "Enemy spotted!",
+     "Uh oh, a bug!",
+     "Something's off."
+    ],
+    "yikes": [
+     "*splits in two* Just kidding.",
+     "*wobbles nervously*"
+    ],
+    "taskOk": [
+     "{task}: victory!",
+     "{task} cleared!"
+    ],
+    "taskFail": [
+     "GAME OVER: {task}.",
+     "{task} failed. Continue?"
+    ],
+    "commit": [
+     "Achievement unlocked: Commit!",
+     "Saved to the high scores."
+    ],
+    "typing": [
+     "Combo!",
+     "Button mashing!",
+     "Ooh, typing!"
+    ],
+    "debugOn": [
+     "Bug hunt! Equip magnifier.",
+     "Let's find it."
+    ],
+    "feed": [
+     "Power-up!",
+     "Ooh, an item!"
+    ],
+    "eatCurly": [
+     "1UP!",
+     "Power-up acquired!"
+    ],
+    "eatSemicolon": [
+     "+10 points!",
+     "Crunchy semicolon!"
+    ],
+    "click": [
+     "*squish*",
+     "Boing!",
+     "A wild slime appears!",
+     "I'm level 1, be gentle."
+    ],
+    "pet": [
+     "*happy wobble*",
+     "Sticky hugs!"
+    ]
+   }
+  },
+  "ghost": {
+   "label": "Ghost",
+   "name": "Boo",
+   "set": "games",
+   "flip": false,
+   "floor": false,
+   "speed": 0.7,
+   "bob": [
+    6,
+    2.6
+   ],
+   "glow": "rgba(226,232,240,0.5)",
+   "mouth": [
+    60,
+    50
+   ],
+   "head": [
+    60,
+    14
+   ],
+   "parts": [
+    {
+     "path": "M48 14h24v4h-24z M40 18h8v4h-8z M72 18h8v4h-8z M36 22h4v4h-4z M80 22h4v4h-4z M36 26h4v4h-4z M80 26h4v4h-4z M32 30h4v4h-4z M84 30h4v4h-4z M32 34h4v4h-4z M84 34h4v4h-4z M32 38h4v4h-4z M84 38h4v4h-4z M32 42h4v4h-4z M84 42h4v4h-4z M32 46h4v4h-4z M84 46h4v4h-4z M32 50h4v4h-4z M84 50h4v4h-4z M32 54h4v4h-4z M84 54h4v4h-4z M32 58h4v4h-4z M44 58h4v4h-4z M56 58h8v4h-8z M72 58h4v4h-4z M84 58h4v4h-4z M36 62h8v4h-8z M48 62h8v4h-8z M64 62h8v4h-8z M76 62h8v4h-8z",
+     "group": "body",
+     "fill": "#64748B",
+     "pivot": [
+      60,
+      66
+     ],
+     "rot": [
+      3,
+      2.6,
+      0
+     ]
+    },
+    {
+     "path": "M48 18h24v4h-24z M40 22h40v4h-40z M40 26h40v4h-40z M36 30h48v4h-48z M36 34h48v4h-48z M36 38h48v4h-48z M36 42h4v4h-4z M44 42h32v4h-32z M80 42h4v4h-4z M36 46h20v4h-20z M64 46h20v4h-20z M36 50h48v4h-48z M36 54h48v4h-48z M36 58h8v4h-8z M48 58h8v4h-8z M64 58h8v4h-8z M76 58h8v4h-8z",
+     "group": "body",
+     "fill": "#F1F5F9",
+     "pivot": [
+      60,
+      66
+     ],
+     "rot": [
+      3,
+      2.6,
+      0
+     ]
+    },
+    {
+     "path": "M40 42h4v4h-4z M76 42h4v4h-4z",
+     "group": "body",
+     "fill": "#F9A8D4",
+     "pivot": [
+      60,
+      66
+     ],
+     "rot": [
+      3,
+      2.6,
+      0
+     ]
+    },
+    {
+     "path": "M56 46h8v4h-8z",
+     "group": "body",
+     "fill": "#334155",
+     "pivot": [
+      60,
+      66
+     ],
+     "rot": [
+      3,
+      2.6,
+      0
+     ]
+    },
+    {
+     "path": "M44 30h8v8h-8z",
+     "group": "face",
+     "fill": "#334155",
+     "when": [
+      "eyesOpen"
+     ]
+    },
+    {
+     "path": "M48 30h4v8h-4z",
+     "group": "face",
+     "fill": "#0E1012",
+     "when": [
+      "eyesOpen"
+     ]
+    },
+    {
+     "path": "M44 34h8v4h-8z",
+     "group": "face",
+     "fill": "#0E1012",
+     "when": [
+      "eyesClosed"
+     ]
+    },
+    {
+     "path": "M44 34h4v4h-4z M48 30h4v4h-4z",
+     "group": "face",
+     "fill": "#0E1012",
+     "when": [
+      "eyesHappy"
+     ]
+    },
+    {
+     "path": "M68 30h8v8h-8z",
+     "group": "face",
+     "fill": "#334155",
+     "when": [
+      "eyesOpen"
+     ]
+    },
+    {
+     "path": "M72 30h4v8h-4z",
+     "group": "face",
+     "fill": "#0E1012",
+     "when": [
+      "eyesOpen"
+     ]
+    },
+    {
+     "path": "M68 34h8v4h-8z",
+     "group": "face",
+     "fill": "#0E1012",
+     "when": [
+      "eyesClosed"
+     ]
+    },
+    {
+     "path": "M68 34h4v4h-4z M72 30h4v4h-4z",
+     "group": "face",
+     "fill": "#0E1012",
+     "when": [
+      "eyesHappy"
+     ]
+    },
+    {
+     "path": "M90 18h3v3h-3z M87 21h9v3h-9z",
+     "group": "face",
+     "fill": "#7DD3FC",
+     "when": [
+      "worried"
+     ]
+    },
+    {
+     "circle": [
+      96,
+      50,
+      5
+     ],
+     "group": "tool",
+     "fill": "rgba(253,230,138,0.15)",
+     "stroke": "#FACC15",
+     "sw": 1.8,
+     "when": [
+      "debugging"
+     ]
+    },
+    {
+     "path": "M92.5 53.5 l-5 5",
+     "group": "tool",
+     "stroke": "#FACC15",
+     "sw": 2.2,
+     "when": [
+      "debugging"
+     ]
+    }
+   ],
+   "poses": {
+    "hiding": {
+     "body": {
+      "s": 0.8,
+      "ty": 4,
+      "p": [
+       60,
+       40
+      ]
+     },
+     "face": {
+      "s": 0.8,
+      "ty": 4,
+      "p": [
+       60,
+       40
+      ]
+     }
+    },
+    "sleeping": {
+     "body": {
+      "ty": 4
+     },
+     "face": {
+      "ty": 4
+     }
+    },
+    "curious": {
+     "body": {
+      "r": -8,
+      "p": [
+       60,
+       40
+      ]
+     },
+     "face": {
+      "r": -8,
+      "p": [
+       60,
+       40
+      ]
+     }
+    }
+   },
+   "lines": {
+    "fixed": [
+     "LEVEL UP!",
+     "Boss defeated!",
+     "Quest complete!"
+    ],
+    "longSession": [
+     "You've been playing a while. Stretch?",
+     "Save and take a break?"
+    ],
+    "lateNight": [
+     "Midnight? My favorite hour.",
+     "Spooky hours. I love it."
+    ],
+    "morning": [
+     "Player 1, ready!",
+     "Press start!"
+    ],
+    "music": [
+     "Ooh, music!",
+     "*dances*",
+     "Is this my song?"
+    ],
+    "hot": [
+     "It's getting hot in here.",
+     "Your Mac's working hard.",
+     "*pants*"
+    ],
+    "file": [
+     "Ooh, a new file.",
+     "*sniffs around*",
+     "What's in here?"
+    ],
+    "hello": [
+     "{name} joined the game!",
+     "Player 2 has entered!"
+    ],
+    "wake": [
+     "Unpaused!",
+     "Back in the game!"
+    ],
+    "save": [
+     "+1 coin!",
+     "Progress saved!",
+     "Checkpoint!"
+    ],
+    "worried": [
+     "Enemy spotted!",
+     "Uh oh, a bug!",
+     "Something's off."
+    ],
+    "yikes": [
+     "*turns transparent*",
+     "Eek! And I'm the ghost!"
+    ],
+    "taskOk": [
+     "{task}: victory!",
+     "{task} cleared!"
+    ],
+    "taskFail": [
+     "GAME OVER: {task}.",
+     "{task} failed. Continue?"
+    ],
+    "commit": [
+     "Achievement unlocked: Commit!",
+     "Saved to the high scores."
+    ],
+    "typing": [
+     "Combo!",
+     "Button mashing!",
+     "Ooh, typing!"
+    ],
+    "debugOn": [
+     "Bug hunt! Equip magnifier.",
+     "Let's find it."
+    ],
+    "feed": [
+     "Power-up!",
+     "Ooh, an item!"
+    ],
+    "eatCurly": [
+     "1UP!",
+     "Power-up acquired!"
+    ],
+    "eatSemicolon": [
+     "+10 points!",
+     "Crunchy semicolon!"
+    ],
+    "click": [
+     "Boo!",
+     "Did I scare you?",
+     "Wooo... hi.",
+     "*floats happily*"
+    ],
+    "pet": [
+     "*blushes*",
+     "Your hand went right through me. Hehe."
+    ]
+   }
+  },
+  "knight": {
+   "label": "Knight",
+   "name": "Sir Pix",
+   "set": "games",
+   "flip": true,
+   "floor": true,
+   "speed": 1.0,
+   "bob": [
+    1.2,
+    0.5
+   ],
+   "glow": "rgba(147,197,253,0.4)",
+   "mouth": [
+    66,
+    26
+   ],
+   "head": [
+    60,
+    10
+   ],
+   "parts": [
+    {
+     "path": "M48 56h8v16h-8z",
+     "group": "legs",
+     "fill": "#475569",
+     "pivot": [
+      52,
+      56
+     ],
+     "rot": [
+      14,
+      0.7,
+      0
+     ]
+    },
+    {
+     "path": "M64 56h8v16h-8z",
+     "group": "legs",
+     "fill": "#475569",
+     "pivot": [
+      68,
+      56
+     ],
+     "rot": [
+      14,
+      0.7,
+      0.5
+     ]
+    },
+    {
+     "path": "M82 20h4v24h-4z M78 40h12v4h-12z M82 44h4v8h-4z",
+     "group": "arms",
+     "fill": "#CBD5E1",
+     "pivot": [
+      84,
+      48
+     ],
+     "rot": [
+      10,
+      1.4,
+      0
+     ]
+    },
+    {
+     "path": "M56 12h8v4h-8z M52 16h12v4h-12z",
+     "group": "body",
+     "fill": "#EF4444"
+    },
+    {
+     "path": "M48 20h24v4h-24z M44 24h32v4h-32z M44 28h8v4h-8z M68 28h8v4h-8z M44 32h32v4h-32z M48 36h24v4h-24z",
+     "group": "body",
+     "fill": "#94A3B8"
+    },
+    {
+     "path": "M52 28h16v4h-16z",
+     "group": "body",
+     "fill": "#1E293B"
+    },
+    {
+     "path": "M44 40h32v4h-32z M40 44h16v4h-16z M64 44h16v4h-16z M40 48h16v4h-16z M64 48h16v4h-16z M44 52h32v4h-32z",
+     "group": "body",
+     "fill": "#3B82F6"
+    },
+    {
+     "path": "M56 44h8v4h-8z M56 48h8v4h-8z",
+     "group": "body",
+     "fill": "#FACC15"
+    },
+    {
+     "path": "M48 28h4v4h-4z M64 28h4v4h-4z",
+     "group": "face",
+     "fill": "#FDE047",
+     "when": [
+      "eyesOpen",
+      "eyesHappy"
+     ]
+    },
+    {
+     "path": "M84 12h3v3h-3z M81 15h9v3h-9z",
+     "group": "face",
+     "fill": "#7DD3FC",
+     "when": [
+      "worried"
+     ]
+    },
+    {
+     "circle": [
+      100,
+      56,
+      5
+     ],
+     "group": "tool",
+     "fill": "rgba(253,230,138,0.15)",
+     "stroke": "#FACC15",
+     "sw": 1.8,
+     "when": [
+      "debugging"
+     ]
+    },
+    {
+     "path": "M96.5 59.5 l-5 5",
+     "group": "tool",
+     "stroke": "#FACC15",
+     "sw": 2.2,
+     "when": [
+      "debugging"
+     ]
+    }
+   ],
+   "poses": {
+    "hiding": {
+     "body": {
+      "s": 0.9,
+      "ty": 4,
+      "p": [
+       60,
+       56
+      ]
+     },
+     "face": {
+      "s": 0.9,
+      "ty": 4,
+      "p": [
+       60,
+       56
+      ]
+     },
+     "arms": {
+      "s": 0.6,
+      "p": [
+       84,
+       48
+      ]
+     }
+    },
+    "sleeping": {
+     "body": {
+      "ty": 4
+     },
+     "face": {
+      "ty": 4
+     },
+     "legs": {
+      "s": 0.5,
+      "p": [
+       60,
+       72
+      ]
+     },
+     "arms": {
+      "r": 60,
+      "p": [
+       84,
+       48
+      ]
+     }
+    },
+    "curious": {
+     "body": {
+      "r": -6,
+      "p": [
+       60,
+       56
+      ]
+     },
+     "face": {
+      "r": -6,
+      "p": [
+       60,
+       56
+      ]
+     }
+    }
+   },
+   "lines": {
+    "fixed": [
+     "The bug is slain!",
+     "LEVEL UP!"
+    ],
+    "longSession": [
+     "You've been playing a while. Stretch?",
+     "Save and take a break?"
+    ],
+    "lateNight": [
+     "One more level? It's late.",
+     "Night quest, huh?"
+    ],
+    "morning": [
+     "Player 1, ready!",
+     "Press start!"
+    ],
+    "music": [
+     "Ooh, music!",
+     "*dances*",
+     "Is this my song?"
+    ],
+    "hot": [
+     "It's getting hot in here.",
+     "Your Mac's working hard.",
+     "*pants*"
+    ],
+    "file": [
+     "Ooh, a new file.",
+     "*sniffs around*",
+     "What's in here?"
+    ],
+    "hello": [
+     "{name} joined the game!",
+     "Player 2 has entered!"
+    ],
+    "wake": [
+     "Unpaused!",
+     "Back in the game!"
+    ],
+    "save": [
+     "+1 coin!",
+     "Progress saved!",
+     "Checkpoint!"
+    ],
+    "worried": [
+     "Enemy spotted!",
+     "Uh oh, a bug!",
+     "Something's off."
+    ],
+    "yikes": [
+     "*hides behind shield*",
+     "Retreat!"
+    ],
+    "taskOk": [
+     "{task}: victory!",
+     "{task} cleared!"
+    ],
+    "taskFail": [
+     "GAME OVER: {task}.",
+     "{task} failed. Continue?"
+    ],
+    "commit": [
+     "Achievement unlocked: Commit!",
+     "Saved to the high scores."
+    ],
+    "typing": [
+     "Combo!",
+     "Button mashing!",
+     "Ooh, typing!"
+    ],
+    "debugOn": [
+     "A quest! Find the bug.",
+     "I shall slay this bug."
+    ],
+    "feed": [
+     "Power-up!",
+     "Ooh, an item!"
+    ],
+    "eatCurly": [
+     "1UP!",
+     "Power-up acquired!"
+    ],
+    "eatSemicolon": [
+     "+10 points!",
+     "Crunchy semicolon!"
+    ],
+    "click": [
+     "For the codebase!",
+     "Huzzah!",
+     "En garde!",
+     "*salutes*"
+    ],
+    "pet": [
+     "*clank of joy*",
+     "Thou art kind."
+    ]
+   }
+  },
+  "robot": {
+   "label": "Robot",
+   "name": "Bolt",
+   "set": "games",
+   "flip": false,
+   "floor": true,
+   "speed": 0.9,
+   "bob": [
+    1,
+    0.6
+   ],
+   "glow": "rgba(103,232,249,0.4)",
+   "mouth": [
+    60,
+    32
+   ],
+   "head": [
+    60,
+    8
+   ],
+   "parts": [
+    {
+     "path": "M48 58h8v14h-8z",
+     "group": "legs",
+     "fill": "#64748B",
+     "pivot": [
+      52,
+      58
+     ],
+     "rot": [
+      12,
+      0.8,
+      0
+     ]
+    },
+    {
+     "path": "M64 58h8v14h-8z",
+     "group": "legs",
+     "fill": "#64748B",
+     "pivot": [
+      68,
+      58
+     ],
+     "rot": [
+      12,
+      0.8,
+      0.5
+     ]
+    },
+    {
+     "path": "M58 18h4v4h-4z",
+     "group": "body",
+     "fill": "#94A3B8"
+    },
+    {
+     "path": "M42 22h36v4h-36z M42 26h4v4h-4z M74 26h4v4h-4z M42 30h4v4h-4z M74 30h4v4h-4z M42 34h4v4h-4z M74 34h4v4h-4z M42 38h4v4h-4z M74 38h4v4h-4z M42 42h36v4h-36z",
+     "group": "body",
+     "fill": "#CBD5E1"
+    },
+    {
+     "path": "M46 26h28v4h-28z M46 30h28v4h-28z M46 34h28v4h-28z M46 38h28v4h-28z",
+     "group": "body",
+     "fill": "#0E7490"
+    },
+    {
+     "path": "M46 46h28v4h-28z M42 50h12v4h-12z M66 50h12v4h-12z M46 54h28v4h-28z",
+     "group": "body",
+     "fill": "#94A3B8"
+    },
+    {
+     "path": "M54 50h12v4h-12z",
+     "group": "body",
+     "fill": "#EF4444"
+    },
+    {
+     "path": "M58 10h4v4h-4z",
+     "group": "body",
+     "fill": "#FDE047"
+    },
+    {
+     "path": "M50 30h8v8h-8z",
+     "group": "face",
+     "fill": "#67E8F9",
+     "when": [
+      "eyesOpen"
+     ]
+    },
+    {
+     "path": "M54 30h4v8h-4z",
+     "group": "face",
+     "fill": "#083344",
+     "when": [
+      "eyesOpen"
+     ]
+    },
+    {
+     "path": "M50 34h8v4h-8z",
+     "group": "face",
+     "fill": "#083344",
+     "when": [
+      "eyesClosed"
+     ]
+    },
+    {
+     "path": "M50 34h4v4h-4z M54 30h4v4h-4z",
+     "group": "face",
+     "fill": "#083344",
+     "when": [
+      "eyesHappy"
+     ]
+    },
+    {
+     "path": "M66 30h8v8h-8z",
+     "group": "face",
+     "fill": "#67E8F9",
+     "when": [
+      "eyesOpen"
+     ]
+    },
+    {
+     "path": "M70 30h4v8h-4z",
+     "group": "face",
+     "fill": "#083344",
+     "when": [
+      "eyesOpen"
+     ]
+    },
+    {
+     "path": "M66 34h8v4h-8z",
+     "group": "face",
+     "fill": "#083344",
+     "when": [
+      "eyesClosed"
+     ]
+    },
+    {
+     "path": "M66 34h4v4h-4z M70 30h4v4h-4z",
+     "group": "face",
+     "fill": "#083344",
+     "when": [
+      "eyesHappy"
+     ]
+    },
+    {
+     "path": "M54 38h12v4h-12z",
+     "group": "face",
+     "fill": "#67E8F9",
+     "when": [
+      "eyesOpen",
+      "eyesHappy"
+     ]
+    },
+    {
+     "path": "M88 16h3v3h-3z M85 19h9v3h-9z",
+     "group": "face",
+     "fill": "#7DD3FC",
+     "when": [
+      "worried"
+     ]
+    },
+    {
+     "circle": [
+      100,
+      56,
+      5
+     ],
+     "group": "tool",
+     "fill": "rgba(253,230,138,0.15)",
+     "stroke": "#FACC15",
+     "sw": 1.8,
+     "when": [
+      "debugging"
+     ]
+    },
+    {
+     "path": "M96.5 59.5 l-5 5",
+     "group": "tool",
+     "stroke": "#FACC15",
+     "sw": 2.2,
+     "when": [
+      "debugging"
+     ]
+    }
+   ],
+   "poses": {
+    "hiding": {
+     "body": {
+      "s": 0.85,
+      "p": [
+       60,
+       58
+      ]
+     },
+     "face": {
+      "s": 0.85,
+      "p": [
+       60,
+       58
+      ]
+     }
+    },
+    "sleeping": {
+     "body": {
+      "ty": 3
+     },
+     "face": {
+      "ty": 3
+     },
+     "legs": {
+      "s": 0.5,
+      "p": [
+       60,
+       72
+      ]
+     }
+    },
+    "curious": {
+     "body": {
+      "r": -6,
+      "p": [
+       60,
+       58
+      ]
+     },
+     "face": {
+      "r": -6,
+      "p": [
+       60,
+       58
+      ]
+     }
+    }
+   },
+   "lines": {
+    "fixed": [
+     "LEVEL UP!",
+     "Boss defeated!",
+     "Quest complete!"
+    ],
+    "longSession": [
+     "You've been playing a while. Stretch?",
+     "Save and take a break?"
+    ],
+    "lateNight": [
+     "One more level? It's late.",
+     "Night quest, huh?"
+    ],
+    "morning": [
+     "Player 1, ready!",
+     "Press start!"
+    ],
+    "music": [
+     "Ooh, music!",
+     "*dances*",
+     "Is this my song?"
+    ],
+    "hot": [
+     "It's getting hot in here.",
+     "Your Mac's working hard.",
+     "*pants*"
+    ],
+    "file": [
+     "Ooh, a new file.",
+     "*sniffs around*",
+     "What's in here?"
+    ],
+    "hello": [
+     "{name} joined the game!",
+     "Player 2 has entered!"
+    ],
+    "wake": [
+     "Unpaused!",
+     "Back in the game!"
+    ],
+    "save": [
+     "+1 coin!",
+     "Progress saved!",
+     "Checkpoint!"
+    ],
+    "worried": [
+     "Enemy spotted!",
+     "Uh oh, a bug!",
+     "Something's off."
+    ],
+    "yikes": [
+     "Error! Error!",
+     "*reboots nervously*"
+    ],
+    "taskOk": [
+     "{task}: victory!",
+     "{task} cleared!"
+    ],
+    "taskFail": [
+     "GAME OVER: {task}.",
+     "{task} failed. Continue?"
+    ],
+    "commit": [
+     "Achievement unlocked: Commit!",
+     "Saved to the high scores."
+    ],
+    "typing": [
+     "Combo!",
+     "Button mashing!",
+     "Ooh, typing!"
+    ],
+    "debugOn": [
+     "Bug hunt! Equip magnifier.",
+     "Let's find it."
+    ],
+    "feed": [
+     "Power-up!",
+     "Ooh, an item!"
+    ],
+    "eatCurly": [
+     "1UP!",
+     "Power-up acquired!"
+    ],
+    "eatSemicolon": [
+     "+10 points!",
+     "Crunchy semicolon!"
+    ],
+    "click": [
+     "Beep boop!",
+     "Hello, human.",
+     "01101000 01101001!",
+     "Battery: 100% happy."
+    ],
+    "pet": [
+     "*happy whirring*",
+     "Affection.exe running."
+    ],
+    "ai": [
+     "A fellow AI! Beep!",
+     "Hello, colleague."
     ]
    }
   }
