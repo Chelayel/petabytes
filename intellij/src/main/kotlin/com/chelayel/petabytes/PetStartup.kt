@@ -1,4 +1,4 @@
-package com.chelayel.tidepets
+package com.chelayel.petabytes
 
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.service

@@ -1,4 +1,4 @@
-package com.chelayel.tidepets
+package com.chelayel.petabytes
 
 import com.intellij.openapi.components.BaseState
 import com.intellij.openapi.components.Service
@@ -9,7 +9,7 @@ import com.intellij.openapi.components.service
 
 /** Whether the pet is shown, which one, and its name. Shared by every open project. */
 @Service(Service.Level.APP)
-@State(name = "TidePets", storages = [Storage("tidePets.xml")])
+@State(name = "Petabytes", storages = [Storage("petabytes.xml")])
 class PetSettings : SimplePersistentStateComponent<PetSettings.Options>(Options()) {
     class Options : BaseState() {
         var enabled by property(true)

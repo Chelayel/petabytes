@@ -1,8 +1,8 @@
-<img src="docs/logo/logo.svg" width="72" alt="Tide Pets logo: a wave with bubbles">
+<img src="docs/logo/logo.svg" width="72" alt="Petabytes logo: a wave with bubbles">
 
-# Tide Pets
+# Petabytes
 
-Sea creatures that keep you company while you code, in VS Code and JetBrains IDEs, and react to what you're doing. Pick one: **Shelly** the sea turtle, **Bloop** the jellyfish, **Inky** the octopus, **Pinchy** the crab, **Puff** the pufferfish, **Blue** the whale, **Clem** the clownfish, **Sandy** the seahorse, **Finn** the shark, **Splash** the dolphin, **Angie** the angelfish or **Indigo** the blue tang.
+Small companions with a big appetite. They keep you company while you code, in VS Code, JetBrains IDEs and on your Mac, and react to what you're doing. The first set is **Tide**, twelve sea creatures. Pick one: **Shelly** the sea turtle, **Bloop** the jellyfish, **Inky** the octopus, **Pinchy** the crab, **Puff** the pufferfish, **Blue** the whale, **Clem** the clownfish, **Sandy** the seahorse, **Finn** the shark, **Splash** the dolphin, **Angie** the angelfish or **Indigo** the blue tang.
 
 ![The twelve pets](docs/pets.png)
 
@@ -36,8 +36,8 @@ In IntelliJ IDEA, the pet swims up and down a strip at the editor's right edge, 
 
 | Editor | Folder | Where the pet lives | Choose, show or hide |
 | --- | --- | --- | --- |
-| VS Code | [`vscode/`](vscode/) | A **Tide Pets** panel in the Explorer (VS Code doesn't let extensions draw over the editor) | **Tide Pets: Choose Pet** / **Toggle Pet**, or the `tidePets.*` settings |
-| JetBrains (2024.2+) | [`intellij/`](intellij/) | Swimming up and down the editor's right edge, or along its bottom edge. Drag it to move it; it fades and lets clicks through when your cursor is right beside it | Right-click the pet or **Tools → Tide Pets**; position, size and name in **Settings → Tools → Tide Pets** |
+| VS Code | [`vscode/`](vscode/) | A **Petabytes** panel in the Explorer (VS Code doesn't let extensions draw over the editor) | **Petabytes: Choose Pet** / **Toggle Pet**, or the `petabytes.*` settings |
+| JetBrains (2024.2+) | [`intellij/`](intellij/) | Swimming up and down the editor's right edge, or along its bottom edge. Drag it to move it; it fades and lets clicks through when your cursor is right beside it | Right-click the pet or **Tools → Petabytes**; position, size and name in **Settings → Tools → Petabytes** |
 
 ## How it's built
 
@@ -54,7 +54,7 @@ Run locally:
 
 ```
 python3 tools/pets.py > web/pets.json          # after changing the art
-cd vscode && npx @vscode/vsce package           # tide-pets-<version>.vsix
+cd vscode && npx @vscode/vsce package           # petabytes-<version>.vsix
 cd intellij && ./gradlew runIde                 # an IDE sandbox with the plugin
 ```
 

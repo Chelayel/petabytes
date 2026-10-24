@@ -1,1 +1,1 @@
-rootProject.name = "tide-pets"
+rootProject.name = "petabytes"

@@ -118,8 +118,8 @@ jobs:
         # `|| true`: a store that doesn't list the extension yet is "nothing", not a failure.
         run: |
           version="${GITHUB_REF_NAME#v}"
-          jb=$(curl -sS "https://plugins.jetbrains.com/plugins/list?pluginId=com.chelayel.tidepets" | grep -o '<version>[^<]*</version>' | head -1 | sed 's/<[^>]*>//g' || true)
-          ms=$(npx --yes @vscode/vsce show chelayel.tide-pets --json 2>/dev/null | node -p "try{JSON.parse(require('fs').readFileSync(0,'utf8')).versions[0].version}catch(e){''}" || true)
+          jb=$(curl -sS "https://plugins.jetbrains.com/plugins/list?pluginId=com.chelayel.petabytes" | grep -o '<version>[^<]*</version>' | head -1 | sed 's/<[^>]*>//g' || true)
+          ms=$(npx --yes @vscode/vsce show chelayel.petabytes --json 2>/dev/null | node -p "try{JSON.parse(require('fs').readFileSync(0,'utf8')).versions[0].version}catch(e){''}" || true)
           echo "version=$version" >> "$GITHUB_OUTPUT"
           echo "jb=$jb" >> "$GITHUB_OUTPUT"; echo "ms=$ms" >> "$GITHUB_OUTPUT"
           echo "Releasing $version (JetBrains Marketplace has ${jb:-nothing}; VS Code Marketplace has ${ms:-nothing})"
@@ -145,7 +145,7 @@ jobs:
           elif grep -qiE "not found|does not exist|No plugin" publish.log; then
             # A new plugin's first version is uploaded by hand on the Marketplace site; after that
             # the API takes updates, even while the first one is still in review (and unlisted).
-            echo "::warning::Tide Pets isn't on the JetBrains Marketplace yet. Upload the first version by hand from the run's pets artifact: https://plugins.jetbrains.com/plugin/add"
+            echo "::warning::Petabytes isn't on the JetBrains Marketplace yet. Upload the first version by hand from the run's pets artifact: https://plugins.jetbrains.com/plugin/add"
           else
             exit 1
           fi
@@ -168,7 +168,7 @@ jobs:
         # The Marketplace sometimes stalls, so a failed upload is tried again;
         # --skip-duplicate makes that safe when the timed-out attempt landed.
         run: |
-          vsix=$(ls dist/tide-pets-*.vsix | head -1)
+          vsix=$(ls dist/petabytes-*.vsix | head -1)
           if [ -n "$AZURE_CLIENT_ID" ]; then auth=(--azure-credential)
           elif [ -n "$VSCE_PAT" ]; then auth=()
           else
@@ -189,4 +189,4 @@ jobs:
             echo "::notice::OVSX_PAT is not set; skipping Open VSX (VSCodium and other VS Code forks)."
             exit 0
           fi
-          npx --yes ovsx publish "$(ls dist/tide-pets-*.vsix | head -1)" -p "$OVSX_PAT" --skip-duplicate
+          npx --yes ovsx publish "$(ls dist/petabytes-*.vsix | head -1)" -p "$OVSX_PAT" --skip-duplicate

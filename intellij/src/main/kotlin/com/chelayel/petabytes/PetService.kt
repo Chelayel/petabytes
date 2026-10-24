@@ -1,7 +1,7 @@
-package com.chelayel.tidepets
+package com.chelayel.petabytes
 
-import com.chelayel.tidepets.pet.PetBrain
-import com.chelayel.tidepets.pet.PetCatalog
+import com.chelayel.petabytes.pet.PetBrain
+import com.chelayel.petabytes.pet.PetCatalog
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer
 import com.intellij.codeInsight.daemon.impl.HighlightInfo
 import com.intellij.execution.ExecutionListener

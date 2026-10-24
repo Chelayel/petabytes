@@ -1,6 +1,6 @@
 <!doctype html>
 <!--
-  Tide Pets: the VS Code pet page. It draws whichever pet web/pets.json
+  Petabytes: the VS Code pet page. It draws whichever pet web/pets.json
   describes (the same art the IntelliJ plugin paints natively) and reacts to
   events the extension posts. The host fills in the three double-brace
   placeholders below: the content security policy, the script nonce and the pets.
@@ -403,7 +403,7 @@
   build("turtle");
   name = pet.name;
   nameEl.textContent = name;
-  window.tidePets = { receive };
+  window.petabytes = { receive };
   if (vscode) {
     window.addEventListener("message", (e) => receive(e.data));
     vscode.postMessage({ type: "ready" });

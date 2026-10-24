@@ -1,4 +1,4 @@
-package com.chelayel.tidepets.pet
+package com.chelayel.petabytes.pet
 
 import java.awt.Color
 import java.awt.Font
