@@ -1,18 +1,18 @@
 {
-  "name": "tide-pets",
-  "displayName": "Tide Pets",
-  "description": "Sea creatures that live in your Explorer and react to what you do: they swim faster while you type, celebrate saves, commits and passing tests, notice the terminal and your AI assistant, eat the curly braces you feed them, and nap when you're away.",
-  "version": "0.3.1",
+  "name": "petabytes",
+  "displayName": "Petabytes",
+  "description": "Small companions with a big appetite. Sea creatures that live in your Explorer and react to what you do: they swim faster while you type, celebrate saves, commits and passing tests, notice the terminal and your AI assistant, eat the curly braces you feed them, and nap when you're away.",
+  "version": "0.4.0",
   "publisher": "chelayel",
   "author": { "name": "Chelayel", "url": "https://www.chelayel.com" },
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Chelayel/tide-pets.git"
+    "url": "https://github.com/Chelayel/petabytes.git"
   },
-  "homepage": "https://github.com/Chelayel/tide-pets#readme",
+  "homepage": "https://github.com/Chelayel/petabytes#readme",
   "bugs": {
-    "url": "https://github.com/Chelayel/tide-pets/issues"
+    "url": "https://github.com/Chelayel/petabytes/issues"
   },
   "icon": "media/icon.png",
   "engines": {
@@ -31,8 +31,11 @@
     "shark",
     "fun",
     "midnight tide",
+    "petabytes",
     "dolphin",
-    "fish"
+    "fish",
+    "dog",
+    "cat"
   ],
   "main": "./extension.js",
   "activationEvents": [
@@ -43,70 +46,70 @@
       "explorer": [
         {
           "type": "webview",
-          "id": "tidePets.pet",
-          "name": "Tide Pets",
-          "when": "config.tidePets.enabled"
+          "id": "petabytes.pet",
+          "name": "Petabytes",
+          "when": "config.petabytes.enabled"
         }
       ]
     },
     "commands": [
       {
-        "command": "tidePets.choose",
+        "command": "petabytes.choose",
         "title": "Choose Pet",
-        "category": "Tide Pets",
+        "category": "Petabytes",
         "icon": "$(symbol-misc)"
       },
       {
-        "command": "tidePets.feed",
+        "command": "petabytes.feed",
         "title": "Feed Pet",
-        "category": "Tide Pets",
+        "category": "Petabytes",
         "icon": "$(heart)"
       },
       {
-        "command": "tidePets.toggle",
+        "command": "petabytes.toggle",
         "title": "Toggle Pet",
-        "category": "Tide Pets"
+        "category": "Petabytes"
       },
       {
-        "command": "tidePets.show",
+        "command": "petabytes.show",
         "title": "Show Pet",
-        "category": "Tide Pets"
+        "category": "Petabytes"
       },
       {
-        "command": "tidePets.hide",
+        "command": "petabytes.hide",
         "title": "Hide Pet",
-        "category": "Tide Pets",
+        "category": "Petabytes",
         "icon": "$(close)"
       }
     ],
     "menus": {
       "view/title": [
         {
-          "command": "tidePets.feed",
-          "when": "view == tidePets.pet",
+          "command": "petabytes.feed",
+          "when": "view == petabytes.pet",
           "group": "navigation"
         },
         {
-          "command": "tidePets.choose",
-          "when": "view == tidePets.pet",
+          "command": "petabytes.choose",
+          "when": "view == petabytes.pet",
           "group": "navigation"
         },
         {
-          "command": "tidePets.hide",
-          "when": "view == tidePets.pet",
+          "command": "petabytes.hide",
+          "when": "view == petabytes.pet",
           "group": "navigation"
         }
       ]
     },
     "configuration": {
-      "title": "Tide Pets",
+      "title": "Petabytes",
       "properties": {
-        "tidePets.enabled": {
+        "petabytes.enabled": {
           "type": "boolean",
           "default": true,
           "description": "Show the pet in the Explorer."
         },
-        "tidePets.pet": {
+        "petabytes.pet": {
           "type": "string",
           "default": "turtle",
           "enum": [
@@ -121,7 +124,11 @@
             "shark",
             "dolphin",
             "angelfish",
-            "tang"
+            "tang",
+            "retriever",
+            "cat",
+            "bunny",
+            "hamster"
           ],
           "enumDescriptions": [
             "Shelly the sea turtle",
@@ -135,14 +142,18 @@
             "Finn the shark",
             "Splash the dolphin",
             "Angie the angelfish",
-            "Indigo the blue tang"
+            "Indigo the blue tang",
+            "Biscuit the golden retriever",
+            "Byte the cat",
+            "Clover the bunny",
+            "Nugget the hamster"
           ],
-          "description": "Which pet lives in the Explorer."
+          "description": "Which pet lives in the Explorer: a sea creature from the Tide set, or a dog, cat, bunny or hamster from the Home set."
         },
-        "tidePets.name": {
+        "petabytes.name": {
           "type": "string",
           "default": "",
-          "description": "Your pet's name. Leave empty for its own (Shelly, Bloop, Inky, Pinchy, Puff, Blue, Clem, Sandy, Finn, Splash, Angie or Indigo)."
+          "description": "Your pet's name. Leave empty for its own (Shelly, Bloop, Inky, Pinchy, Puff, Blue, Clem, Sandy, Finn, Splash, Angie, Indigo, Biscuit, Byte, Clover or Nugget)."
         }
       }
     }

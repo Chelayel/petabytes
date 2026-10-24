@@ -1,6 +1,6 @@
-package com.chelayel.tidepets
+package com.chelayel.petabytes
 
-import com.chelayel.tidepets.pet.PetCatalog
+import com.chelayel.petabytes.pet.PetCatalog
 import com.intellij.openapi.options.BoundConfigurable
 import com.intellij.openapi.ui.DialogPanel
 import com.intellij.ui.dsl.builder.bindItem
@@ -9,8 +9,8 @@ import com.intellij.ui.dsl.builder.bindText
 import com.intellij.ui.dsl.builder.panel
 import com.intellij.ui.dsl.listCellRenderer.textListCellRenderer
 
-/** Settings → Tools → Tide Pets. */
-class PetConfigurable : BoundConfigurable("Tide Pets") {
+/** Settings → Tools → Petabytes. */
+class PetConfigurable : BoundConfigurable("Petabytes") {
     override fun createPanel(): DialogPanel {
         val settings = PetSettings.get().state
         val pets = PetCatalog.load().pets.values.toList()

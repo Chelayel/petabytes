@@ -1,10 +1,10 @@
-# Builds the pet for both IDEs and publishes it on a tag:
+# Builds the pet for both IDEs and the Mac, and publishes it on a tag:
 #
 #   git tag v1.2.3 && git push origin v1.2.3
 #
 # A tag ships the JetBrains plugin and the VS Code extension at the tag's
 # version, each only when its store does not have that version yet, so
-# re-running a tag is safe. A push to main that touches either IDE or the shared
+# re-running a tag is safe. The Mac app's DMG goes on the GitHub release. A push to main that touches either IDE or the shared
 # page builds and verifies both as a check and uploads nothing. "Run workflow" by hand is the
 # same dry run. A missing token skips that store with a warning; the built files
 # are in the run's `pets` artifact either way.
@@ -18,6 +18,7 @@ on:
       - "intellij/**"
       - "vscode/**"
       - "web/**"
+      - "mac/**"
       - ".github/workflows/release.yml"
   workflow_dispatch:
 
@@ -63,10 +64,26 @@ jobs:
           name: pets
           path: dist/*
 
-  # The GitHub release carries both files, for anyone installing from disk.
+  # Unsigned for now (signed ad hoc): the first launch needs right-click > Open.
+  mac:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Mac app
+        working-directory: mac
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          ./build.sh ${{ startsWith(github.ref, 'refs/tags/v') && '"$version"' || '' }}
+          mkdir -p ../dist && cp build/Petabytes-*.dmg ../dist/
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mac
+          path: dist/*
+
+  # The GitHub release carries every file, for anyone installing from disk.
   # Idempotent: a rerun finds the release already there and refreshes its assets.
   github-release:
-    needs: [build]
+    needs: [build, mac]
     if: startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
     steps:
@@ -74,6 +91,10 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: pets
+          path: dist
+      - uses: actions/download-artifact@v4
+        with:
+          name: mac
           path: dist
       - name: Publish
         env:
@@ -118,8 +139,8 @@ jobs:
         # `|| true`: a store that doesn't list the extension yet is "nothing", not a failure.
         run: |
           version="${GITHUB_REF_NAME#v}"
-          jb=$(curl -sS "https://plugins.jetbrains.com/plugins/list?pluginId=com.chelayel.tidepets" | grep -o '<version>[^<]*</version>' | head -1 | sed 's/<[^>]*>//g' || true)
-          ms=$(npx --yes @vscode/vsce show chelayel.tide-pets --json 2>/dev/null | node -p "try{JSON.parse(require('fs').readFileSync(0,'utf8')).versions[0].version}catch(e){''}" || true)
+          jb=$(curl -sS "https://plugins.jetbrains.com/plugins/list?pluginId=com.chelayel.petabytes" | grep -o '<version>[^<]*</version>' | head -1 | sed 's/<[^>]*>//g' || true)
+          ms=$(npx --yes @vscode/vsce show chelayel.petabytes --json 2>/dev/null | node -p "try{JSON.parse(require('fs').readFileSync(0,'utf8')).versions[0].version}catch(e){''}" || true)
           echo "version=$version" >> "$GITHUB_OUTPUT"
           echo "jb=$jb" >> "$GITHUB_OUTPUT"; echo "ms=$ms" >> "$GITHUB_OUTPUT"
           echo "Releasing $version (JetBrains Marketplace has ${jb:-nothing}; VS Code Marketplace has ${ms:-nothing})"
@@ -145,7 +166,7 @@ jobs:
           elif grep -qiE "not found|does not exist|No plugin" publish.log; then
             # A new plugin's first version is uploaded by hand on the Marketplace site; after that
             # the API takes updates, even while the first one is still in review (and unlisted).
-            echo "::warning::Tide Pets isn't on the JetBrains Marketplace yet. Upload the first version by hand from the run's pets artifact: https://plugins.jetbrains.com/plugin/add"
+            echo "::warning::Petabytes isn't on the JetBrains Marketplace yet. Upload the first version by hand from the run's pets artifact: https://plugins.jetbrains.com/plugin/add"
           else
             exit 1
           fi
@@ -168,7 +189,7 @@ jobs:
         # The Marketplace sometimes stalls, so a failed upload is tried again;
         # --skip-duplicate makes that safe when the timed-out attempt landed.
         run: |
-          vsix=$(ls dist/tide-pets-*.vsix | head -1)
+          vsix=$(ls dist/petabytes-*.vsix | head -1)
           if [ -n "$AZURE_CLIENT_ID" ]; then auth=(--azure-credential)
           elif [ -n "$VSCE_PAT" ]; then auth=()
           else
@@ -189,4 +210,4 @@ jobs:
             echo "::notice::OVSX_PAT is not set; skipping Open VSX (VSCodium and other VS Code forks)."
             exit 0
           fi
-          npx --yes ovsx publish "$(ls dist/tide-pets-*.vsix | head -1)" -p "$OVSX_PAT" --skip-duplicate
+          npx --yes ovsx publish "$(ls dist/petabytes-*.vsix | head -1)" -p "$OVSX_PAT" --skip-duplicate

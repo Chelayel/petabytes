@@ -1,4 +1,4 @@
-package com.chelayel.tidepets.pet
+package com.chelayel.petabytes.pet
 
 import kotlin.math.max
 import kotlin.math.min

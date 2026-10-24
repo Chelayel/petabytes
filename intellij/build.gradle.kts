@@ -4,7 +4,7 @@ plugins {
     id("org.jetbrains.intellij.platform") version "2.17.0"
 }
 
-group = "com.chelayel.tidepets"
+group = "com.chelayel.petabytes"
 // A tag builds and publishes at the tag's version (release.yml); gradle.properties
 // only labels local builds and builds off main.
 version = (findProperty("pluginVersion") as String?) ?: "0.0.0"
@@ -61,7 +61,7 @@ kotlin {
 // Renders every pet in each mood with the IntelliJ painter, headlessly, into build/preview.
 tasks.register<JavaExec>("renderPreview") {
     classpath = sourceSets["test"].runtimeClasspath
-    mainClass = "com.chelayel.tidepets.pet.RenderPreviewKt"
+    mainClass = "com.chelayel.petabytes.pet.RenderPreviewKt"
     args(rootDir.resolve("../web/pets.json").path, layout.buildDirectory.dir("preview").get().asFile.path)
     jvmArgs("-Djava.awt.headless=true")
 }

@@ -1,11 +1,11 @@
-// Tide Pets: a sea creature in the Explorer that reacts to what you do.
+// Petabytes: a sea creature in the Explorer that reacts to what you do.
 const vscode = require("vscode");
 const crypto = require("crypto");
 const fs = require("fs");
 const path = require("path");
 
-const VIEW_ID = "tidePets.pet";
-const SECTION = "tidePets";
+const VIEW_ID = "petabytes.pet";
+const SECTION = "petabytes";
 
 class PetView {
   constructor(extensionPath) {
@@ -51,6 +51,10 @@ const PETS = [
   { id: "dolphin", label: "Dolphin", detail: "Splash: fast, chatty and loves a flip" },
   { id: "angelfish", label: "Angelfish", detail: "Angie: glides gracefully, trailing long fins" },
   { id: "tang", label: "Blue tang", detail: "Indigo: friendly, if a little forgetful" },
+  { id: "retriever", label: "Golden retriever", detail: "Biscuit: wags, tilts its head, and loves a treat" },
+  { id: "cat", label: "Cat", detail: "Byte: purrs, judges, and sits on your keyboard" },
+  { id: "bunny", label: "Bunny", detail: "Clover: hops, wiggles its nose, and flattens its ears" },
+  { id: "hamster", label: "Hamster", detail: "Nugget: scurries, and stuffs its cheeks with snacks" },
 ];
 
 // Terminal commands worth a reaction, checked in order.
@@ -89,17 +93,17 @@ function activate(context) {
 
   sub(vscode.window.registerWebviewViewProvider(VIEW_ID, pet));
 
-  sub(vscode.commands.registerCommand("tidePets.toggle", async () => {
+  sub(vscode.commands.registerCommand("petabytes.toggle", async () => {
     const next = !vscode.workspace.getConfiguration(SECTION).get("enabled");
     await setEnabled(next);
     if (next) vscode.commands.executeCommand(`${VIEW_ID}.focus`);
   }));
-  sub(vscode.commands.registerCommand("tidePets.show", async () => {
+  sub(vscode.commands.registerCommand("petabytes.show", async () => {
     await setEnabled(true);
     vscode.commands.executeCommand(`${VIEW_ID}.focus`);
   }));
-  sub(vscode.commands.registerCommand("tidePets.hide", () => setEnabled(false)));
-  sub(vscode.commands.registerCommand("tidePets.choose", async () => {
+  sub(vscode.commands.registerCommand("petabytes.hide", () => setEnabled(false)));
+  sub(vscode.commands.registerCommand("petabytes.choose", async () => {
     const current = vscode.workspace.getConfiguration(SECTION).get("pet");
     const choice = await vscode.window.showQuickPick(
       PETS.map((p) => ({ ...p, description: p.id === current ? "current" : "" })),
@@ -111,7 +115,7 @@ function activate(context) {
     vscode.commands.executeCommand(`${VIEW_ID}.focus`);
   }));
 
-  sub(vscode.commands.registerCommand("tidePets.feed", async () => {
+  sub(vscode.commands.registerCommand("petabytes.feed", async () => {
     if (!vscode.workspace.getConfiguration(SECTION).get("enabled")) await setEnabled(true);
     pet.post({ type: "feed", key: "feed" });
   }));

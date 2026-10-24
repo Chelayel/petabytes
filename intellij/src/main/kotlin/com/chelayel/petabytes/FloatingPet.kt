@@ -1,8 +1,8 @@
-package com.chelayel.tidepets
+package com.chelayel.petabytes
 
-import com.chelayel.tidepets.pet.BubbleStyle
-import com.chelayel.tidepets.pet.PetBrain
-import com.chelayel.tidepets.pet.PetPainter
+import com.chelayel.petabytes.pet.BubbleStyle
+import com.chelayel.petabytes.pet.PetBrain
+import com.chelayel.petabytes.pet.PetPainter
 import com.intellij.openapi.actionSystem.ActionManager
 import com.intellij.openapi.actionSystem.ActionPlaces
 import com.intellij.openapi.actionSystem.ActionGroup
@@ -78,7 +78,7 @@ class FloatingPet(val brain: PetBrain, scale: Double, private val onDropped: (Do
     }
 
     private fun menu(e: MouseEvent) {
-        val group = ActionManager.getInstance().getAction("TidePets.Menu") as? ActionGroup ?: return
+        val group = ActionManager.getInstance().getAction("Petabytes.Menu") as? ActionGroup ?: return
         ActionManager.getInstance().createActionPopupMenu(ActionPlaces.POPUP, group).component.show(this, e.x, e.y)
     }
 

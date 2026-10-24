@@ -1,8 +1,8 @@
-# Tide Pets
+# Petabytes
 
-A sea creature lives in a **Tide Pets** panel in your Explorer and reacts to what you're doing. Pick one: **Shelly** the sea turtle, **Bloop** the jellyfish, **Inky** the octopus, **Pinchy** the crab, **Puff** the pufferfish, **Blue** the whale, **Clem** the clownfish, **Sandy** the seahorse, **Finn** the shark, **Splash** the dolphin, **Angie** the angelfish or **Indigo** the blue tang.
+Small companions with a big appetite. A pet lives in a **Petabytes** panel in your Explorer and reacts to what you're doing. Pick a sea creature from the **Tide** set or a pet from the **Home** set: **Shelly** the sea turtle, **Bloop** the jellyfish, **Inky** the octopus, **Pinchy** the crab, **Puff** the pufferfish, **Blue** the whale, **Clem** the clownfish, **Sandy** the seahorse, **Finn** the shark, **Splash** the dolphin, **Angie** the angelfish, **Indigo** the blue tang, **Biscuit** the golden retriever, **Byte** the cat, **Clover** the bunny or **Nugget** the hamster.
 
-![The twelve pets](https://raw.githubusercontent.com/Chelayel/tide-pets/main/docs/pets.png)
+![The twelve pets](https://raw.githubusercontent.com/Chelayel/petabytes/main/docs/pets.png)
 
 - **Typing:** swims faster
 - **Saving:** does a happy loop and blows bubbles
@@ -19,13 +19,13 @@ A sea creature lives in a **Tide Pets** panel in your Explorer and reacts to wha
 - **Late nights, mornings, long sessions:** says so, and suggests a stretch
 - **Clicked / double-clicked:** does a spin / shows hearts
 
-**Feed it:** click the ♥ on the panel (or **Tide Pets: Feed Pet**) and a `{ }`, `[ ]`, `( )`, `< >` or `;` sinks down for your pet to eat. Every 20th `{` you type drops a crumb too.
+**Feed it:** click the ♥ on the panel (or **Petabytes: Feed Pet**) and a `{ }`, `[ ]`, `( )`, `< >` or `;` sinks down for your pet to eat. Every 20th `{` you type drops a crumb too.
 
-![Pets reacting to typing, fixed errors, a new error, failed tests, debugging and being left alone](https://raw.githubusercontent.com/Chelayel/tide-pets/main/docs/moods.png)
+![Pets reacting to typing, fixed errors, a new error, failed tests, debugging and being left alone](https://raw.githubusercontent.com/Chelayel/petabytes/main/docs/moods.png)
 
 ## Choose, show or hide
 
-- Command Palette → **Tide Pets: Choose Pet**, **Feed Pet**, **Toggle Pet**, **Show Pet** or **Hide Pet**
+- Command Palette → **Petabytes: Choose Pet**, **Feed Pet**, **Toggle Pet**, **Show Pet** or **Hide Pet**
 - The buttons on the panel's title bar
 - The settings below
 
@@ -33,12 +33,12 @@ A sea creature lives in a **Tide Pets** panel in your Explorer and reacts to wha
 
 | Setting | Default | |
 | --- | --- | --- |
-| `tidePets.enabled` | `true` | Show the pet in the Explorer |
-| `tidePets.pet` | `"turtle"` | `turtle`, `jellyfish`, `octopus`, `crab`, `pufferfish`, `whale`, `clownfish`, `seahorse`, `shark`, `dolphin`, `angelfish` or `tang` |
-| `tidePets.name` | `""` | Your pet's name; empty for its own (Shelly, Bloop, Inky, Pinchy, Puff, Blue, Clem, Sandy, Finn, Splash, Angie or Indigo) |
+| `petabytes.enabled` | `true` | Show the pet in the Explorer |
+| `petabytes.pet` | `"turtle"` | `turtle`, `jellyfish`, `octopus`, `crab`, `pufferfish`, `whale`, `clownfish`, `seahorse`, `shark`, `dolphin`, `angelfish`, `tang`, `retriever`, `cat`, `bunny` or `hamster` |
+| `petabytes.name` | `""` | Your pet's name; empty for its own (Shelly, Bloop, Inky, Pinchy, Puff, Blue, Clem, Sandy, Finn, Splash, Angie, Indigo, Biscuit, Byte, Clover or Nugget) |
 
 Made to go with the [Midnight Tide](https://marketplace.visualstudio.com/items?itemName=Chelayel.midnight-tide-vscode) theme, and works with any theme. In [JetBrains IDEs](https://plugins.jetbrains.com/search?search=tide%20pets) the pet floats along the bottom of the editor.
 
 ## License
 
-MIT. Built by [Chelayel](https://www.chelayel.com). Source: [github.com/Chelayel/tide-pets](https://github.com/Chelayel/tide-pets).
+MIT. Built by [Chelayel](https://www.chelayel.com). Source: [github.com/Chelayel/petabytes](https://github.com/Chelayel/petabytes).

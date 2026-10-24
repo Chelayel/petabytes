@@ -1,6 +1,6 @@
-package com.chelayel.tidepets
+package com.chelayel.petabytes
 
-import com.chelayel.tidepets.pet.PetCatalog
+import com.chelayel.petabytes.pet.PetCatalog
 import com.intellij.openapi.actionSystem.ActionGroup
 import com.intellij.openapi.actionSystem.ActionUpdateThread
 import com.intellij.openapi.actionSystem.AnAction
@@ -11,7 +11,7 @@ import com.intellij.openapi.options.ShowSettingsUtil
 import com.intellij.openapi.project.DumbAwareAction
 import com.intellij.openapi.project.DumbAwareToggleAction
 
-/** Tools → Tide Pets: show or hide the pet, pick one, open the settings. */
+/** Tools → Petabytes: show or hide the pet, pick one, open the settings. */
 class PetMenu : ActionGroup() {
     private val children: Array<AnAction> by lazy {
         val pets = PetCatalog.load().pets.values.map { ChoosePet(it.id, "${it.label} (${it.name})") }
