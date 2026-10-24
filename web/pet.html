@@ -81,7 +81,7 @@
 
   let pet, name, parts = [], groups = {};
   const state = {
-    x: 20, dir: 1, speed: 0.4, clock: 0, errors: 0, debugging: false, sleeping: false,
+    x: 20, dir: 1, speed: 0.4, clock: 0, errors: 0, debugging: false, sleeping: false, ground: false, artBottom: 80,
     until: { excited: 0, happy: 0, curious: 0, hiding: 0, spin: 0 }, happyAt: 0, spinAt: 0,
     lastActivity: now(), lastTypingLine: 0, sayTimer: 0, poses: {},
     lastReact: {}, sessionMark: now(), lastFed: now(), eaten: 0, food: null, foodEl: null,
@@ -119,6 +119,9 @@
       parts.push({ part, el });
     }
     root.id = "root";
+    // Where the art ends, so a pet on the ground stands on its lowest point, whatever its shape.
+    const box = root.getBBox();
+    state.artBottom = Math.min(80, box.y + box.height);
     document.documentElement.style.setProperty("--glow", pet.glow);
     const accent = pet.parts.find((p) => p.stroke && p.stroke.startsWith("#"));
     document.documentElement.style.setProperty("--bubble", accent ? accent.stroke : "#5EEAD4");
@@ -165,7 +168,7 @@
       if (part.rot) el.setAttribute("transform", `rotate(${wave(part.rot, t)} ${part.pivot[0]} ${part.pivot[1]})`);
     }
     // Whole pet: facing, bob, happy loop, spin.
-    let rot = 0, ty = wave([pet.bob[0], pet.bob[1] * (f.sleeping ? 2 : 1), 0], now() / 1000);
+    let rot = 0, ty = state.ground ? 0 : wave([pet.bob[0], pet.bob[1] * (f.sleeping ? 2 : 1), 0], now() / 1000);
     if (f.happy) { const p = Math.min(1, (now() - state.happyAt) / 1100); ty -= 18 * Math.sin(Math.PI * p); rot += -12 * Math.sin(2 * Math.PI * p); }
     if (active("spin")) rot += 360 * Math.min(1, (now() - state.spinAt) / 800);
     const flip = pet.flip && state.dir < 0 ? "translate(120 0) scale(-1 1)" : "";
@@ -283,10 +286,12 @@
   function receive(msg) {
     if (!msg || !msg.type) return;
     if (msg.type === "config") {
-      if (msg.pet && (!pet || DATA.pets[msg.pet] !== pet)) build(msg.pet);
+      if (msg.pet && (!pet || DATA.pets[msg.pet] !== pet)) { build(msg.pet); newDepth(); }
       name = msg.name || pet.name;
       nameEl.textContent = name;
       if (msg.background) document.body.style.background = msg.background;
+      // The Mac app sets ground while the pet walks along the top of the Dock.
+      if (msg.ground != null && msg.ground !== state.ground) { state.ground = msg.ground; newDepth(); }
       for (const [k, v] of Object.entries(msg.vars || {})) document.documentElement.style.setProperty(k, v);
       return;
     }
@@ -341,11 +346,12 @@
     if (!state.sleeping && !state.food && now() - state.lastFed > 60 * 60 * 1000) react("hungry");
   }, 5000);
 
-  // Drift up and down every few seconds; floor pets and sleepers stay on the sand.
+  // Drift up and down every few seconds; floor pets, sleepers and pets on the ground stay at the bottom.
   function newDepth() {
     const room = Math.max(0, sea.clientHeight - H - 40);
     petEl.style.transition = "bottom 2.5s ease-in-out";
-    petEl.style.bottom = (state.sleeping || pet.floor ? 18 : 24 + Math.random() * room) + "px";
+    petEl.style.bottom = state.ground ? -(80 - state.artBottom) * SCALE + "px"
+      : (state.sleeping || pet.floor ? 18 : 24 + Math.random() * room) + "px";
   }
   setInterval(newDepth, 4000);
 

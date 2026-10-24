@@ -492,10 +492,43 @@ LINES.update({
   "longSession": ["You've been at it a while. Stretch break?", "Water break? I'm already in water.", "Blink a few times. Eyes need breaks too."],
 })
 
+# Things only the Mac app sees: the Mac itself, and the apps you switch to.
+REACTIONS.update({
+  "ide":         {"mood": "excited", "ms": 2000, "chance": 0.5, "cooldown": 600},
+  "meeting":     {"mood": "hiding", "ms": 2000, "cooldown": 600},
+  "music":       {"mood": "happy", "ms": 1100, "bubbles": 3, "chance": 0.5, "cooldown": 900},
+  "batteryLow":  {"mood": "curious", "ms": 1500, "cooldown": 1800},
+  "charging":    {"mood": "happy", "ms": 1100, "bubbles": 4, "cooldown": 120},
+  "offline":     {"mood": "hiding", "ms": 2000, "cooldown": 60},
+  "online":      {"mood": "happy", "ms": 1100, "cooldown": 60},
+  "download":    {"mood": "curious", "ms": 1200, "cooldown": 20},
+  "screenshot":  {"mood": "happy", "ms": 1100, "cooldown": 10},
+  "copy":        {"chance": 0.08, "cooldown": 300},
+  "hot":         {"mood": "worried", "ms": 2500, "cooldown": 900},
+  "darkMode":    {"mood": "curious", "ms": 1200, "cooldown": 30},
+  "unlock":      {"mood": "happy", "ms": 1100, "hearts": 2, "cooldown": 60},
+})
+
+LINES.update({
+  "ide": ["Code time!", "Back to the editor!", "What are we building today?"],
+  "meeting": ["A call? I'll be quiet.", "*hides from the camera*", "Mute yourself when you sneeze."],
+  "music": ["Ooh, music!", "Is this a sea shanty?", "*bobs along*"],
+  "batteryLow": ["Battery's low. Got a charger?", "Running on fumes here.", "{percent} battery left."],
+  "charging": ["Ahh, power.", "Charging! Snack for the laptop.", "Plugged in. Nice."],
+  "offline": ["The internet's gone!", "Offline. Just us now.", "No Wi-Fi? I'll still keep you company."],
+  "online": ["We're back online!", "Internet's back."],
+  "download": ["Something landed in Downloads.", "Download done!", "Ooh, a new file."],
+  "screenshot": ["Cheese!", "Did you get my good side?", "Screenshot! Was I in it?"],
+  "copy": ["Copy-paste? I saw nothing.", "Ctrl+C, Ctrl+V. Classic."],
+  "hot": ["It's getting hot in here.", "Your Mac's working hard.", "Is the water warming up?"],
+  "darkMode": ["Lights out!", "Ooh, new look.", "Switching modes?"],
+  "unlock": ["Welcome back!", "You're back!", "Missed you."],
+})
+
 PETS["crab"]["lines"].update({"pet": ["*happy clacks*", "Snip! I mean, thanks!"], "run": ["Scuttling into action!", "It's alive! *clack clack*"]})
 PETS["octopus"]["lines"].update({"pet": ["*hugs you with all eight arms*", "Eight arms, all for you."], "ai": ["An AI? I have eight arms, it has a million parameters."]})
 PETS["pufferfish"]["lines"].update({"pet": ["*puffs happily*", "Hehe, don't pop me."], "danger": ["*PUFF* Careful!", "*maximum puff*"]})
 PETS["jellyfish"]["lines"].update({"pet": ["*glows brighter*", "Bloop! Thank you."], "lateNight": ["It's late. Good thing I glow."]})
 PETS["turtle"]["lines"].update({"pet": ["*happy flipper flaps*", "Hehe, my shell is ticklish."], "longSession": ["Even turtles take breaks. Stretch?"]})
 
-print(json.dumps({"version": 1, "box": [120, 80], "lines": LINES, "reactions": REACTIONS, "snacks": SNACKS, "pets": PETS}, indent=1))
+print(json.dumps({"version": 1, "box": [120, 80], "lines": LINES, "reactions": REACTIONS, "snacks": SNACKS, "order": list(PETS), "pets": PETS}, indent=1))
