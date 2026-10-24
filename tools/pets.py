@@ -1046,11 +1046,12 @@ LINES.update({
   "longSession": ["You've been at it a while. Stretch break?", "Water break? I'm already in water.", "Blink a few times. Eyes need breaks too."],
 })
 
-# Things only the Mac app sees: the Mac itself, and the apps you switch to.
+# Things only the Mac app sees: the Mac itself, and the apps you switch to. Switching apps always gets a
+# reaction and a line; the cooldowns keep a busy afternoon of switching from turning into chatter.
 REACTIONS.update({
-  "ide":         {"mood": "excited", "ms": 2000, "chance": 0.5, "cooldown": 600},
-  "meeting":     {"mood": "hiding", "ms": 2000, "cooldown": 600},
-  "music":       {"mood": "happy", "ms": 1100, "bubbles": 3, "chance": 0.5, "cooldown": 900},
+  "ide":         {"mood": "excited", "ms": 2000, "cooldown": 300},
+  "meeting":     {"mood": "hiding", "ms": 2000, "cooldown": 300},
+  "music":       {"mood": "happy", "ms": 1100, "bubbles": 3, "cooldown": 600},
   "batteryLow":  {"mood": "curious", "ms": 1500, "cooldown": 1800},
   "charging":    {"mood": "happy", "ms": 1100, "bubbles": 4, "cooldown": 120},
   "offline":     {"mood": "hiding", "ms": 2000, "cooldown": 60},
@@ -1061,21 +1062,21 @@ REACTIONS.update({
   "hot":         {"mood": "worried", "ms": 2500, "cooldown": 900},
   "darkMode":    {"mood": "curious", "ms": 1200, "cooldown": 30},
   "unlock":      {"mood": "happy", "ms": 1100, "hearts": 2, "cooldown": 60},
-  "browser":     {"mood": "curious", "ms": 1200, "chance": 0.3, "cooldown": 1800},
-  "chat":        {"mood": "curious", "ms": 1200, "chance": 0.4, "cooldown": 900},
-  "mail":        {"mood": "curious", "ms": 1200, "chance": 0.5, "cooldown": 1800},
-  "design":      {"mood": "happy", "ms": 1100, "bubbles": 3, "chance": 0.6, "cooldown": 900},
-  "notes":       {"mood": "curious", "ms": 1200, "chance": 0.4, "cooldown": 900},
-  "calendar":    {"mood": "curious", "ms": 1200, "chance": 0.5, "cooldown": 1800},
-  "game":        {"mood": "excited", "ms": 3000, "cooldown": 900},
-  "video":       {"mood": "happy", "ms": 1100, "chance": 0.6, "cooldown": 1800},
+  "browser":     {"mood": "curious", "ms": 1200, "cooldown": 300},
+  "chat":        {"mood": "curious", "ms": 1200, "cooldown": 300},
+  "mail":        {"mood": "curious", "ms": 1200, "cooldown": 600},
+  "design":      {"mood": "happy", "ms": 1100, "bubbles": 3, "cooldown": 600},
+  "notes":       {"mood": "curious", "ms": 1200, "cooldown": 600},
+  "calendar":    {"mood": "curious", "ms": 1200, "cooldown": 900},
+  "game":        {"mood": "excited", "ms": 3000, "cooldown": 600},
+  "video":       {"mood": "happy", "ms": 1100, "cooldown": 900},
   "activity":    {"mood": "curious", "ms": 1500, "cooldown": 600},
-  "docker":      {"mood": "curious", "ms": 1200, "chance": 0.6, "cooldown": 900},
-  "database":    {"mood": "hiding", "ms": 1500, "chance": 0.6, "cooldown": 900},
-  "api":         {"mood": "curious", "ms": 1200, "chance": 0.5, "cooldown": 900},
+  "docker":      {"mood": "curious", "ms": 1200, "cooldown": 600},
+  "database":    {"mood": "hiding", "ms": 1500, "cooldown": 600},
+  "api":         {"mood": "curious", "ms": 1200, "cooldown": 600},
   "simulator":   {"mood": "spin", "ms": 800, "bubbles": 3, "cooldown": 300},
-  "settings":    {"mood": "curious", "ms": 1200, "chance": 0.5, "cooldown": 900},
-  "appStore":    {"mood": "curious", "ms": 1200, "chance": 0.5, "cooldown": 1800},
+  "settings":    {"mood": "curious", "ms": 1200, "cooldown": 600},
+  "appStore":    {"mood": "curious", "ms": 1200, "cooldown": 900},
   "passwords":   {"mood": "hiding", "ms": 1500, "cooldown": 600},
 })
 

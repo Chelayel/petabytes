@@ -81,27 +81,33 @@ final class Signals {
             "terminal": ["com.apple.Terminal", "com.googlecode.iterm2", "dev.warp.Warp-Stable", "com.mitchellh.ghostty",
                          "net.kovidgoyal.kitty", "org.alacritty", "com.github.wez.wezterm", "co.zeit.hyper"],
             "ai": ["com.anthropic.claudefordesktop", "com.openai.chat", "com.openai.codex", "com.openai.atlas",
-                   "ai.perplexity.mac", "com.todesktop.230313mzl4w4u92"],
+                   "ai.perplexity.mac", "com.todesktop.230313mzl4w4u92", "com.google.antigravity-ide"],
             "ide": ["com.microsoft.VSCode", "com.microsoft.VSCodeInsiders", "com.apple.dt.Xcode", "com.google.android.studio",
                     "dev.zed.Zed", "com.sublimetext.4", "com.exafunction.windsurf", "com.panic.Nova", "com.barebones.bbedit"],
             "meeting": ["us.zoom.xos", "com.microsoft.teams2", "com.microsoft.teams", "com.apple.FaceTime", "com.cisco.webexmeetingsapp"],
             "music": ["com.spotify.client", "com.apple.Music", "com.apple.podcasts", "com.tidal.desktop"],
             "browser": ["com.apple.Safari", "com.google.Chrome", "company.thebrowser.Browser", "org.mozilla.firefox",
-                        "com.brave.Browser", "com.microsoft.edgemac", "app.zen-browser.zen", "com.operasoftware.Opera"],
+                        "com.brave.Browser", "com.microsoft.edgemac", "app.zen-browser.zen", "com.operasoftware.Opera",
+                        "company.thebrowser.dia"],
             "chat": ["com.tinyspeck.slackmacgap", "com.hnc.Discord", "com.apple.MobileSMS", "net.whatsapp.WhatsApp",
-                     "ru.keepcoder.Telegram", "org.whispersystems.signal-desktop"],
-            "mail": ["com.apple.mail", "com.microsoft.Outlook", "com.readdle.smartemail-Mac", "com.superhuman.electron"],
+                     "ru.keepcoder.Telegram", "org.whispersystems.signal-desktop", "com.larksuite.larkApp"],
+            "mail": ["com.apple.mail", "com.microsoft.Outlook", "com.readdle.smartemail-Mac", "com.readdle.SparkDesktop",
+                     "com.readdle.SparkDesktop.appstore", "com.superhuman.electron"],
             "design": ["com.figma.Desktop", "com.bohemiancoding.sketch3", "com.seriflabs.affinitydesigner2", "com.seriflabs.affinityphoto2",
                        "com.adobe.Photoshop", "com.adobe.illustrator", "com.pixelmatorteam.pixelmator.x", "com.canva.CanvaDesktop"],
-            "notes": ["notion.id", "md.obsidian", "com.apple.Notes", "net.shinyfrog.bear", "com.apple.iWork.Pages", "com.microsoft.Word"],
-            "calendar": ["com.apple.iCal", "com.flexibits.fantastical2.mac", "com.cron.electron"],
-            "game": ["com.valvesoftware.steam", "com.mojang.minecraftlauncher", "net.battle.app", "com.epicgames.EpicGamesLauncher"],
-            "video": ["com.apple.TV", "com.colliderli.iina", "org.videolan.vlc", "com.apple.QuickTimePlayerX"],
+            "notes": ["notion.id", "md.obsidian", "com.apple.Notes", "net.shinyfrog.bear", "com.apple.iWork.Pages", "com.microsoft.Word",
+                      "com.apple.iWork.Keynote", "com.apple.iWork.Numbers", "com.microsoft.Excel", "com.microsoft.Powerpoint"],
+            "calendar": ["com.apple.iCal", "com.flexibits.fantastical2.mac", "com.cron.electron", "com.TickTick.task.mac", "com.mowglii.ItsycalApp"],
+            "game": ["com.valvesoftware.steam", "com.mojang.minecraftlauncher", "net.battle.app", "com.epicgames.EpicGamesLauncher",
+                     "com.codeweavers.CrossOver", "com.generalsx.generalsxzh", "RVGL Launcher"],
+            "video": ["com.apple.TV", "com.colliderli.iina", "org.videolan.vlc", "com.apple.QuickTimePlayerX", "com.westbridge.stremio5-mac",
+                      "com.electron.multiviewer-for-f1", "com.apple.iMovieApp", "com.nuvio.media.desktop"],
             "activity": ["com.apple.ActivityMonitor"],
-            "docker": ["com.docker.docker", "com.electron.dockerdesktop", "dev.orbstack.OrbStack"],
+            "docker": ["com.docker.docker", "com.electron.dockerdesktop", "dev.kdrag0n.MacVirt"],
             "database": ["com.tinyapp.TablePlus", "org.jkiss.dbeaver.core.product", "com.sequel-ace.sequel-ace", "com.jetbrains.datagrip"],
             "api": ["com.postmanlabs.mac", "com.insomnia.app", "com.usebruno.app"],
             "simulator": ["com.apple.iphonesimulator"],
+            "screenshot": ["cc.ffitch.shottr", "com.apple.screenshot.launcher"],
             "settings": ["com.apple.systempreferences"],
             "appStore": ["com.apple.AppStore"],
             "passwords": ["com.apple.Passwords", "com.1password.1password", "com.bitwarden.desktop"],
@@ -109,10 +115,34 @@ final class Signals {
         return Dictionary(groups.flatMap { key, ids in ids.map { ($0, key) } }, uniquingKeysWith: { first, _ in first })
     }()
 
+    /** App Store categories apps declare (LSApplicationCategoryType), for apps the table doesn't list. */
+    private static let categories: [String: String] = [
+        "public.app-category.developer-tools": "ide", "public.app-category.social-networking": "chat",
+        "public.app-category.music": "music", "public.app-category.video": "video",
+        "public.app-category.graphics-design": "design", "public.app-category.photography": "design",
+        "public.app-category.games": "game",
+    ]
+
+    /**
+     What kind of app this is: the table above, then what the app says about itself. Apps that open web links
+     are browsers and ones that open mailto: links are mail apps; failing that, its App Store category.
+     */
+    static func kind(of app: NSRunningApplication) -> String? {
+        guard let id = app.bundleIdentifier, id != Bundle.main.bundleIdentifier else { return nil }
+        if let key = apps[id] { return key }
+        if id.hasPrefix("com.jetbrains.") { return "ide" }
+        guard let url = app.bundleURL, let info = Bundle(url: url)?.infoDictionary else { return nil }
+        let schemes = Set((info["CFBundleURLTypes"] as? [[String: Any]] ?? []).flatMap { $0["CFBundleURLSchemes"] as? [String] ?? [] }.map { $0.lowercased() })
+        if schemes.contains("https") || schemes.contains("http") { return "browser" }
+        if schemes.contains("mailto") { return "mail" }
+        guard let category = info["LSApplicationCategoryType"] as? String else { return nil }
+        return categories[category] ?? (category.hasPrefix("public.app-category.") && category.hasSuffix("-games") ? "game" : nil)
+    }
+
     private func watchApps() {
         NSWorkspace.shared.notificationCenter.addObserver(forName: NSWorkspace.didActivateApplicationNotification, object: nil, queue: .main) { [weak self] note in
-            guard let app = note.userInfo?[NSWorkspace.applicationUserInfoKey] as? NSRunningApplication, let id = app.bundleIdentifier else { return }
-            if let key = Self.apps[id] ?? (id.hasPrefix("com.jetbrains.") ? "ide" : nil) { self?.react(key) }
+            guard let app = note.userInfo?[NSWorkspace.applicationUserInfoKey] as? NSRunningApplication, let key = Self.kind(of: app) else { return }
+            self?.react(key)
         }
     }
 

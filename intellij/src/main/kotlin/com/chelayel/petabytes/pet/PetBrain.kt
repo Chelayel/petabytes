@@ -40,6 +40,9 @@ class PetBrain(
     var spinAt = 0L; private set
     private var lastActivity = clock()
     private var lastTypingLine = 0L
+    /** Where a roaming pet with nothing to do is heading, and until when it rests on arriving. */
+    private var goal: Double? = null
+    private var restUntil = 0L
 
     /**
      * True: the pet lives in a strip along the right edge and moves up and down; [x] is then its
@@ -291,9 +294,17 @@ class PetBrain(
             else if (excited) target = 1.7 * pet.speed
             else if (debugging) target = 0.8 * pet.speed
             else if ("worried" in f) target = 0.22 * pet.speed
+            // Head for a spot anywhere along the edge, rest there a moment, then pick another, so the pet
+            // gets around the whole strip instead of pacing near where it started.
+            val heading = goal
+            if (heading == null || kotlin.math.abs(heading - x) < 8) {
+                if (heading != null) restUntil = t + 800 + random.nextLong(2500)
+                goal = 4 + random.nextDouble() * max(0.0, maxX - 4)
+            }
+            if (t < restUntil && !excited) target = 0.0
+            else dir = if (goal!! > x) 1 else -1
             speed += (target - speed) * 0.06 * dt
             x += speed * dir * dt
-            if (speed > 0.1 && random.nextDouble() < 0.0015 * dt) dir = -dir
         }
         if (x > maxX) { x = maxX; dir = -1 }
         if (x < 4) { x = 4.0; dir = 1 }
