@@ -1,4 +1,4 @@
-<img src="docs/logo/logo.svg" width="72" alt="Petabytes logo: a wave with bubbles">
+<img src="docs/logo/logo.svg" width="72" alt="Petabytes logo: a little critter between curly braces">
 
 # Petabytes
 
@@ -7,7 +7,9 @@ Small companions with a big appetite. They keep you company while you code, in V
 - **Tide**, sea creatures that swim: **Shelly** the sea turtle, **Bloop** the jellyfish, **Inky** the octopus, **Pinchy** the crab, **Puff** the pufferfish, **Blue** the whale, **Clem** the clownfish, **Sandy** the seahorse, **Finn** the shark, **Splash** the dolphin, **Angie** the angelfish or **Indigo** the blue tang.
 - **Home**, pets that walk: **Biscuit** the golden retriever, **Byte** the cat, **Clover** the bunny or **Nugget** the hamster.
 
-![The Tide pets](docs/pets.png)
+![Shelly swimming faster while you type, worrying about an error and celebrating the fix; Byte the cat hiding from failed tests; Biscuit eating a curly brace, napping and waking up](docs/demo.gif)
+
+![All sixteen pets](docs/pets.png)
 
 | You | Your pet |
 | --- | --- |
@@ -49,7 +51,7 @@ Download `Petabytes-<version>.dmg` from the [latest release](https://github.com/
 
 The pet walks along the top of your Dock, out of the way: clicks go through everywhere except on the pet itself. Drag it off the Dock to float it anywhere. **Move to Dock** puts it inside its own Dock icon instead, where you can keep it: it stays animated, a little bubble shows how it feels (z, !, ♥, ?) or that it's talking, and clicking the icon feeds it.
 
-![Inky the octopus living in the Dock, saying something](docs/mac-dock.png)
+![Inky the octopus living inside its own Dock icon](docs/mac-dock.png)
  It steps aside while an app is full screen (**Hide in Full Screen**, on by default).
 
 It reacts to your Mac, and none of it asks for a permission:
