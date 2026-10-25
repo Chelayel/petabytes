@@ -8,10 +8,11 @@ Small companions with a big appetite. They keep you company while you code, in V
 - **Home**, pets that walk: **Biscuit** the golden retriever, **Byte** the cat, **Clover** the bunny or **Nugget** the hamster.
 - **Snacks**, food with feet: **Patty** the burger, **Nori** the sushi, **Pepe** the pizza, **Sprinkles** the donut or **Tuesday** the taco.
 - **Games**, original pixel-art characters: **Squish** the slime, **Boo** the ghost, **Sir Pix** the knight or **Bolt** the robot. They say "+1 coin!" when you save, "LEVEL UP!" when you fix every error and "GAME OVER" when tests fail.
+- **Gadgets**, the things on your desk: **Lappy** the laptop, **Joy** the controller, **Java** the coffee mug, **Quackers** the rubber duck (who helps when you debug), **Spike** the cactus, **Floppy** the floppy disk, **Click** the mouse, **Beats** the headphones or **Post** the sticky note.
 
 ![Shelly swimming faster while you type, worrying about an error and celebrating the fix; Byte the cat hiding from failed tests; Patty the burger eating a curly brace; Sir Pix the knight napping and waking up](docs/demo.gif)
 
-![All twenty-five pets](docs/pets.png)
+![All thirty-four pets](docs/pets.png)
 
 ## Which one do I need?
 

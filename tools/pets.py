@@ -950,8 +950,287 @@ PETS["robot"] = {
             "ai": ["A fellow AI! Beep!", "Hello, colleague."]},
 }
 
+# ---- Gadgets: things on your desk ------------------------------------------
+
+def outlined(d, group, color, sw, **kw):
+    """A thick line with an ink outline: the ink drawn wider underneath, then the color."""
+    return [p(d, group, stroke=ink, sw=sw + 2.5, **kw), p(d, group, stroke=color, sw=sw, **kw)]
+
+# ---- Laptop -------------------------------------------------------------
+PETS["laptop"] = {
+  "label": "Laptop", "name": "Lappy", "set": "gadgets", "flip": False, "floor": True, "speed": 0.9,
+  "bob": [1, 0.5], "glow": "rgba(96,165,250,0.4)", "mouth": [60, 42], "head": [60, 12],
+  "parts": [
+    leg_stroke(46, 58, -1, "#6B7280", 6, 0, 0.7), leg_stroke(74, 58, 1, "#6B7280", 6, 0.5, 0.7),
+    p("M30 54 H90 L98 60 H22 Z", "body", fill="#CBD5E1", stroke=ink, sw=1.5),
+    p("M36 57 h48", "body", stroke="#94A3B8", sw=1.5),
+    p("M36 14 H84 Q88 14 88 18 V54 H32 V18 Q32 14 36 14 Z", "lid", fill="#374151", stroke=ink, sw=1.5),
+    p("M36 18 H84 V50 H36 Z", "lid", fill="#60A5FA"),
+    p("M36 18 H84 V50 H36 Z", "lid", fill="#1E3A8A", when=["sleeping"]),
+    p("M40 22 l8 0", "lid", stroke="#BFDBFE", sw=1.5, opacity=0.7),
+    *snack_face(54, 66, 33, "lid"),
+    sweat(84, 10),
+    *lens(104, 56),
+  ],
+  "poses": {
+    "hiding":   {"lid": {"ty": 10, "s": 0.75, "p": [60, 54]}},
+    "sleeping": {"lid": {"ty": 3, "s": 0.95, "p": [60, 54]}, "legs": {"s": 0.4, "p": [60, 78]}},
+    "curious":  {"lid": {"r": -6, "p": [60, 54]}},
+  },
+  "lines": {"click": ["*whirrs happily*", "Fully charged!", "Hello, world!", "Don't spill coffee on me."],
+            "pet": ["*happy fan noises*", "Hehe, that's my trackpad."],
+            "yikes": ["*closes its lid*", "Blue screen! Kidding."],
+            "typing": ["Clack clack clack!", "My keys are on fire!", "Ooh, typing!"],
+            "save": ["Saved to my SSD!", "Saved!"],
+            "hot": ["My fans are spinning!", "I'm overheating!"],
+            "batteryLow": ["I'm running low! Charger, please.", "{percent} left. Plug me in?"],
+            "charging": ["Ahh, power.", "Charging! Thank you."]},
+}
+
+# ---- Gaming controller --------------------------------------------------
+PETS["controller"] = {
+  "label": "Controller", "name": "Joy", "set": "gadgets", "flip": False, "floor": True, "speed": 1.0,
+  "bob": [1.2, 0.5], "glow": "rgba(129,140,248,0.45)", "mouth": [60, 44], "head": [60, 16],
+  "parts": [
+    leg_stroke(44, 56, -1, "#4F46E5", 6, 0, 0.7), leg_stroke(76, 56, 1, "#4F46E5", 6, 0.5, 0.7),
+    p("M30 30 Q30 22 40 22 H80 Q90 22 90 30 Q99 46 95 56 Q91 63 84 58 L76 50 H44 L36 58 Q29 63 25 56 Q21 46 30 30 Z", "body", fill="#6366F1", stroke=ink, sw=1.6),
+    p("M37 33 h6 v-6 h4 v6 h6 v4 h-6 v6 h-4 v-6 h-6z", "body", fill="#1E1B4B"),
+    c(80, 29, 2.6, "buttons", fill="#EF4444", stroke=ink, sw=0.8), c(86, 35, 2.6, "buttons", fill="#22C55E", stroke=ink, sw=0.8),
+    c(74, 35, 2.6, "buttons", fill="#3B82F6", stroke=ink, sw=0.8), c(80, 41, 2.6, "buttons", fill="#FACC15", stroke=ink, sw=0.8),
+    *snack_face(54, 66, 36, "face"),
+    sweat(90, 18),
+    *lens(104, 54),
+  ],
+  "groupMotion": {"buttons": {"sx": [0.12, 0.6, 0], "sy": [0.12, 0.6, 0], "p": [80, 35]}},
+  "poses": {
+    "hiding":   {"body": {"r": 10, "s": 0.9, "p": [60, 50]}, "face": {"r": 10, "s": 0.9, "p": [60, 50]}, "buttons": {"r": 10, "s": 0.9, "p": [60, 50]}},
+    "sleeping": {"body": {"ty": 3}, "face": {"ty": 3}, "buttons": {"ty": 3}, "legs": {"s": 0.4, "p": [60, 76]}},
+    "curious":  {"face": {"r": -8, "p": [60, 40]}},
+  },
+  "lines": {"click": ["Player 1 ready!", "Press start!", "Up, up, down, down...", "Combo!"],
+            "pet": ["*happy rumble*", "Hehe, that's my trigger."],
+            "yikes": ["*rumbles nervously*", "Controller disconnected!"],
+            "typing": ["Button mashing!", "Combo!", "Ooh, typing!"],
+            "taskFail": ["GAME OVER: {task}.", "{task} failed. Continue?"],
+            "fixed": ["LEVEL UP!", "High score!"],
+            "game": ["Game time! Pick me!", "Let's play!"]},
+}
+
+# ---- Coffee mug ---------------------------------------------------------
+PETS["mug"] = {
+  "label": "Coffee mug", "name": "Java", "set": "gadgets", "flip": True, "floor": True, "speed": 0.8,
+  "bob": [1, 0.5], "glow": "rgba(248,113,113,0.4)", "mouth": [57, 47], "head": [57, 8],
+  "parts": [
+    leg_stroke(48, 58, -1, "#DC2626", 6, 0, 0.75), leg_stroke(66, 58, 1, "#DC2626", 6, 0.5, 0.75),
+    *outlined("M78 32 q12 0 12 11 q0 11 -12 11", "body", "#F87171", 5),
+    p("M36 24 H78 V54 Q78 62 70 62 H44 Q36 62 36 54 Z", "body", fill="#F87171", stroke=ink, sw=1.6),
+    e(57, 24, 21, 4, "body", fill="#6F4E37", stroke=ink, sw=1.3),
+    p("M50 18 q-4 -5 0 -9 q4 -4 0 -9", "steam", stroke="#CBD5E1", sw=2.2, opacity=0.75, pivot=[50, 18], rot=[8, 1.6, 0]),
+    p("M60 18 q-4 -5 0 -9 q4 -4 0 -9", "steam", stroke="#CBD5E1", sw=2.2, opacity=0.75, pivot=[60, 18], rot=[8, 1.6, 0.4]),
+    p("M70 18 q-4 -5 0 -9", "steam", stroke="#CBD5E1", sw=2.2, opacity=0.6, pivot=[70, 18], rot=[8, 1.6, 0.8], when=["happy"]),
+    *snack_face(51, 63, 40, "face"),
+    c(45, 47, 2.4, "face", fill="#FECACA", opacity=0.8), c(69, 47, 2.4, "face", fill="#FECACA", opacity=0.8),
+    sweat(82, 20),
+    *lens(100, 52),
+  ],
+  "poses": {
+    "hiding":   {"face": {"s": 0.85, "ty": 3, "p": [57, 50]}, "steam": {"s": 0.3, "p": [60, 20]}},
+    "sleeping": {"steam": {"s": 0.4, "p": [60, 20]}, "legs": {"s": 0.4, "p": [57, 78]}},
+    "curious":  {"face": {"r": -8, "p": [57, 45]}},
+  },
+  "lines": {"click": ["Espresso yourself!", "Brewing ideas.", "Refill?", "Latte love for you."],
+            "pet": ["*warm and cozy*", "Careful, I'm hot!"],
+            "yikes": ["*spills a little*", "Grounds for concern!"],
+            "typing": ["Caffeinated typing!", "Brewing code!", "Ooh, typing!"],
+            "save": ["Saved! Fresh brew.", "Saved!"],
+            "longSession": ["Refill time? We've been at it a while.", "Coffee break? I insist."],
+            "morning": ["Good morning! Coffee first.", "Rise and grind!"],
+            "lateNight": ["Decaf, maybe?", "Coffee this late? Bold."]},
+}
+
+# ---- Rubber duck --------------------------------------------------------
+PETS["duck"] = {
+  "label": "Rubber duck", "name": "Quackers", "set": "gadgets", "flip": True, "floor": False, "speed": 0.7,
+  "bob": [4, 2.4], "glow": "rgba(250,204,21,0.45)", "mouth": [96, 36], "head": [80, 14],
+  "parts": [
+    p("M30 46 Q30 32 50 34 Q70 36 74 44 Q86 44 88 52 Q86 66 58 66 Q32 66 30 46 Z", "body", fill="#FACC15", stroke=ink, sw=1.6, pivot=[58, 66], rot=[4, 2.4, 0]),
+    p("M30 46 q-6 -8 -2 -14 q4 4 6 10", "body", fill="#FACC15", stroke=ink, sw=1.4, pivot=[58, 66], rot=[4, 2.4, 0]),
+    p("M46 46 q10 -4 18 4 q-8 6 -18 -4z", "body", fill="#EAB308", stroke=ink, sw=1.2, pivot=[58, 66], rot=[4, 2.4, 0]),
+    c(80, 30, 13, "head", fill="#FACC15", stroke=ink, sw=1.6),
+    p("M90 31 q9 -1 11 3 q-3 4 -11 2z", "head", fill="#F97316", stroke=ink, sw=1.2),
+    *eye_set(83, 26, 2.5, "head", ink, sclera="#FFFFFF"),
+    p("M79 20 l6 2", "head", stroke=ink, sw=1.4, when=["worried"]),
+    c(77, 34, 2.4, "head", fill="#FB923C", opacity=0.6),
+    sweat(70, 14),
+    *lens(108, 50),
+  ],
+  "poses": {
+    "hiding":   {"head": {"tx": -6, "ty": 8, "s": 0.85, "p": [72, 40]}},
+    "sleeping": {"head": {"tx": -2, "ty": 4, "r": 10, "p": [72, 40]}},
+    "curious":  {"head": {"r": -12, "p": [76, 40]}},
+  },
+  "lines": {"click": ["Quack!", "*squeak*", "Explain it to me.", "I'm listening."],
+            "pet": ["*squeak squeak*", "Quack quack!"],
+            "yikes": ["QUACK!", "*squeaks in panic*"],
+            "debugOn": ["Explain it to me, line by line.", "Talk me through it.", "What should it do? What does it do?"],
+            "debugOff": ["See? Talking it through works.", "Quack. You figured it out."],
+            "fixed": ["See? Talking it through works.", "Quack-tastic!"],
+            "worried": ["Hmm. Explain that line to me?", "Uh oh."],
+            "typing": ["Quack quack quack!", "Ooh, typing!"]},
+}
+
+# ---- Cactus -------------------------------------------------------------
+PETS["cactus"] = {
+  "label": "Cactus", "name": "Spike", "set": "gadgets", "flip": False, "floor": True, "speed": 0.5,
+  "bob": [0.8, 0.8], "glow": "rgba(74,222,128,0.4)", "mouth": [60, 40], "head": [60, 10],
+  "parts": [
+    p("M47 18 Q47 12 60 12 Q73 12 73 18 V54 H47 Z", "body", fill="#4ADE80", stroke=ink, sw=1.6),
+    p("M54 18 V50 M66 18 V50", "body", stroke="#22C55E", sw=1.5),
+    *outlined("M47 40 h-6 q-5 0 -5 -5 v-9", "arms", "#4ADE80", 6, pivot=[47, 40], rot=[6, 2.2, 0]),
+    *outlined("M73 34 h6 q5 0 5 -5 v-8", "arms", "#4ADE80", 6, pivot=[73, 34], rot=[6, 2.2, 0.5]),
+    p("M50 24 l-3 -1 M70 22 l3 -1 M52 46 l-3 1 M68 44 l3 1", "body", stroke="#F0FDF4", sw=1),
+    c(60, 9, 4, "flower", fill="#F472B6", stroke=ink, sw=1, when=["happy"]),
+    c(60, 9, 1.6, "flower", fill="#FDE047", when=["happy"]),
+    p("M40 52 H80 V58 H40 Z", "pot", fill="#C2410C", stroke=ink, sw=1.5),
+    p("M42 58 H78 L74 74 H46 Z", "pot", fill="#EA580C", stroke=ink, sw=1.5),
+    *snack_face(55, 65, 30, "face"),
+    c(51, 37, 2.2, "face", fill="#F9A8D4", opacity=0.7), c(69, 37, 2.2, "face", fill="#F9A8D4", opacity=0.7),
+    sweat(76, 12),
+    *lens(96, 52),
+  ],
+  "poses": {
+    "hiding":   {"arms": {"s": 0.45, "p": [60, 38]}, "face": {"s": 0.9, "ty": 2, "p": [60, 34]}},
+    "sleeping": {"arms": {"s": 0.8, "p": [60, 38]}, "face": {"ty": 2}},
+    "curious":  {"body": {"r": -5, "p": [60, 54]}, "face": {"r": -5, "p": [60, 54]}, "arms": {"r": -5, "p": [60, 54]}},
+  },
+  "lines": {"click": ["Hug? Careful.", "Low maintenance, high spirits.", "Looking sharp!", "I'm a succulent for you."],
+            "pet": ["*prickly happiness*", "Ow, careful! Hehe."],
+            "yikes": ["*pulls in its arms*", "Prickly situation!"],
+            "fixed": ["Look, I bloomed!", "All clear!"],
+            "hungry": ["Water? Just a sip.", "A little sunshine, please."],
+            "feed": ["A snack? I usually just drink.", "Ooh, food!"],
+            "typing": ["Growing with every line!", "Ooh, typing!"]},
+}
+
+# ---- Floppy disk --------------------------------------------------------
+PETS["floppy"] = {
+  "label": "Floppy disk", "name": "Floppy", "set": "gadgets", "flip": False, "floor": True, "speed": 0.9,
+  "bob": [1, 0.5], "glow": "rgba(37,99,235,0.4)", "mouth": [60, 50], "head": [60, 12],
+  "parts": [
+    leg_stroke(48, 58, -1, "#1E40AF", 6, 0, 0.7), leg_stroke(72, 58, 1, "#1E40AF", 6, 0.5, 0.7),
+    p("M36 16 H80 L86 22 V60 H36 Z", "body", fill="#2563EB", stroke=ink, sw=1.6),
+    p("M47 16 H73 V30 H47 Z", "body", fill="#CBD5E1", stroke=ink, sw=1.2),
+    p("M64 19 H69 V27 H64 Z", "body", fill="#475569"),
+    p("M42 36 H80 V58 H42 Z", "body", fill="#F8FAFC", stroke=ink, sw=1.2),
+    p("M46 40 h14", "body", stroke="#93C5FD", sw=1.5),
+    *snack_face(55, 67, 46, "face", mouth_dy=6),
+    sweat(84, 12),
+    *lens(102, 54),
+  ],
+  "poses": {
+    "hiding":   {"body": {"s": 0.85, "p": [60, 60]}, "face": {"s": 0.85, "p": [60, 60]}},
+    "sleeping": {"body": {"ty": 2}, "face": {"ty": 2}, "legs": {"s": 0.4, "p": [60, 78]}},
+    "curious":  {"body": {"r": -6, "p": [60, 60]}, "face": {"r": -6, "p": [60, 60]}},
+  },
+  "lines": {"click": ["I'm the save icon!", "Remember me?", "1.44 MB of personality.", "Insert me!"],
+            "pet": ["*happy whirring*", "Hehe, careful with my shutter."],
+            "yikes": ["*ejects itself*", "Disk error!"],
+            "save": ["Saved! The old-fashioned way.", "1.44 MB of pure joy!", "Saved to disk. That's me!"],
+            "typing": ["Writing to disk!", "Ooh, typing!"],
+            "fixed": ["Error-free, like a fresh disk.", "All clear!"]},
+}
+
+# ---- Computer mouse -----------------------------------------------------
+PETS["mouse"] = {
+  "label": "Mouse", "name": "Click", "set": "gadgets", "flip": True, "floor": True, "speed": 1.2,
+  "bob": [1, 0.4], "glow": "rgba(229,231,235,0.4)", "mouth": [70, 50], "head": [66, 20],
+  "parts": [
+    leg_stroke(52, 56, -1, "#6B7280", 5, 0, 0.5), leg_stroke(76, 56, 1, "#6B7280", 5, 0.5, 0.5),
+    p("M40 56 q-10 0 -14 -10 q-4 -10 -14 -8", "tail", stroke="#6B7280", sw=2.6, pivot=[40, 56], rot=[14, 0.9, 0]),
+    p("M40 60 Q40 26 66 24 Q92 26 92 60 Z", "body", fill="#E5E7EB", stroke=ink, sw=1.6),
+    p("M66 24 V40", "body", stroke="#9CA3AF", sw=1.4),
+    p("M64 28 H68 V36 H64 Z", "body", fill="#6B7280"),
+    *snack_face(60, 74, 46, "face", mouth_dy=6),
+    c(55, 52, 2.2, "face", fill="#F9A8D4", opacity=0.7), c(80, 52, 2.2, "face", fill="#F9A8D4", opacity=0.7),
+    sweat(90, 22),
+    *lens(106, 54),
+  ],
+  "poses": {
+    "hiding":   {"body": {"s": 0.88, "p": [66, 60]}, "face": {"s": 0.88, "p": [66, 60]}, "tail": {"s": 0.6, "p": [40, 56]}},
+    "sleeping": {"body": {"ty": 2}, "face": {"ty": 2}, "legs": {"s": 0.4, "p": [64, 76]}},
+    "curious":  {"face": {"r": -8, "p": [66, 50]}},
+  },
+  "lines": {"click": ["Click!", "Double-click me!", "Right-click for options.", "*scrolls happily*"],
+            "pet": ["*happy scroll*", "Cursor cuddles!"],
+            "yikes": ["*unplugs itself*", "Eek! A mouse! Wait, that's me."],
+            "typing": ["Keyboard shortcuts? I see how it is.", "Ooh, typing!"],
+            "fixed": ["Point and fixed!", "All clear!"]},
+}
+
+# ---- Headphones ---------------------------------------------------------
+PETS["headphones"] = {
+  "label": "Headphones", "name": "Beats", "set": "gadgets", "flip": False, "floor": True, "speed": 1.0,
+  "bob": [2, 0.5], "glow": "rgba(236,72,153,0.45)", "mouth": [60, 34], "head": [60, 8],
+  "parts": [
+    leg_stroke(33, 56, -1, "#BE185D", 5, 0, 0.6), leg_stroke(87, 56, 1, "#BE185D", 5, 0.5, 0.6),
+    *outlined("M33 40 Q33 10 60 10 Q87 10 87 40", "body", "#E5E7EB", 6),
+    p("M24 36 Q24 32 28 32 H38 Q42 32 42 36 V54 Q42 58 38 58 H28 Q24 58 24 54 Z", "body", fill="#EC4899", stroke=ink, sw=1.5),
+    p("M78 36 Q78 32 82 32 H92 Q96 32 96 36 V54 Q96 58 92 58 H82 Q78 58 78 54 Z", "body", fill="#EC4899", stroke=ink, sw=1.5),
+    *eye_set(33, 44, 3, "face", ink, sclera="#FFFFFF"), *eye_set(87, 44, 3, "face", ink, sclera="#FFFFFF"),
+    p("M28 36 l7 2 M92 36 l-7 2", "face", stroke=ink, sw=1.4, when=["worried"]),
+    p("M64 18 v-10 l7 -2 v10", "notes", stroke="#F9A8D4", sw=1.6, when=["happy"]),
+    c(62, 18, 2.2, "notes", fill="#F9A8D4", when=["happy"]), c(69, 16, 2.2, "notes", fill="#F9A8D4", when=["happy"]),
+    sweat(98, 26),
+    *lens(106, 52),
+  ],
+  "groupMotion": {"body": {"sy": [0.03, 0.5, 0], "p": [60, 58]}},
+  "poses": {
+    "hiding":   {"body": {"s": 0.85, "p": [60, 58]}, "face": {"s": 0.85, "p": [60, 58]}},
+    "sleeping": {"body": {"ty": 2}, "face": {"ty": 2}, "legs": {"s": 0.4, "p": [60, 76]}},
+    "curious":  {"body": {"r": -7, "p": [60, 40]}, "face": {"r": -7, "p": [60, 40]}},
+  },
+  "lines": {"click": ["Turn it up!", "*bass drop*", "Now playing: you.", "Testing, one, two."],
+            "pet": ["*happy bass*", "Hehe, that's my ear cup."],
+            "yikes": ["*noise cancelling engaged*", "Too loud!"],
+            "music": ["My jam!", "*bops along*", "Turn it up!"],
+            "meeting": ["Mic check, one, two.", "You're on mute. Probably."],
+            "typing": ["Typing to the beat!", "Ooh, typing!"]},
+}
+
+# ---- Sticky note --------------------------------------------------------
+PETS["sticky"] = {
+  "label": "Sticky note", "name": "Post", "set": "gadgets", "flip": False, "floor": True, "speed": 0.8,
+  "bob": [1.2, 0.6], "glow": "rgba(253,230,138,0.45)", "mouth": [59, 44], "head": [60, 10],
+  "parts": [
+    leg_stroke(48, 56, -1, "#CA8A04", 5, 0, 0.7), leg_stroke(70, 56, 1, "#CA8A04", 5, 0.5, 0.7),
+    p("M34 14 H86 V50 L76 60 H34 Z", "body", fill="#FDE68A", stroke=ink, sw=1.5),
+    p("M86 50 H76 V60 Z", "body", fill="#FCD34D", stroke=ink, sw=1.2),
+    p("M50 10 H70 V18 H50 Z", "body", fill="#E0F2FE", opacity=0.85),
+    p("M40 24 h18 M40 29 h12", "body", stroke="#92400E", sw=1.6),
+    p("M62 24 l2 2 l4 -5", "body", stroke="#16A34A", sw=1.8, when=["happy"]),
+    *snack_face(53, 65, 38, "face", mouth_dy=6),
+    sweat(84, 12),
+    *lens(100, 52),
+  ],
+  "poses": {
+    "hiding":   {"body": {"r": 8, "s": 0.88, "p": [60, 14]}, "face": {"r": 8, "s": 0.88, "p": [60, 14]}},
+    "sleeping": {"body": {"r": 4, "p": [60, 14]}, "face": {"r": 4, "p": [60, 14]}, "legs": {"s": 0.4, "p": [60, 76]}},
+    "curious":  {"body": {"r": -6, "p": [60, 14]}, "face": {"r": -6, "p": [60, 14]}},
+  },
+  "lines": {"click": ["Don't forget the tests!", "Note to self: you're great.", "TODO: pet me.", "Remember to drink water."],
+            "pet": ["TODO: pet me. Done!", "*happy rustle*"],
+            "yikes": ["*falls off the monitor*", "*curls up at the edges*"],
+            "save": ["Noted!", "Saved. I'll remember."],
+            "fixed": ["Crossed off the list!", "All clear!"],
+            "commit": ["Added to the changelog.", "Committed! Noted."],
+            "worried": ["Note: something's off.", "Uh oh."],
+            "typing": ["Taking notes!", "Ooh, typing!"]},
+}
+
 for pet in PETS.values():
     pet.setdefault("set", "tide")
+    if pet["set"] == "gadgets":
+        pet["lines"] = {**HOME_LINES, **pet["lines"]}
     if pet["set"] == "games":
         pet["lines"] = {**HOME_LINES, **GAMES_LINES, **pet["lines"]}
     if pet["set"] in ("home", "snacks"):

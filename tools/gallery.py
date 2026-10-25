@@ -85,7 +85,7 @@ moods = [
     ("knight", "You fixed every error", "send({ type: 'errors', errors: 2, before: 0 }); setTimeout(() => send({ type: 'errors', errors: 0, before: 2 }), 4800);", "LEVEL UP!"),
     ("pufferfish", "A new error appeared", "setTimeout(() => send({ type: 'errors', errors: 1, before: 0 }), 4000);", "Uh oh."),
     ("cat", "Your tests failed", "setTimeout(() => send({ type: 'task', ok: false, name: 'npm test' }), 4800);", "Oof, npm test."),
-    ("crab", "You're debugging", "send({ type: 'debug', active: true });", "Let's find it."),
+    ("duck", "You're debugging", "send({ type: 'debug', active: true });", "Explain it to me, line by line."),
     ("retriever", "You stepped away", "setTimeout(() => { window.skip = 4 * 60 * 1000; }, 300);", "zzz..."),
     ("shark", "You opened Copilot", "setTimeout(() => send({ type: 'react', key: 'ai' }), 4800);", "Two assistants are better than one."),
     ("hamster", "You fed it five snacks", "setTimeout(() => send({ type: 'react', key: 'full' }), 5000);", "My cheeks are full."),

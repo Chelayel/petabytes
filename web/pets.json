@@ -663,7 +663,16 @@
   "slime",
   "ghost",
   "knight",
-  "robot"
+  "robot",
+  "laptop",
+  "controller",
+  "mug",
+  "duck",
+  "cactus",
+  "floppy",
+  "mouse",
+  "headphones",
+  "sticky"
  ],
  "pets": {
   "turtle": {
@@ -9103,6 +9112,3353 @@
     "ai": [
      "A fellow AI! Beep!",
      "Hello, colleague."
+    ]
+   }
+  },
+  "laptop": {
+   "label": "Laptop",
+   "name": "Lappy",
+   "set": "gadgets",
+   "flip": false,
+   "floor": true,
+   "speed": 0.9,
+   "bob": [
+    1,
+    0.5
+   ],
+   "glow": "rgba(96,165,250,0.4)",
+   "mouth": [
+    60,
+    42
+   ],
+   "head": [
+    60,
+    12
+   ],
+   "parts": [
+    {
+     "path": "M46 58 l-1 20",
+     "group": "legs",
+     "stroke": "#6B7280",
+     "sw": 6,
+     "pivot": [
+      46,
+      58
+     ],
+     "rot": [
+      14,
+      0.7,
+      0
+     ]
+    },
+    {
+     "path": "M74 58 l1 20",
+     "group": "legs",
+     "stroke": "#6B7280",
+     "sw": 6,
+     "pivot": [
+      74,
+      58
+     ],
+     "rot": [
+      14,
+      0.7,
+      0.5
+     ]
+    },
+    {
+     "path": "M30 54 H90 L98 60 H22 Z",
+     "group": "body",
+     "fill": "#CBD5E1",
+     "stroke": "#2B1D12",
+     "sw": 1.5
+    },
+    {
+     "path": "M36 57 h48",
+     "group": "body",
+     "stroke": "#94A3B8",
+     "sw": 1.5
+    },
+    {
+     "path": "M36 14 H84 Q88 14 88 18 V54 H32 V18 Q32 14 36 14 Z",
+     "group": "lid",
+     "fill": "#374151",
+     "stroke": "#2B1D12",
+     "sw": 1.5
+    },
+    {
+     "path": "M36 18 H84 V50 H36 Z",
+     "group": "lid",
+     "fill": "#60A5FA"
+    },
+    {
+     "path": "M36 18 H84 V50 H36 Z",
+     "group": "lid",
+     "fill": "#1E3A8A",
+     "when": [
+      "sleeping"
+     ]
+    },
+    {
+     "path": "M40 22 l8 0",
+     "group": "lid",
+     "stroke": "#BFDBFE",
+     "sw": 1.5,
+     "opacity": 0.7
+    },
+    {
+     "circle": [
+      52.5,
+      33,
+      5.1
+     ],
+     "group": "lid",
+     "fill": "#FFFFFF",
+     "when": [
+      "eyesOpen"
+     ]
+    },
+    {
+     "circle": [
+      54,
+      33,
+      2.5
+     ],
+     "group": "lid",
+     "fill": "#2B1D12",
+     "when": [
+      "eyesOpen"
+     ]
+    },
+    {
+     "circle": [
+      55.0,
+      32.0,
+      0.8
+     ],
+     "group": "lid",
+     "fill": "#FFFFFF",
+     "when": [
+      "eyesOpen"
+     ]
+    },
+    {
+     "path": "M50.875 33 q3.125 2.5 6.25 0",
+     "group": "lid",
+     "stroke": "#2B1D12",
+     "sw": 1.6,
+     "when": [
+      "eyesClosed"
+     ]
+    },
+    {
+     "path": "M50.875 33.8 q3.125 -3.75 6.25 0",
+     "group": "lid",
+     "stroke": "#2B1D12",
+     "sw": 1.6,
+     "when": [
+      "eyesHappy"
+     ]
+    },
+    {
+     "circle": [
+      64.5,
+      33,
+      5.1
+     ],
+     "group": "lid",
+     "fill": "#FFFFFF",
+     "when": [
+      "eyesOpen"
+     ]
+    },
+    {
+     "circle": [
+      66,
+      33,
+      2.5
+     ],
+     "group": "lid",
+     "fill": "#2B1D12",
+     "when": [
+      "eyesOpen"
+     ]
+    },
+    {
+     "circle": [
+      67.0,
+      32.0,
+      0.8
+     ],
+     "group": "lid",
+     "fill": "#FFFFFF",
+     "when": [
+      "eyesOpen"
+     ]
+    },
+    {
+     "path": "M62.875 33 q3.125 2.5 6.25 0",
+     "group": "lid",
+     "stroke": "#2B1D12",
+     "sw": 1.6,
+     "when": [
+      "eyesClosed"
+     ]
+    },
+    {
+     "path": "M62.875 33.8 q3.125 -3.75 6.25 0",
+     "group": "lid",
+     "stroke": "#2B1D12",
+     "sw": 1.6,
+     "when": [
+      "eyesHappy"
+     ]
+    },
+    {
+     "path": "M56.0 40 q4 3.5 8 0",
+     "group": "lid",
+     "stroke": "#2B1D12",
+     "sw": 1.5
+    },
+    {
+     "path": "M50 27 l6 1.5 M70 27 l-6 1.5",
+     "group": "lid",
+     "stroke": "#2B1D12",
+     "sw": 1.4,
+     "when": [
+      "worried"
+     ]
+    },
+    {
+     "path": "M84 10 q-2.5 4.5 0 5.5 q2.5 -1 0 -5.5z",
+     "group": "face",
+     "fill": "#7DD3FC",
+     "when": [
+      "worried"
+     ]
+    },
+    {
+     "circle": [
+      104,
+      56,
+      5
+     ],
+     "group": "tool",
+     "fill": "rgba(253,230,138,0.15)",
+     "stroke": "#FACC15",
+     "sw": 1.8,
+     "when": [
+      "debugging"
+     ]
+    },
+    {
+     "path": "M100.5 59.5 l-5 5",
+     "group": "tool",
+     "stroke": "#FACC15",
+     "sw": 2.2,
+     "when": [
+      "debugging"
+     ]
+    }
+   ],
+   "poses": {
+    "hiding": {
+     "lid": {
+      "ty": 10,
+      "s": 0.75,
+      "p": [
+       60,
+       54
+      ]
+     }
+    },
+    "sleeping": {
+     "lid": {
+      "ty": 3,
+      "s": 0.95,
+      "p": [
+       60,
+       54
+      ]
+     },
+     "legs": {
+      "s": 0.4,
+      "p": [
+       60,
+       78
+      ]
+     }
+    },
+    "curious": {
+     "lid": {
+      "r": -6,
+      "p": [
+       60,
+       54
+      ]
+     }
+    }
+   },
+   "lines": {
+    "fixed": [
+     "All clear!",
+     "Fixed it!",
+     "No more errors!",
+     "Good job!"
+    ],
+    "longSession": [
+     "You've been at it a while. Stretch break?",
+     "Walk break? I'll come.",
+     "Blink a few times. Eyes need breaks too."
+    ],
+    "lateNight": [
+     "It's late. I'm sleepy.",
+     "Coding past midnight? I'll keep you company.",
+     "Night shift, huh?"
+    ],
+    "morning": [
+     "Good morning!",
+     "Morning! Breakfast first?",
+     "Rise and shine!"
+    ],
+    "music": [
+     "Ooh, music!",
+     "*dances*",
+     "Is this my song?"
+    ],
+    "hot": [
+     "My fans are spinning!",
+     "I'm overheating!"
+    ],
+    "file": [
+     "Ooh, a new file.",
+     "*sniffs around*",
+     "What's in here?"
+    ],
+    "click": [
+     "*whirrs happily*",
+     "Fully charged!",
+     "Hello, world!",
+     "Don't spill coffee on me."
+    ],
+    "pet": [
+     "*happy fan noises*",
+     "Hehe, that's my trackpad."
+    ],
+    "yikes": [
+     "*closes its lid*",
+     "Blue screen! Kidding."
+    ],
+    "typing": [
+     "Clack clack clack!",
+     "My keys are on fire!",
+     "Ooh, typing!"
+    ],
+    "save": [
+     "Saved to my SSD!",
+     "Saved!"
+    ],
+    "batteryLow": [
+     "I'm running low! Charger, please.",
+     "{percent} left. Plug me in?"
+    ],
+    "charging": [
+     "Ahh, power.",
+     "Charging! Thank you."
+    ]
+   }
+  },
+  "controller": {
+   "label": "Controller",
+   "name": "Joy",
+   "set": "gadgets",
+   "flip": false,
+   "floor": true,
+   "speed": 1.0,
+   "bob": [
+    1.2,
+    0.5
+   ],
+   "glow": "rgba(129,140,248,0.45)",
+   "mouth": [
+    60,
+    44
+   ],
+   "head": [
+    60,
+    16
+   ],
+   "parts": [
+    {
+     "path": "M44 56 l-1 20",
+     "group": "legs",
+     "stroke": "#4F46E5",
+     "sw": 6,
+     "pivot": [
+      44,
+      56
+     ],
+     "rot": [
+      14,
+      0.7,
+      0
+     ]
+    },
+    {
+     "path": "M76 56 l1 20",
+     "group": "legs",
+     "stroke": "#4F46E5",
+     "sw": 6,
+     "pivot": [
+      76,
+      56
+     ],
+     "rot": [
+      14,
+      0.7,
+      0.5
+     ]
+    },
+    {
+     "path": "M30 30 Q30 22 40 22 H80 Q90 22 90 30 Q99 46 95 56 Q91 63 84 58 L76 50 H44 L36 58 Q29 63 25 56 Q21 46 30 30 Z",
+     "group": "body",
+     "fill": "#6366F1",
+     "stroke": "#2B1D12",
+     "sw": 1.6
+    },
+    {
+     "path": "M37 33 h6 v-6 h4 v6 h6 v4 h-6 v6 h-4 v-6 h-6z",
+     "group": "body",
+     "fill": "#1E1B4B"
+    },
+    {
+     "circle": [
+      80,
+      29,
+      2.6
+     ],
+     "group": "buttons",
+     "fill": "#EF4444",
+     "stroke": "#2B1D12",
+     "sw": 0.8
+    },
+    {
+     "circle": [
+      86,
+      35,
+      2.6
+     ],
+     "group": "buttons",
+     "fill": "#22C55E",
+     "stroke": "#2B1D12",
+     "sw": 0.8
+    },
+    {
+     "circle": [
+      74,
+      35,
+      2.6
+     ],
+     "group": "buttons",
+     "fill": "#3B82F6",
+     "stroke": "#2B1D12",
+     "sw": 0.8
+    },
+    {
+     "circle": [
+      80,
+      41,
+      2.6
+     ],
+     "group": "buttons",
+     "fill": "#FACC15",
+     "stroke": "#2B1D12",
+     "sw": 0.8
+    },
+    {
+     "circle": [
+      52.5,
+      36,
+      5.1
+     ],
+     "group": "face",
+     "fill": "#FFFFFF",
+     "when": [
+      "eyesOpen"
+     ]
+    },
+    {
+     "circle": [
+      54,
+      36,
+      2.5
+     ],
+     "group": "face",
+     "fill": "#2B1D12",
+     "when": [
+      "eyesOpen"
+     ]
+    },
+    {
+     "circle": [
+      55.0,
+      35.0,
+      0.8
+     ],
+     "group": "face",
+     "fill": "#FFFFFF",
+     "when": [
+      "eyesOpen"
+     ]
+    },
+    {
+     "path": "M50.875 36 q3.125 2.5 6.25 0",
+     "group": "face",
+     "stroke": "#2B1D12",
+     "sw": 1.6,
+     "when": [
+      "eyesClosed"
+     ]
+    },
+    {
+     "path": "M50.875 36.8 q3.125 -3.75 6.25 0",
+     "group": "face",
+     "stroke": "#2B1D12",
+     "sw": 1.6,
+     "when": [
+      "eyesHappy"
+     ]
+    },
+    {
+     "circle": [
+      64.5,
+      36,
+      5.1
+     ],
+     "group": "face",
+     "fill": "#FFFFFF",
+     "when": [
+      "eyesOpen"
+     ]
+    },
+    {
+     "circle": [
+      66,
+      36,
+      2.5
+     ],
+     "group": "face",
+     "fill": "#2B1D12",
+     "when": [
+      "eyesOpen"
+     ]
+    },
+    {
+     "circle": [
+      67.0,
+      35.0,
+      0.8
+     ],
+     "group": "face",
+     "fill": "#FFFFFF",
+     "when": [
+      "eyesOpen"
+     ]
+    },
+    {
+     "path": "M62.875 36 q3.125 2.5 6.25 0",
+     "group": "face",
+     "stroke": "#2B1D12",
+     "sw": 1.6,
+     "when": [
+      "eyesClosed"
+     ]
+    },
+    {
+     "path": "M62.875 36.8 q3.125 -3.75 6.25 0",
+     "group": "face",
+     "stroke": "#2B1D12",
+     "sw": 1.6,
+     "when": [
+      "eyesHappy"
+     ]
+    },
+    {
+     "path": "M56.0 43 q4 3.5 8 0",
+     "group": "face",
+     "stroke": "#2B1D12",
+     "sw": 1.5
+    },
+    {
+     "path": "M50 30 l6 1.5 M70 30 l-6 1.5",
+     "group": "face",
+     "stroke": "#2B1D12",
+     "sw": 1.4,
+     "when": [
+      "worried"
+     ]
+    },
+    {
+     "path": "M90 18 q-2.5 4.5 0 5.5 q2.5 -1 0 -5.5z",
+     "group": "face",
+     "fill": "#7DD3FC",
+     "when": [
+      "worried"
+     ]
+    },
+    {
+     "circle": [
+      104,
+      54,
+      5
+     ],
+     "group": "tool",
+     "fill": "rgba(253,230,138,0.15)",
+     "stroke": "#FACC15",
+     "sw": 1.8,
+     "when": [
+      "debugging"
+     ]
+    },
+    {
+     "path": "M100.5 57.5 l-5 5",
+     "group": "tool",
+     "stroke": "#FACC15",
+     "sw": 2.2,
+     "when": [
+      "debugging"
+     ]
+    }
+   ],
+   "groupMotion": {
+    "buttons": {
+     "sx": [
+      0.12,
+      0.6,
+      0
+     ],
+     "sy": [
+      0.12,
+      0.6,
+      0
+     ],
+     "p": [
+      80,
+      35
+     ]
+    }
+   },
+   "poses": {
+    "hiding": {
+     "body": {
+      "r": 10,
+      "s": 0.9,
+      "p": [
+       60,
+       50
+      ]
+     },
+     "face": {
+      "r": 10,
+      "s": 0.9,
+      "p": [
+       60,
+       50
+      ]
+     },
+     "buttons": {
+      "r": 10,
+      "s": 0.9,
+      "p": [
+       60,
+       50
+      ]
+     }
+    },
+    "sleeping": {
+     "body": {
+      "ty": 3
+     },
+     "face": {
+      "ty": 3
+     },
+     "buttons": {
+      "ty": 3
+     },
+     "legs": {
+      "s": 0.4,
+      "p": [
+       60,
+       76
+      ]
+     }
+    },
+    "curious": {
+     "face": {
+      "r": -8,
+      "p": [
+       60,
+       40
+      ]
+     }
+    }
+   },
+   "lines": {
+    "fixed": [
+     "LEVEL UP!",
+     "High score!"
+    ],
+    "longSession": [
+     "You've been at it a while. Stretch break?",
+     "Walk break? I'll come.",
+     "Blink a few times. Eyes need breaks too."
+    ],
+    "lateNight": [
+     "It's late. I'm sleepy.",
+     "Coding past midnight? I'll keep you company.",
+     "Night shift, huh?"
+    ],
+    "morning": [
+     "Good morning!",
+     "Morning! Breakfast first?",
+     "Rise and shine!"
+    ],
+    "music": [
+     "Ooh, music!",
+     "*dances*",
+     "Is this my song?"
+    ],
+    "hot": [
+     "It's getting hot in here.",
+     "Your Mac's working hard.",
+     "*pants*"
+    ],
+    "file": [
+     "Ooh, a new file.",
+     "*sniffs around*",
+     "What's in here?"
+    ],
+    "click": [
+     "Player 1 ready!",
+     "Press start!",
+     "Up, up, down, down...",
+     "Combo!"
+    ],
+    "pet": [
+     "*happy rumble*",
+     "Hehe, that's my trigger."
+    ],
+    "yikes": [
+     "*rumbles nervously*",
+     "Controller disconnected!"
+    ],
+    "typing": [
+     "Button mashing!",
+     "Combo!",
+     "Ooh, typing!"
+    ],
+    "taskFail": [
+     "GAME OVER: {task}.",
+     "{task} failed. Continue?"
+    ],
+    "game": [
+     "Game time! Pick me!",
+     "Let's play!"
+    ]
+   }
+  },
+  "mug": {
+   "label": "Coffee mug",
+   "name": "Java",
+   "set": "gadgets",
+   "flip": true,
+   "floor": true,
+   "speed": 0.8,
+   "bob": [
+    1,
+    0.5
+   ],
+   "glow": "rgba(248,113,113,0.4)",
+   "mouth": [
+    57,
+    47
+   ],
+   "head": [
+    57,
+    8
+   ],
+   "parts": [
+    {
+     "path": "M48 58 l-1 20",
+     "group": "legs",
+     "stroke": "#DC2626",
+     "sw": 6,
+     "pivot": [
+      48,
+      58
+     ],
+     "rot": [
+      14,
+      0.75,
+      0
+     ]
+    },
+    {
+     "path": "M66 58 l1 20",
+     "group": "legs",
+     "stroke": "#DC2626",
+     "sw": 6,
+     "pivot": [
+      66,
+      58
+     ],
+     "rot": [
+      14,
+      0.75,
+      0.5
+     ]
+    },
+    {
+     "path": "M78 32 q12 0 12 11 q0 11 -12 11",
+     "group": "body",
+     "stroke": "#2B1D12",
+     "sw": 7.5
+    },
+    {
+     "path": "M78 32 q12 0 12 11 q0 11 -12 11",
+     "group": "body",
+     "stroke": "#F87171",
+     "sw": 5
+    },
+    {
+     "path": "M36 24 H78 V54 Q78 62 70 62 H44 Q36 62 36 54 Z",
+     "group": "body",
+     "fill": "#F87171",
+     "stroke": "#2B1D12",
+     "sw": 1.6
+    },
+    {
+     "ellipse": [
+      57,
+      24,
+      21,
+      4
+     ],
+     "group": "body",
+     "fill": "#6F4E37",
+     "stroke": "#2B1D12",
+     "sw": 1.3
+    },
+    {
+     "path": "M50 18 q-4 -5 0 -9 q4 -4 0 -9",
+     "group": "steam",
+     "stroke": "#CBD5E1",
+     "sw": 2.2,
+     "opacity": 0.75,
+     "pivot": [
+      50,
+      18
+     ],
+     "rot": [
+      8,
+      1.6,
+      0
+     ]
+    },
+    {
+     "path": "M60 18 q-4 -5 0 -9 q4 -4 0 -9",
+     "group": "steam",
+     "stroke": "#CBD5E1",
+     "sw": 2.2,
+     "opacity": 0.75,
+     "pivot": [
+      60,
+      18
+     ],
+     "rot": [
+      8,
+      1.6,
+      0.4
+     ]
+    },
+    {
+     "path": "M70 18 q-4 -5 0 -9",
+     "group": "steam",
+     "stroke": "#CBD5E1",
+     "sw": 2.2,
+     "opacity": 0.6,
+     "pivot": [
+      70,
+      18
+     ],
+     "rot": [
+      8,
+      1.6,
+      0.8
+     ],
+     "when": [
+      "happy"
+     ]
+    },
+    {
+     "circle": [
+      49.5,
+      40,
+      5.1
+     ],
+     "group": "face",
+     "fill": "#FFFFFF",
+     "when": [
+      "eyesOpen"
+     ]
+    },
+    {
+     "circle": [
+      51,
+      40,
+      2.5
+     ],
+     "group": "face",
+     "fill": "#2B1D12",
+     "when": [
+      "eyesOpen"
+     ]
+    },
+    {
+     "circle": [
+      52.0,
+      39.0,
+      0.8
+     ],
+     "group": "face",
+     "fill": "#FFFFFF",
+     "when": [
+      "eyesOpen"
+     ]
+    },
+    {
+     "path": "M47.875 40 q3.125 2.5 6.25 0",
+     "group": "face",
+     "stroke": "#2B1D12",
+     "sw": 1.6,
+     "when": [
+      "eyesClosed"
+     ]
+    },
+    {
+     "path": "M47.875 40.8 q3.125 -3.75 6.25 0",
+     "group": "face",
+     "stroke": "#2B1D12",
+     "sw": 1.6,
+     "when": [
+      "eyesHappy"
+     ]
+    },
+    {
+     "circle": [
+      61.5,
+      40,
+      5.1
+     ],
+     "group": "face",
+     "fill": "#FFFFFF",
+     "when": [
+      "eyesOpen"
+     ]
+    },
+    {
+     "circle": [
+      63,
+      40,
+      2.5
+     ],
+     "group": "face",
+     "fill": "#2B1D12",
+     "when": [
+      "eyesOpen"
+     ]
+    },
+    {
+     "circle": [
+      64.0,
+      39.0,
+      0.8
+     ],
+     "group": "face",
+     "fill": "#FFFFFF",
+     "when": [
+      "eyesOpen"
+     ]
+    },
+    {
+     "path": "M59.875 40 q3.125 2.5 6.25 0",
+     "group": "face",
+     "stroke": "#2B1D12",
+     "sw": 1.6,
+     "when": [
+      "eyesClosed"
+     ]
+    },
+    {
+     "path": "M59.875 40.8 q3.125 -3.75 6.25 0",
+     "group": "face",
+     "stroke": "#2B1D12",
+     "sw": 1.6,
+     "when": [
+      "eyesHappy"
+     ]
+    },
+    {
+     "path": "M53.0 47 q4 3.5 8 0",
+     "group": "face",
+     "stroke": "#2B1D12",
+     "sw": 1.5
+    },
+    {
+     "path": "M47 34 l6 1.5 M67 34 l-6 1.5",
+     "group": "face",
+     "stroke": "#2B1D12",
+     "sw": 1.4,
+     "when": [
+      "worried"
+     ]
+    },
+    {
+     "circle": [
+      45,
+      47,
+      2.4
+     ],
+     "group": "face",
+     "fill": "#FECACA",
+     "opacity": 0.8
+    },
+    {
+     "circle": [
+      69,
+      47,
+      2.4
+     ],
+     "group": "face",
+     "fill": "#FECACA",
+     "opacity": 0.8
+    },
+    {
+     "path": "M82 20 q-2.5 4.5 0 5.5 q2.5 -1 0 -5.5z",
+     "group": "face",
+     "fill": "#7DD3FC",
+     "when": [
+      "worried"
+     ]
+    },
+    {
+     "circle": [
+      100,
+      52,
+      5
+     ],
+     "group": "tool",
+     "fill": "rgba(253,230,138,0.15)",
+     "stroke": "#FACC15",
+     "sw": 1.8,
+     "when": [
+      "debugging"
+     ]
+    },
+    {
+     "path": "M96.5 55.5 l-5 5",
+     "group": "tool",
+     "stroke": "#FACC15",
+     "sw": 2.2,
+     "when": [
+      "debugging"
+     ]
+    }
+   ],
+   "poses": {
+    "hiding": {
+     "face": {
+      "s": 0.85,
+      "ty": 3,
+      "p": [
+       57,
+       50
+      ]
+     },
+     "steam": {
+      "s": 0.3,
+      "p": [
+       60,
+       20
+      ]
+     }
+    },
+    "sleeping": {
+     "steam": {
+      "s": 0.4,
+      "p": [
+       60,
+       20
+      ]
+     },
+     "legs": {
+      "s": 0.4,
+      "p": [
+       57,
+       78
+      ]
+     }
+    },
+    "curious": {
+     "face": {
+      "r": -8,
+      "p": [
+       57,
+       45
+      ]
+     }
+    }
+   },
+   "lines": {
+    "fixed": [
+     "All clear!",
+     "Fixed it!",
+     "No more errors!",
+     "Good job!"
+    ],
+    "longSession": [
+     "Refill time? We've been at it a while.",
+     "Coffee break? I insist."
+    ],
+    "lateNight": [
+     "Decaf, maybe?",
+     "Coffee this late? Bold."
+    ],
+    "morning": [
+     "Good morning! Coffee first.",
+     "Rise and grind!"
+    ],
+    "music": [
+     "Ooh, music!",
+     "*dances*",
+     "Is this my song?"
+    ],
+    "hot": [
+     "It's getting hot in here.",
+     "Your Mac's working hard.",
+     "*pants*"
+    ],
+    "file": [
+     "Ooh, a new file.",
+     "*sniffs around*",
+     "What's in here?"
+    ],
+    "click": [
+     "Espresso yourself!",
+     "Brewing ideas.",
+     "Refill?",
+     "Latte love for you."
+    ],
+    "pet": [
+     "*warm and cozy*",
+     "Careful, I'm hot!"
+    ],
+    "yikes": [
+     "*spills a little*",
+     "Grounds for concern!"
+    ],
+    "typing": [
+     "Caffeinated typing!",
+     "Brewing code!",
+     "Ooh, typing!"
+    ],
+    "save": [
+     "Saved! Fresh brew.",
+     "Saved!"
+    ]
+   }
+  },
+  "duck": {
+   "label": "Rubber duck",
+   "name": "Quackers",
+   "set": "gadgets",
+   "flip": true,
+   "floor": false,
+   "speed": 0.7,
+   "bob": [
+    4,
+    2.4
+   ],
+   "glow": "rgba(250,204,21,0.45)",
+   "mouth": [
+    96,
+    36
+   ],
+   "head": [
+    80,
+    14
+   ],
+   "parts": [
+    {
+     "path": "M30 46 Q30 32 50 34 Q70 36 74 44 Q86 44 88 52 Q86 66 58 66 Q32 66 30 46 Z",
+     "group": "body",
+     "fill": "#FACC15",
+     "stroke": "#2B1D12",
+     "sw": 1.6,
+     "pivot": [
+      58,
+      66
+     ],
+     "rot": [
+      4,
+      2.4,
+      0
+     ]
+    },
+    {
+     "path": "M30 46 q-6 -8 -2 -14 q4 4 6 10",
+     "group": "body",
+     "fill": "#FACC15",
+     "stroke": "#2B1D12",
+     "sw": 1.4,
+     "pivot": [
+      58,
+      66
+     ],
+     "rot": [
+      4,
+      2.4,
+      0
+     ]
+    },
+    {
+     "path": "M46 46 q10 -4 18 4 q-8 6 -18 -4z",
+     "group": "body",
+     "fill": "#EAB308",
+     "stroke": "#2B1D12",
+     "sw": 1.2,
+     "pivot": [
+      58,
+      66
+     ],
+     "rot": [
+      4,
+      2.4,
+      0
+     ]
+    },
+    {
+     "circle": [
+      80,
+      30,
+      13
+     ],
+     "group": "head",
+     "fill": "#FACC15",
+     "stroke": "#2B1D12",
+     "sw": 1.6
+    },
+    {
+     "path": "M90 31 q9 -1 11 3 q-3 4 -11 2z",
+     "group": "head",
+     "fill": "#F97316",
+     "stroke": "#2B1D12",
+     "sw": 1.2
+    },
+    {
+     "circle": [
+      81.5,
+      26,
+      5.1
+     ],
+     "group": "head",
+     "fill": "#FFFFFF",
+     "when": [
+      "eyesOpen"
+     ]
+    },
+    {
+     "circle": [
+      83,
+      26,
+      2.5
+     ],
+     "group": "head",
+     "fill": "#2B1D12",
+     "when": [
+      "eyesOpen"
+     ]
+    },
+    {
+     "circle": [
+      84.0,
+      25.0,
+      0.8
+     ],
+     "group": "head",
+     "fill": "#FFFFFF",
+     "when": [
+      "eyesOpen"
+     ]
+    },
+    {
+     "path": "M79.875 26 q3.125 2.5 6.25 0",
+     "group": "head",
+     "stroke": "#2B1D12",
+     "sw": 1.6,
+     "when": [
+      "eyesClosed"
+     ]
+    },
+    {
+     "path": "M79.875 26.8 q3.125 -3.75 6.25 0",
+     "group": "head",
+     "stroke": "#2B1D12",
+     "sw": 1.6,
+     "when": [
+      "eyesHappy"
+     ]
+    },
+    {
+     "path": "M79 20 l6 2",
+     "group": "head",
+     "stroke": "#2B1D12",
+     "sw": 1.4,
+     "when": [
+      "worried"
+     ]
+    },
+    {
+     "circle": [
+      77,
+      34,
+      2.4
+     ],
+     "group": "head",
+     "fill": "#FB923C",
+     "opacity": 0.6
+    },
+    {
+     "path": "M70 14 q-2.5 4.5 0 5.5 q2.5 -1 0 -5.5z",
+     "group": "face",
+     "fill": "#7DD3FC",
+     "when": [
+      "worried"
+     ]
+    },
+    {
+     "circle": [
+      108,
+      50,
+      5
+     ],
+     "group": "tool",
+     "fill": "rgba(253,230,138,0.15)",
+     "stroke": "#FACC15",
+     "sw": 1.8,
+     "when": [
+      "debugging"
+     ]
+    },
+    {
+     "path": "M104.5 53.5 l-5 5",
+     "group": "tool",
+     "stroke": "#FACC15",
+     "sw": 2.2,
+     "when": [
+      "debugging"
+     ]
+    }
+   ],
+   "poses": {
+    "hiding": {
+     "head": {
+      "tx": -6,
+      "ty": 8,
+      "s": 0.85,
+      "p": [
+       72,
+       40
+      ]
+     }
+    },
+    "sleeping": {
+     "head": {
+      "tx": -2,
+      "ty": 4,
+      "r": 10,
+      "p": [
+       72,
+       40
+      ]
+     }
+    },
+    "curious": {
+     "head": {
+      "r": -12,
+      "p": [
+       76,
+       40
+      ]
+     }
+    }
+   },
+   "lines": {
+    "fixed": [
+     "See? Talking it through works.",
+     "Quack-tastic!"
+    ],
+    "longSession": [
+     "You've been at it a while. Stretch break?",
+     "Walk break? I'll come.",
+     "Blink a few times. Eyes need breaks too."
+    ],
+    "lateNight": [
+     "It's late. I'm sleepy.",
+     "Coding past midnight? I'll keep you company.",
+     "Night shift, huh?"
+    ],
+    "morning": [
+     "Good morning!",
+     "Morning! Breakfast first?",
+     "Rise and shine!"
+    ],
+    "music": [
+     "Ooh, music!",
+     "*dances*",
+     "Is this my song?"
+    ],
+    "hot": [
+     "It's getting hot in here.",
+     "Your Mac's working hard.",
+     "*pants*"
+    ],
+    "file": [
+     "Ooh, a new file.",
+     "*sniffs around*",
+     "What's in here?"
+    ],
+    "click": [
+     "Quack!",
+     "*squeak*",
+     "Explain it to me.",
+     "I'm listening."
+    ],
+    "pet": [
+     "*squeak squeak*",
+     "Quack quack!"
+    ],
+    "yikes": [
+     "QUACK!",
+     "*squeaks in panic*"
+    ],
+    "debugOn": [
+     "Explain it to me, line by line.",
+     "Talk me through it.",
+     "What should it do? What does it do?"
+    ],
+    "debugOff": [
+     "See? Talking it through works.",
+     "Quack. You figured it out."
+    ],
+    "worried": [
+     "Hmm. Explain that line to me?",
+     "Uh oh."
+    ],
+    "typing": [
+     "Quack quack quack!",
+     "Ooh, typing!"
+    ]
+   }
+  },
+  "cactus": {
+   "label": "Cactus",
+   "name": "Spike",
+   "set": "gadgets",
+   "flip": false,
+   "floor": true,
+   "speed": 0.5,
+   "bob": [
+    0.8,
+    0.8
+   ],
+   "glow": "rgba(74,222,128,0.4)",
+   "mouth": [
+    60,
+    40
+   ],
+   "head": [
+    60,
+    10
+   ],
+   "parts": [
+    {
+     "path": "M47 18 Q47 12 60 12 Q73 12 73 18 V54 H47 Z",
+     "group": "body",
+     "fill": "#4ADE80",
+     "stroke": "#2B1D12",
+     "sw": 1.6
+    },
+    {
+     "path": "M54 18 V50 M66 18 V50",
+     "group": "body",
+     "stroke": "#22C55E",
+     "sw": 1.5
+    },
+    {
+     "path": "M47 40 h-6 q-5 0 -5 -5 v-9",
+     "group": "arms",
+     "stroke": "#2B1D12",
+     "sw": 8.5,
+     "pivot": [
+      47,
+      40
+     ],
+     "rot": [
+      6,
+      2.2,
+      0
+     ]
+    },
+    {
+     "path": "M47 40 h-6 q-5 0 -5 -5 v-9",
+     "group": "arms",
+     "stroke": "#4ADE80",
+     "sw": 6,
+     "pivot": [
+      47,
+      40
+     ],
+     "rot": [
+      6,
+      2.2,
+      0
+     ]
+    },
+    {
+     "path": "M73 34 h6 q5 0 5 -5 v-8",
+     "group": "arms",
+     "stroke": "#2B1D12",
+     "sw": 8.5,
+     "pivot": [
+      73,
+      34
+     ],
+     "rot": [
+      6,
+      2.2,
+      0.5
+     ]
+    },
+    {
+     "path": "M73 34 h6 q5 0 5 -5 v-8",
+     "group": "arms",
+     "stroke": "#4ADE80",
+     "sw": 6,
+     "pivot": [
+      73,
+      34
+     ],
+     "rot": [
+      6,
+      2.2,
+      0.5
+     ]
+    },
+    {
+     "path": "M50 24 l-3 -1 M70 22 l3 -1 M52 46 l-3 1 M68 44 l3 1",
+     "group": "body",
+     "stroke": "#F0FDF4",
+     "sw": 1
+    },
+    {
+     "circle": [
+      60,
+      9,
+      4
+     ],
+     "group": "flower",
+     "fill": "#F472B6",
+     "stroke": "#2B1D12",
+     "sw": 1,
+     "when": [
+      "happy"
+     ]
+    },
+    {
+     "circle": [
+      60,
+      9,
+      1.6
+     ],
+     "group": "flower",
+     "fill": "#FDE047",
+     "when": [
+      "happy"
+     ]
+    },
+    {
+     "path": "M40 52 H80 V58 H40 Z",
+     "group": "pot",
+     "fill": "#C2410C",
+     "stroke": "#2B1D12",
+     "sw": 1.5
+    },
+    {
+     "path": "M42 58 H78 L74 74 H46 Z",
+     "group": "pot",
+     "fill": "#EA580C",
+     "stroke": "#2B1D12",
+     "sw": 1.5
+    },
+    {
+     "circle": [
+      53.5,
+      30,
+      5.1
+     ],
+     "group": "face",
+     "fill": "#FFFFFF",
+     "when": [
+      "eyesOpen"
+     ]
+    },
+    {
+     "circle": [
+      55,
+      30,
+      2.5
+     ],
+     "group": "face",
+     "fill": "#2B1D12",
+     "when": [
+      "eyesOpen"
+     ]
+    },
+    {
+     "circle": [
+      56.0,
+      29.0,
+      0.8
+     ],
+     "group": "face",
+     "fill": "#FFFFFF",
+     "when": [
+      "eyesOpen"
+     ]
+    },
+    {
+     "path": "M51.875 30 q3.125 2.5 6.25 0",
+     "group": "face",
+     "stroke": "#2B1D12",
+     "sw": 1.6,
+     "when": [
+      "eyesClosed"
+     ]
+    },
+    {
+     "path": "M51.875 30.8 q3.125 -3.75 6.25 0",
+     "group": "face",
+     "stroke": "#2B1D12",
+     "sw": 1.6,
+     "when": [
+      "eyesHappy"
+     ]
+    },
+    {
+     "circle": [
+      63.5,
+      30,
+      5.1
+     ],
+     "group": "face",
+     "fill": "#FFFFFF",
+     "when": [
+      "eyesOpen"
+     ]
+    },
+    {
+     "circle": [
+      65,
+      30,
+      2.5
+     ],
+     "group": "face",
+     "fill": "#2B1D12",
+     "when": [
+      "eyesOpen"
+     ]
+    },
+    {
+     "circle": [
+      66.0,
+      29.0,
+      0.8
+     ],
+     "group": "face",
+     "fill": "#FFFFFF",
+     "when": [
+      "eyesOpen"
+     ]
+    },
+    {
+     "path": "M61.875 30 q3.125 2.5 6.25 0",
+     "group": "face",
+     "stroke": "#2B1D12",
+     "sw": 1.6,
+     "when": [
+      "eyesClosed"
+     ]
+    },
+    {
+     "path": "M61.875 30.8 q3.125 -3.75 6.25 0",
+     "group": "face",
+     "stroke": "#2B1D12",
+     "sw": 1.6,
+     "when": [
+      "eyesHappy"
+     ]
+    },
+    {
+     "path": "M56.0 37 q4 3.5 8 0",
+     "group": "face",
+     "stroke": "#2B1D12",
+     "sw": 1.5
+    },
+    {
+     "path": "M51 24 l6 1.5 M69 24 l-6 1.5",
+     "group": "face",
+     "stroke": "#2B1D12",
+     "sw": 1.4,
+     "when": [
+      "worried"
+     ]
+    },
+    {
+     "circle": [
+      51,
+      37,
+      2.2
+     ],
+     "group": "face",
+     "fill": "#F9A8D4",
+     "opacity": 0.7
+    },
+    {
+     "circle": [
+      69,
+      37,
+      2.2
+     ],
+     "group": "face",
+     "fill": "#F9A8D4",
+     "opacity": 0.7
+    },
+    {
+     "path": "M76 12 q-2.5 4.5 0 5.5 q2.5 -1 0 -5.5z",
+     "group": "face",
+     "fill": "#7DD3FC",
+     "when": [
+      "worried"
+     ]
+    },
+    {
+     "circle": [
+      96,
+      52,
+      5
+     ],
+     "group": "tool",
+     "fill": "rgba(253,230,138,0.15)",
+     "stroke": "#FACC15",
+     "sw": 1.8,
+     "when": [
+      "debugging"
+     ]
+    },
+    {
+     "path": "M92.5 55.5 l-5 5",
+     "group": "tool",
+     "stroke": "#FACC15",
+     "sw": 2.2,
+     "when": [
+      "debugging"
+     ]
+    }
+   ],
+   "poses": {
+    "hiding": {
+     "arms": {
+      "s": 0.45,
+      "p": [
+       60,
+       38
+      ]
+     },
+     "face": {
+      "s": 0.9,
+      "ty": 2,
+      "p": [
+       60,
+       34
+      ]
+     }
+    },
+    "sleeping": {
+     "arms": {
+      "s": 0.8,
+      "p": [
+       60,
+       38
+      ]
+     },
+     "face": {
+      "ty": 2
+     }
+    },
+    "curious": {
+     "body": {
+      "r": -5,
+      "p": [
+       60,
+       54
+      ]
+     },
+     "face": {
+      "r": -5,
+      "p": [
+       60,
+       54
+      ]
+     },
+     "arms": {
+      "r": -5,
+      "p": [
+       60,
+       54
+      ]
+     }
+    }
+   },
+   "lines": {
+    "fixed": [
+     "Look, I bloomed!",
+     "All clear!"
+    ],
+    "longSession": [
+     "You've been at it a while. Stretch break?",
+     "Walk break? I'll come.",
+     "Blink a few times. Eyes need breaks too."
+    ],
+    "lateNight": [
+     "It's late. I'm sleepy.",
+     "Coding past midnight? I'll keep you company.",
+     "Night shift, huh?"
+    ],
+    "morning": [
+     "Good morning!",
+     "Morning! Breakfast first?",
+     "Rise and shine!"
+    ],
+    "music": [
+     "Ooh, music!",
+     "*dances*",
+     "Is this my song?"
+    ],
+    "hot": [
+     "It's getting hot in here.",
+     "Your Mac's working hard.",
+     "*pants*"
+    ],
+    "file": [
+     "Ooh, a new file.",
+     "*sniffs around*",
+     "What's in here?"
+    ],
+    "click": [
+     "Hug? Careful.",
+     "Low maintenance, high spirits.",
+     "Looking sharp!",
+     "I'm a succulent for you."
+    ],
+    "pet": [
+     "*prickly happiness*",
+     "Ow, careful! Hehe."
+    ],
+    "yikes": [
+     "*pulls in its arms*",
+     "Prickly situation!"
+    ],
+    "hungry": [
+     "Water? Just a sip.",
+     "A little sunshine, please."
+    ],
+    "feed": [
+     "A snack? I usually just drink.",
+     "Ooh, food!"
+    ],
+    "typing": [
+     "Growing with every line!",
+     "Ooh, typing!"
+    ]
+   }
+  },
+  "floppy": {
+   "label": "Floppy disk",
+   "name": "Floppy",
+   "set": "gadgets",
+   "flip": false,
+   "floor": true,
+   "speed": 0.9,
+   "bob": [
+    1,
+    0.5
+   ],
+   "glow": "rgba(37,99,235,0.4)",
+   "mouth": [
+    60,
+    50
+   ],
+   "head": [
+    60,
+    12
+   ],
+   "parts": [
+    {
+     "path": "M48 58 l-1 20",
+     "group": "legs",
+     "stroke": "#1E40AF",
+     "sw": 6,
+     "pivot": [
+      48,
+      58
+     ],
+     "rot": [
+      14,
+      0.7,
+      0
+     ]
+    },
+    {
+     "path": "M72 58 l1 20",
+     "group": "legs",
+     "stroke": "#1E40AF",
+     "sw": 6,
+     "pivot": [
+      72,
+      58
+     ],
+     "rot": [
+      14,
+      0.7,
+      0.5
+     ]
+    },
+    {
+     "path": "M36 16 H80 L86 22 V60 H36 Z",
+     "group": "body",
+     "fill": "#2563EB",
+     "stroke": "#2B1D12",
+     "sw": 1.6
+    },
+    {
+     "path": "M47 16 H73 V30 H47 Z",
+     "group": "body",
+     "fill": "#CBD5E1",
+     "stroke": "#2B1D12",
+     "sw": 1.2
+    },
+    {
+     "path": "M64 19 H69 V27 H64 Z",
+     "group": "body",
+     "fill": "#475569"
+    },
+    {
+     "path": "M42 36 H80 V58 H42 Z",
+     "group": "body",
+     "fill": "#F8FAFC",
+     "stroke": "#2B1D12",
+     "sw": 1.2
+    },
+    {
+     "path": "M46 40 h14",
+     "group": "body",
+     "stroke": "#93C5FD",
+     "sw": 1.5
+    },
+    {
+     "circle": [
+      53.5,
+      46,
+      5.1
+     ],
+     "group": "face",
+     "fill": "#FFFFFF",
+     "when": [
+      "eyesOpen"
+     ]
+    },
+    {
+     "circle": [
+      55,
+      46,
+      2.5
+     ],
+     "group": "face",
+     "fill": "#2B1D12",
+     "when": [
+      "eyesOpen"
+     ]
+    },
+    {
+     "circle": [
+      56.0,
+      45.0,
+      0.8
+     ],
+     "group": "face",
+     "fill": "#FFFFFF",
+     "when": [
+      "eyesOpen"
+     ]
+    },
+    {
+     "path": "M51.875 46 q3.125 2.5 6.25 0",
+     "group": "face",
+     "stroke": "#2B1D12",
+     "sw": 1.6,
+     "when": [
+      "eyesClosed"
+     ]
+    },
+    {
+     "path": "M51.875 46.8 q3.125 -3.75 6.25 0",
+     "group": "face",
+     "stroke": "#2B1D12",
+     "sw": 1.6,
+     "when": [
+      "eyesHappy"
+     ]
+    },
+    {
+     "circle": [
+      65.5,
+      46,
+      5.1
+     ],
+     "group": "face",
+     "fill": "#FFFFFF",
+     "when": [
+      "eyesOpen"
+     ]
+    },
+    {
+     "circle": [
+      67,
+      46,
+      2.5
+     ],
+     "group": "face",
+     "fill": "#2B1D12",
+     "when": [
+      "eyesOpen"
+     ]
+    },
+    {
+     "circle": [
+      68.0,
+      45.0,
+      0.8
+     ],
+     "group": "face",
+     "fill": "#FFFFFF",
+     "when": [
+      "eyesOpen"
+     ]
+    },
+    {
+     "path": "M63.875 46 q3.125 2.5 6.25 0",
+     "group": "face",
+     "stroke": "#2B1D12",
+     "sw": 1.6,
+     "when": [
+      "eyesClosed"
+     ]
+    },
+    {
+     "path": "M63.875 46.8 q3.125 -3.75 6.25 0",
+     "group": "face",
+     "stroke": "#2B1D12",
+     "sw": 1.6,
+     "when": [
+      "eyesHappy"
+     ]
+    },
+    {
+     "path": "M57.0 52 q4 3.5 8 0",
+     "group": "face",
+     "stroke": "#2B1D12",
+     "sw": 1.5
+    },
+    {
+     "path": "M51 40 l6 1.5 M71 40 l-6 1.5",
+     "group": "face",
+     "stroke": "#2B1D12",
+     "sw": 1.4,
+     "when": [
+      "worried"
+     ]
+    },
+    {
+     "path": "M84 12 q-2.5 4.5 0 5.5 q2.5 -1 0 -5.5z",
+     "group": "face",
+     "fill": "#7DD3FC",
+     "when": [
+      "worried"
+     ]
+    },
+    {
+     "circle": [
+      102,
+      54,
+      5
+     ],
+     "group": "tool",
+     "fill": "rgba(253,230,138,0.15)",
+     "stroke": "#FACC15",
+     "sw": 1.8,
+     "when": [
+      "debugging"
+     ]
+    },
+    {
+     "path": "M98.5 57.5 l-5 5",
+     "group": "tool",
+     "stroke": "#FACC15",
+     "sw": 2.2,
+     "when": [
+      "debugging"
+     ]
+    }
+   ],
+   "poses": {
+    "hiding": {
+     "body": {
+      "s": 0.85,
+      "p": [
+       60,
+       60
+      ]
+     },
+     "face": {
+      "s": 0.85,
+      "p": [
+       60,
+       60
+      ]
+     }
+    },
+    "sleeping": {
+     "body": {
+      "ty": 2
+     },
+     "face": {
+      "ty": 2
+     },
+     "legs": {
+      "s": 0.4,
+      "p": [
+       60,
+       78
+      ]
+     }
+    },
+    "curious": {
+     "body": {
+      "r": -6,
+      "p": [
+       60,
+       60
+      ]
+     },
+     "face": {
+      "r": -6,
+      "p": [
+       60,
+       60
+      ]
+     }
+    }
+   },
+   "lines": {
+    "fixed": [
+     "Error-free, like a fresh disk.",
+     "All clear!"
+    ],
+    "longSession": [
+     "You've been at it a while. Stretch break?",
+     "Walk break? I'll come.",
+     "Blink a few times. Eyes need breaks too."
+    ],
+    "lateNight": [
+     "It's late. I'm sleepy.",
+     "Coding past midnight? I'll keep you company.",
+     "Night shift, huh?"
+    ],
+    "morning": [
+     "Good morning!",
+     "Morning! Breakfast first?",
+     "Rise and shine!"
+    ],
+    "music": [
+     "Ooh, music!",
+     "*dances*",
+     "Is this my song?"
+    ],
+    "hot": [
+     "It's getting hot in here.",
+     "Your Mac's working hard.",
+     "*pants*"
+    ],
+    "file": [
+     "Ooh, a new file.",
+     "*sniffs around*",
+     "What's in here?"
+    ],
+    "click": [
+     "I'm the save icon!",
+     "Remember me?",
+     "1.44 MB of personality.",
+     "Insert me!"
+    ],
+    "pet": [
+     "*happy whirring*",
+     "Hehe, careful with my shutter."
+    ],
+    "yikes": [
+     "*ejects itself*",
+     "Disk error!"
+    ],
+    "save": [
+     "Saved! The old-fashioned way.",
+     "1.44 MB of pure joy!",
+     "Saved to disk. That's me!"
+    ],
+    "typing": [
+     "Writing to disk!",
+     "Ooh, typing!"
+    ]
+   }
+  },
+  "mouse": {
+   "label": "Mouse",
+   "name": "Click",
+   "set": "gadgets",
+   "flip": true,
+   "floor": true,
+   "speed": 1.2,
+   "bob": [
+    1,
+    0.4
+   ],
+   "glow": "rgba(229,231,235,0.4)",
+   "mouth": [
+    70,
+    50
+   ],
+   "head": [
+    66,
+    20
+   ],
+   "parts": [
+    {
+     "path": "M52 56 l-1 20",
+     "group": "legs",
+     "stroke": "#6B7280",
+     "sw": 5,
+     "pivot": [
+      52,
+      56
+     ],
+     "rot": [
+      14,
+      0.5,
+      0
+     ]
+    },
+    {
+     "path": "M76 56 l1 20",
+     "group": "legs",
+     "stroke": "#6B7280",
+     "sw": 5,
+     "pivot": [
+      76,
+      56
+     ],
+     "rot": [
+      14,
+      0.5,
+      0.5
+     ]
+    },
+    {
+     "path": "M40 56 q-10 0 -14 -10 q-4 -10 -14 -8",
+     "group": "tail",
+     "stroke": "#6B7280",
+     "sw": 2.6,
+     "pivot": [
+      40,
+      56
+     ],
+     "rot": [
+      14,
+      0.9,
+      0
+     ]
+    },
+    {
+     "path": "M40 60 Q40 26 66 24 Q92 26 92 60 Z",
+     "group": "body",
+     "fill": "#E5E7EB",
+     "stroke": "#2B1D12",
+     "sw": 1.6
+    },
+    {
+     "path": "M66 24 V40",
+     "group": "body",
+     "stroke": "#9CA3AF",
+     "sw": 1.4
+    },
+    {
+     "path": "M64 28 H68 V36 H64 Z",
+     "group": "body",
+     "fill": "#6B7280"
+    },
+    {
+     "circle": [
+      58.5,
+      46,
+      5.1
+     ],
+     "group": "face",
+     "fill": "#FFFFFF",
+     "when": [
+      "eyesOpen"
+     ]
+    },
+    {
+     "circle": [
+      60,
+      46,
+      2.5
+     ],
+     "group": "face",
+     "fill": "#2B1D12",
+     "when": [
+      "eyesOpen"
+     ]
+    },
+    {
+     "circle": [
+      61.0,
+      45.0,
+      0.8
+     ],
+     "group": "face",
+     "fill": "#FFFFFF",
+     "when": [
+      "eyesOpen"
+     ]
+    },
+    {
+     "path": "M56.875 46 q3.125 2.5 6.25 0",
+     "group": "face",
+     "stroke": "#2B1D12",
+     "sw": 1.6,
+     "when": [
+      "eyesClosed"
+     ]
+    },
+    {
+     "path": "M56.875 46.8 q3.125 -3.75 6.25 0",
+     "group": "face",
+     "stroke": "#2B1D12",
+     "sw": 1.6,
+     "when": [
+      "eyesHappy"
+     ]
+    },
+    {
+     "circle": [
+      72.5,
+      46,
+      5.1
+     ],
+     "group": "face",
+     "fill": "#FFFFFF",
+     "when": [
+      "eyesOpen"
+     ]
+    },
+    {
+     "circle": [
+      74,
+      46,
+      2.5
+     ],
+     "group": "face",
+     "fill": "#2B1D12",
+     "when": [
+      "eyesOpen"
+     ]
+    },
+    {
+     "circle": [
+      75.0,
+      45.0,
+      0.8
+     ],
+     "group": "face",
+     "fill": "#FFFFFF",
+     "when": [
+      "eyesOpen"
+     ]
+    },
+    {
+     "path": "M70.875 46 q3.125 2.5 6.25 0",
+     "group": "face",
+     "stroke": "#2B1D12",
+     "sw": 1.6,
+     "when": [
+      "eyesClosed"
+     ]
+    },
+    {
+     "path": "M70.875 46.8 q3.125 -3.75 6.25 0",
+     "group": "face",
+     "stroke": "#2B1D12",
+     "sw": 1.6,
+     "when": [
+      "eyesHappy"
+     ]
+    },
+    {
+     "path": "M63.0 52 q4 3.5 8 0",
+     "group": "face",
+     "stroke": "#2B1D12",
+     "sw": 1.5
+    },
+    {
+     "path": "M56 40 l6 1.5 M78 40 l-6 1.5",
+     "group": "face",
+     "stroke": "#2B1D12",
+     "sw": 1.4,
+     "when": [
+      "worried"
+     ]
+    },
+    {
+     "circle": [
+      55,
+      52,
+      2.2
+     ],
+     "group": "face",
+     "fill": "#F9A8D4",
+     "opacity": 0.7
+    },
+    {
+     "circle": [
+      80,
+      52,
+      2.2
+     ],
+     "group": "face",
+     "fill": "#F9A8D4",
+     "opacity": 0.7
+    },
+    {
+     "path": "M90 22 q-2.5 4.5 0 5.5 q2.5 -1 0 -5.5z",
+     "group": "face",
+     "fill": "#7DD3FC",
+     "when": [
+      "worried"
+     ]
+    },
+    {
+     "circle": [
+      106,
+      54,
+      5
+     ],
+     "group": "tool",
+     "fill": "rgba(253,230,138,0.15)",
+     "stroke": "#FACC15",
+     "sw": 1.8,
+     "when": [
+      "debugging"
+     ]
+    },
+    {
+     "path": "M102.5 57.5 l-5 5",
+     "group": "tool",
+     "stroke": "#FACC15",
+     "sw": 2.2,
+     "when": [
+      "debugging"
+     ]
+    }
+   ],
+   "poses": {
+    "hiding": {
+     "body": {
+      "s": 0.88,
+      "p": [
+       66,
+       60
+      ]
+     },
+     "face": {
+      "s": 0.88,
+      "p": [
+       66,
+       60
+      ]
+     },
+     "tail": {
+      "s": 0.6,
+      "p": [
+       40,
+       56
+      ]
+     }
+    },
+    "sleeping": {
+     "body": {
+      "ty": 2
+     },
+     "face": {
+      "ty": 2
+     },
+     "legs": {
+      "s": 0.4,
+      "p": [
+       64,
+       76
+      ]
+     }
+    },
+    "curious": {
+     "face": {
+      "r": -8,
+      "p": [
+       66,
+       50
+      ]
+     }
+    }
+   },
+   "lines": {
+    "fixed": [
+     "Point and fixed!",
+     "All clear!"
+    ],
+    "longSession": [
+     "You've been at it a while. Stretch break?",
+     "Walk break? I'll come.",
+     "Blink a few times. Eyes need breaks too."
+    ],
+    "lateNight": [
+     "It's late. I'm sleepy.",
+     "Coding past midnight? I'll keep you company.",
+     "Night shift, huh?"
+    ],
+    "morning": [
+     "Good morning!",
+     "Morning! Breakfast first?",
+     "Rise and shine!"
+    ],
+    "music": [
+     "Ooh, music!",
+     "*dances*",
+     "Is this my song?"
+    ],
+    "hot": [
+     "It's getting hot in here.",
+     "Your Mac's working hard.",
+     "*pants*"
+    ],
+    "file": [
+     "Ooh, a new file.",
+     "*sniffs around*",
+     "What's in here?"
+    ],
+    "click": [
+     "Click!",
+     "Double-click me!",
+     "Right-click for options.",
+     "*scrolls happily*"
+    ],
+    "pet": [
+     "*happy scroll*",
+     "Cursor cuddles!"
+    ],
+    "yikes": [
+     "*unplugs itself*",
+     "Eek! A mouse! Wait, that's me."
+    ],
+    "typing": [
+     "Keyboard shortcuts? I see how it is.",
+     "Ooh, typing!"
+    ]
+   }
+  },
+  "headphones": {
+   "label": "Headphones",
+   "name": "Beats",
+   "set": "gadgets",
+   "flip": false,
+   "floor": true,
+   "speed": 1.0,
+   "bob": [
+    2,
+    0.5
+   ],
+   "glow": "rgba(236,72,153,0.45)",
+   "mouth": [
+    60,
+    34
+   ],
+   "head": [
+    60,
+    8
+   ],
+   "parts": [
+    {
+     "path": "M33 56 l-1 20",
+     "group": "legs",
+     "stroke": "#BE185D",
+     "sw": 5,
+     "pivot": [
+      33,
+      56
+     ],
+     "rot": [
+      14,
+      0.6,
+      0
+     ]
+    },
+    {
+     "path": "M87 56 l1 20",
+     "group": "legs",
+     "stroke": "#BE185D",
+     "sw": 5,
+     "pivot": [
+      87,
+      56
+     ],
+     "rot": [
+      14,
+      0.6,
+      0.5
+     ]
+    },
+    {
+     "path": "M33 40 Q33 10 60 10 Q87 10 87 40",
+     "group": "body",
+     "stroke": "#2B1D12",
+     "sw": 8.5
+    },
+    {
+     "path": "M33 40 Q33 10 60 10 Q87 10 87 40",
+     "group": "body",
+     "stroke": "#E5E7EB",
+     "sw": 6
+    },
+    {
+     "path": "M24 36 Q24 32 28 32 H38 Q42 32 42 36 V54 Q42 58 38 58 H28 Q24 58 24 54 Z",
+     "group": "body",
+     "fill": "#EC4899",
+     "stroke": "#2B1D12",
+     "sw": 1.5
+    },
+    {
+     "path": "M78 36 Q78 32 82 32 H92 Q96 32 96 36 V54 Q96 58 92 58 H82 Q78 58 78 54 Z",
+     "group": "body",
+     "fill": "#EC4899",
+     "stroke": "#2B1D12",
+     "sw": 1.5
+    },
+    {
+     "circle": [
+      31.5,
+      44,
+      5.6
+     ],
+     "group": "face",
+     "fill": "#FFFFFF",
+     "when": [
+      "eyesOpen"
+     ]
+    },
+    {
+     "circle": [
+      33,
+      44,
+      3
+     ],
+     "group": "face",
+     "fill": "#2B1D12",
+     "when": [
+      "eyesOpen"
+     ]
+    },
+    {
+     "circle": [
+      34.2,
+      42.8,
+      0.96
+     ],
+     "group": "face",
+     "fill": "#FFFFFF",
+     "when": [
+      "eyesOpen"
+     ]
+    },
+    {
+     "path": "M29.25 44 q3.75 3 7.5 0",
+     "group": "face",
+     "stroke": "#2B1D12",
+     "sw": 1.6,
+     "when": [
+      "eyesClosed"
+     ]
+    },
+    {
+     "path": "M29.25 44.8 q3.75 -4.5 7.5 0",
+     "group": "face",
+     "stroke": "#2B1D12",
+     "sw": 1.6,
+     "when": [
+      "eyesHappy"
+     ]
+    },
+    {
+     "circle": [
+      85.5,
+      44,
+      5.6
+     ],
+     "group": "face",
+     "fill": "#FFFFFF",
+     "when": [
+      "eyesOpen"
+     ]
+    },
+    {
+     "circle": [
+      87,
+      44,
+      3
+     ],
+     "group": "face",
+     "fill": "#2B1D12",
+     "when": [
+      "eyesOpen"
+     ]
+    },
+    {
+     "circle": [
+      88.2,
+      42.8,
+      0.96
+     ],
+     "group": "face",
+     "fill": "#FFFFFF",
+     "when": [
+      "eyesOpen"
+     ]
+    },
+    {
+     "path": "M83.25 44 q3.75 3 7.5 0",
+     "group": "face",
+     "stroke": "#2B1D12",
+     "sw": 1.6,
+     "when": [
+      "eyesClosed"
+     ]
+    },
+    {
+     "path": "M83.25 44.8 q3.75 -4.5 7.5 0",
+     "group": "face",
+     "stroke": "#2B1D12",
+     "sw": 1.6,
+     "when": [
+      "eyesHappy"
+     ]
+    },
+    {
+     "path": "M28 36 l7 2 M92 36 l-7 2",
+     "group": "face",
+     "stroke": "#2B1D12",
+     "sw": 1.4,
+     "when": [
+      "worried"
+     ]
+    },
+    {
+     "path": "M64 18 v-10 l7 -2 v10",
+     "group": "notes",
+     "stroke": "#F9A8D4",
+     "sw": 1.6,
+     "when": [
+      "happy"
+     ]
+    },
+    {
+     "circle": [
+      62,
+      18,
+      2.2
+     ],
+     "group": "notes",
+     "fill": "#F9A8D4",
+     "when": [
+      "happy"
+     ]
+    },
+    {
+     "circle": [
+      69,
+      16,
+      2.2
+     ],
+     "group": "notes",
+     "fill": "#F9A8D4",
+     "when": [
+      "happy"
+     ]
+    },
+    {
+     "path": "M98 26 q-2.5 4.5 0 5.5 q2.5 -1 0 -5.5z",
+     "group": "face",
+     "fill": "#7DD3FC",
+     "when": [
+      "worried"
+     ]
+    },
+    {
+     "circle": [
+      106,
+      52,
+      5
+     ],
+     "group": "tool",
+     "fill": "rgba(253,230,138,0.15)",
+     "stroke": "#FACC15",
+     "sw": 1.8,
+     "when": [
+      "debugging"
+     ]
+    },
+    {
+     "path": "M102.5 55.5 l-5 5",
+     "group": "tool",
+     "stroke": "#FACC15",
+     "sw": 2.2,
+     "when": [
+      "debugging"
+     ]
+    }
+   ],
+   "groupMotion": {
+    "body": {
+     "sy": [
+      0.03,
+      0.5,
+      0
+     ],
+     "p": [
+      60,
+      58
+     ]
+    }
+   },
+   "poses": {
+    "hiding": {
+     "body": {
+      "s": 0.85,
+      "p": [
+       60,
+       58
+      ]
+     },
+     "face": {
+      "s": 0.85,
+      "p": [
+       60,
+       58
+      ]
+     }
+    },
+    "sleeping": {
+     "body": {
+      "ty": 2
+     },
+     "face": {
+      "ty": 2
+     },
+     "legs": {
+      "s": 0.4,
+      "p": [
+       60,
+       76
+      ]
+     }
+    },
+    "curious": {
+     "body": {
+      "r": -7,
+      "p": [
+       60,
+       40
+      ]
+     },
+     "face": {
+      "r": -7,
+      "p": [
+       60,
+       40
+      ]
+     }
+    }
+   },
+   "lines": {
+    "fixed": [
+     "All clear!",
+     "Fixed it!",
+     "No more errors!",
+     "Good job!"
+    ],
+    "longSession": [
+     "You've been at it a while. Stretch break?",
+     "Walk break? I'll come.",
+     "Blink a few times. Eyes need breaks too."
+    ],
+    "lateNight": [
+     "It's late. I'm sleepy.",
+     "Coding past midnight? I'll keep you company.",
+     "Night shift, huh?"
+    ],
+    "morning": [
+     "Good morning!",
+     "Morning! Breakfast first?",
+     "Rise and shine!"
+    ],
+    "music": [
+     "My jam!",
+     "*bops along*",
+     "Turn it up!"
+    ],
+    "hot": [
+     "It's getting hot in here.",
+     "Your Mac's working hard.",
+     "*pants*"
+    ],
+    "file": [
+     "Ooh, a new file.",
+     "*sniffs around*",
+     "What's in here?"
+    ],
+    "click": [
+     "Turn it up!",
+     "*bass drop*",
+     "Now playing: you.",
+     "Testing, one, two."
+    ],
+    "pet": [
+     "*happy bass*",
+     "Hehe, that's my ear cup."
+    ],
+    "yikes": [
+     "*noise cancelling engaged*",
+     "Too loud!"
+    ],
+    "meeting": [
+     "Mic check, one, two.",
+     "You're on mute. Probably."
+    ],
+    "typing": [
+     "Typing to the beat!",
+     "Ooh, typing!"
+    ]
+   }
+  },
+  "sticky": {
+   "label": "Sticky note",
+   "name": "Post",
+   "set": "gadgets",
+   "flip": false,
+   "floor": true,
+   "speed": 0.8,
+   "bob": [
+    1.2,
+    0.6
+   ],
+   "glow": "rgba(253,230,138,0.45)",
+   "mouth": [
+    59,
+    44
+   ],
+   "head": [
+    60,
+    10
+   ],
+   "parts": [
+    {
+     "path": "M48 56 l-1 20",
+     "group": "legs",
+     "stroke": "#CA8A04",
+     "sw": 5,
+     "pivot": [
+      48,
+      56
+     ],
+     "rot": [
+      14,
+      0.7,
+      0
+     ]
+    },
+    {
+     "path": "M70 56 l1 20",
+     "group": "legs",
+     "stroke": "#CA8A04",
+     "sw": 5,
+     "pivot": [
+      70,
+      56
+     ],
+     "rot": [
+      14,
+      0.7,
+      0.5
+     ]
+    },
+    {
+     "path": "M34 14 H86 V50 L76 60 H34 Z",
+     "group": "body",
+     "fill": "#FDE68A",
+     "stroke": "#2B1D12",
+     "sw": 1.5
+    },
+    {
+     "path": "M86 50 H76 V60 Z",
+     "group": "body",
+     "fill": "#FCD34D",
+     "stroke": "#2B1D12",
+     "sw": 1.2
+    },
+    {
+     "path": "M50 10 H70 V18 H50 Z",
+     "group": "body",
+     "fill": "#E0F2FE",
+     "opacity": 0.85
+    },
+    {
+     "path": "M40 24 h18 M40 29 h12",
+     "group": "body",
+     "stroke": "#92400E",
+     "sw": 1.6
+    },
+    {
+     "path": "M62 24 l2 2 l4 -5",
+     "group": "body",
+     "stroke": "#16A34A",
+     "sw": 1.8,
+     "when": [
+      "happy"
+     ]
+    },
+    {
+     "circle": [
+      51.5,
+      38,
+      5.1
+     ],
+     "group": "face",
+     "fill": "#FFFFFF",
+     "when": [
+      "eyesOpen"
+     ]
+    },
+    {
+     "circle": [
+      53,
+      38,
+      2.5
+     ],
+     "group": "face",
+     "fill": "#2B1D12",
+     "when": [
+      "eyesOpen"
+     ]
+    },
+    {
+     "circle": [
+      54.0,
+      37.0,
+      0.8
+     ],
+     "group": "face",
+     "fill": "#FFFFFF",
+     "when": [
+      "eyesOpen"
+     ]
+    },
+    {
+     "path": "M49.875 38 q3.125 2.5 6.25 0",
+     "group": "face",
+     "stroke": "#2B1D12",
+     "sw": 1.6,
+     "when": [
+      "eyesClosed"
+     ]
+    },
+    {
+     "path": "M49.875 38.8 q3.125 -3.75 6.25 0",
+     "group": "face",
+     "stroke": "#2B1D12",
+     "sw": 1.6,
+     "when": [
+      "eyesHappy"
+     ]
+    },
+    {
+     "circle": [
+      63.5,
+      38,
+      5.1
+     ],
+     "group": "face",
+     "fill": "#FFFFFF",
+     "when": [
+      "eyesOpen"
+     ]
+    },
+    {
+     "circle": [
+      65,
+      38,
+      2.5
+     ],
+     "group": "face",
+     "fill": "#2B1D12",
+     "when": [
+      "eyesOpen"
+     ]
+    },
+    {
+     "circle": [
+      66.0,
+      37.0,
+      0.8
+     ],
+     "group": "face",
+     "fill": "#FFFFFF",
+     "when": [
+      "eyesOpen"
+     ]
+    },
+    {
+     "path": "M61.875 38 q3.125 2.5 6.25 0",
+     "group": "face",
+     "stroke": "#2B1D12",
+     "sw": 1.6,
+     "when": [
+      "eyesClosed"
+     ]
+    },
+    {
+     "path": "M61.875 38.8 q3.125 -3.75 6.25 0",
+     "group": "face",
+     "stroke": "#2B1D12",
+     "sw": 1.6,
+     "when": [
+      "eyesHappy"
+     ]
+    },
+    {
+     "path": "M55.0 44 q4 3.5 8 0",
+     "group": "face",
+     "stroke": "#2B1D12",
+     "sw": 1.5
+    },
+    {
+     "path": "M49 32 l6 1.5 M69 32 l-6 1.5",
+     "group": "face",
+     "stroke": "#2B1D12",
+     "sw": 1.4,
+     "when": [
+      "worried"
+     ]
+    },
+    {
+     "path": "M84 12 q-2.5 4.5 0 5.5 q2.5 -1 0 -5.5z",
+     "group": "face",
+     "fill": "#7DD3FC",
+     "when": [
+      "worried"
+     ]
+    },
+    {
+     "circle": [
+      100,
+      52,
+      5
+     ],
+     "group": "tool",
+     "fill": "rgba(253,230,138,0.15)",
+     "stroke": "#FACC15",
+     "sw": 1.8,
+     "when": [
+      "debugging"
+     ]
+    },
+    {
+     "path": "M96.5 55.5 l-5 5",
+     "group": "tool",
+     "stroke": "#FACC15",
+     "sw": 2.2,
+     "when": [
+      "debugging"
+     ]
+    }
+   ],
+   "poses": {
+    "hiding": {
+     "body": {
+      "r": 8,
+      "s": 0.88,
+      "p": [
+       60,
+       14
+      ]
+     },
+     "face": {
+      "r": 8,
+      "s": 0.88,
+      "p": [
+       60,
+       14
+      ]
+     }
+    },
+    "sleeping": {
+     "body": {
+      "r": 4,
+      "p": [
+       60,
+       14
+      ]
+     },
+     "face": {
+      "r": 4,
+      "p": [
+       60,
+       14
+      ]
+     },
+     "legs": {
+      "s": 0.4,
+      "p": [
+       60,
+       76
+      ]
+     }
+    },
+    "curious": {
+     "body": {
+      "r": -6,
+      "p": [
+       60,
+       14
+      ]
+     },
+     "face": {
+      "r": -6,
+      "p": [
+       60,
+       14
+      ]
+     }
+    }
+   },
+   "lines": {
+    "fixed": [
+     "Crossed off the list!",
+     "All clear!"
+    ],
+    "longSession": [
+     "You've been at it a while. Stretch break?",
+     "Walk break? I'll come.",
+     "Blink a few times. Eyes need breaks too."
+    ],
+    "lateNight": [
+     "It's late. I'm sleepy.",
+     "Coding past midnight? I'll keep you company.",
+     "Night shift, huh?"
+    ],
+    "morning": [
+     "Good morning!",
+     "Morning! Breakfast first?",
+     "Rise and shine!"
+    ],
+    "music": [
+     "Ooh, music!",
+     "*dances*",
+     "Is this my song?"
+    ],
+    "hot": [
+     "It's getting hot in here.",
+     "Your Mac's working hard.",
+     "*pants*"
+    ],
+    "file": [
+     "Ooh, a new file.",
+     "*sniffs around*",
+     "What's in here?"
+    ],
+    "click": [
+     "Don't forget the tests!",
+     "Note to self: you're great.",
+     "TODO: pet me.",
+     "Remember to drink water."
+    ],
+    "pet": [
+     "TODO: pet me. Done!",
+     "*happy rustle*"
+    ],
+    "yikes": [
+     "*falls off the monitor*",
+     "*curls up at the edges*"
+    ],
+    "save": [
+     "Noted!",
+     "Saved. I'll remember."
+    ],
+    "commit": [
+     "Added to the changelog.",
+     "Committed! Noted."
+    ],
+    "worried": [
+     "Note: something's off.",
+     "Uh oh."
+    ],
+    "typing": [
+     "Taking notes!",
+     "Ooh, typing!"
     ]
    }
   }

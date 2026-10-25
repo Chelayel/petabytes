@@ -64,6 +64,15 @@ const PETS = [
   { id: "ghost", label: "Ghost", detail: "Boo: a shy pixel ghost that floats and blushes" },
   { id: "knight", label: "Knight", detail: "Sir Pix: a pixel knight on a quest to slay your bugs" },
   { id: "robot", label: "Robot", detail: "Bolt: a pixel robot with a screen for a face" },
+  { id: "laptop", label: "Laptop", detail: "Lappy: its screen is its face, and it naps with the screen dimmed" },
+  { id: "controller", label: "Controller", detail: "Joy: Player 1, with buttons that light up" },
+  { id: "mug", label: "Coffee mug", detail: "Java: steaming, and asking for a refill" },
+  { id: "duck", label: "Rubber duck", detail: "Quackers: rubber-duck debugging, for real" },
+  { id: "cactus", label: "Cactus", detail: "Spike: prickly, and blooms when you fix things" },
+  { id: "floppy", label: "Floppy disk", detail: "Floppy: the save icon, in person" },
+  { id: "mouse", label: "Mouse", detail: "Click: a computer mouse with a wagging cable tail" },
+  { id: "headphones", label: "Headphones", detail: "Beats: bops along to your music" },
+  { id: "sticky", label: "Sticky note", detail: "Post: reminds you to write the tests" },
 ];
 
 // Terminal commands worth a reaction, checked in order.

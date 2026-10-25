@@ -6,13 +6,15 @@
     <description><![CDATA[
         <h2>Petabytes — small companions with a big appetite</h2>
         <p>A pet swims up and down the right edge of your editor, out of the way of your code, and reacts to what
-        you do. Pick a sea creature from the <b>Tide</b> set, a pet from the <b>Home</b> set, a <b>Snack</b>, or a pixel character from the <b>Games</b> set: <b>Shelly</b> the sea turtle, <b>Bloop</b> the jellyfish, <b>Inky</b> the octopus,
+        you do. Pick a sea creature from the <b>Tide</b> set, a pet from the <b>Home</b> set, a <b>Snack</b>, a pixel character from the <b>Games</b> set, or a desk <b>Gadget</b>: <b>Shelly</b> the sea turtle, <b>Bloop</b> the jellyfish, <b>Inky</b> the octopus,
         <b>Pinchy</b> the crab, <b>Puff</b> the pufferfish, <b>Blue</b> the whale, <b>Clem</b> the clownfish,
         <b>Sandy</b> the seahorse, <b>Finn</b> the shark, <b>Splash</b> the dolphin, <b>Angie</b> the angelfish
         <b>Indigo</b> the blue tang, <b>Biscuit</b> the golden retriever, <b>Byte</b> the cat, <b>Clover</b> the bunny
         <b>Nugget</b> the hamster, <b>Patty</b> the burger, <b>Nori</b> the sushi, <b>Pepe</b> the pizza,
         <b>Sprinkles</b> the donut, <b>Tuesday</b> the taco, <b>Squish</b> the slime, <b>Boo</b> the ghost,
-        <b>Sir Pix</b> the knight or <b>Bolt</b> the robot.</p>
+        <b>Sir Pix</b> the knight, <b>Bolt</b> the robot, <b>Lappy</b> the laptop, <b>Joy</b> the controller,
+        <b>Java</b> the coffee mug, <b>Quackers</b> the rubber duck, <b>Spike</b> the cactus, <b>Floppy</b> the floppy disk,
+        <b>Click</b> the mouse, <b>Beats</b> the headphones or <b>Post</b> the sticky note.</p>
         <p><img src="https://raw.githubusercontent.com/Chelayel/petabytes/main/docs/intellij-right-edge.png" alt="Patty the burger at the right edge of the editor in IntelliJ IDEA, saying All clear!" width="640"/></p>
         <p><img src="https://raw.githubusercontent.com/Chelayel/petabytes/main/docs/demo.gif" alt="A pet swimming faster while you type, celebrating a fix, hiding from failed tests, eating and napping" width="620"/></p>
         <p><img src="https://raw.githubusercontent.com/Chelayel/petabytes/main/docs/pets.png" alt="All sixteen pets" width="620"/></p>
@@ -47,6 +49,7 @@
     ]]></description>
 
     <change-notes><![CDATA[
+        <p><b>1.2.0</b> — A new set, Gadgets: Lappy the laptop, Joy the controller, Java the coffee mug, Quackers the rubber duck (who helps you debug), Spike the cactus, Floppy the floppy disk, Click the mouse, Beats the headphones and Post the sticky note.</p>
         <p><b>1.1.1</b> — With nothing to do, the pet wanders along its whole edge instead of staying near one spot.</p>
         <p><b>1.1.0</b> — A new set, Games: original pixel-art characters. Squish the slime, Boo the ghost, Sir Pix the knight and Bolt the robot, who level up when you fix errors and say GAME OVER when tests fail.</p>
         <p><b>1.0.0</b> — Petabytes 1.0. A new set, Snacks: Patty the burger, Nori the sushi, Pepe the pizza, Sprinkles the donut and Tuesday the taco. Also on the Mac: a pet that walks along your Dock.</p>

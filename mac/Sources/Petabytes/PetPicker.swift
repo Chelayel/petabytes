@@ -31,7 +31,7 @@ private struct PickerView: View {
     let onChoose: (String) -> Void
     let onRename: () -> Void
 
-    private static let sets = [("tide", "Tide"), ("home", "Home"), ("snacks", "Snacks"), ("games", "Games")]
+    private static let sets = [("tide", "Tide"), ("home", "Home"), ("snacks", "Snacks"), ("games", "Games"), ("gadgets", "Gadgets")]
     /** Every pet's picture, drawn once. */
     private static let pictures: [String: NSImage] = Dictionary(uniqueKeysWithValues: Catalog.shared.order.map {
         ($0, PetArt.load($0).image(size: NSSize(width: 150, height: 100)))
