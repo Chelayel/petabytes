@@ -49,6 +49,7 @@
     ]]></description>
 
     <change-notes><![CDATA[
+        <p><b>1.4.2</b> — No changes in the editor: the Mac app is now signed with its own certificate, so macOS keeps its permissions across updates.</p>
         <p><b>1.4.1</b> — No changes in the editor: this release is for the Mac app, whose pet now talks in a bubble above its Dock icon.</p>
         <p><b>1.4.0</b> — Meet Loopee, a small, fluffy white German Spitz, in the Home set.</p>
         <p><b>1.3.0</b> — Choose a Pet: a picker with a card for every pet and a tab per set, instead of a 34-item menu. Right-click the pet or use Tools → Petabytes → Choose Pet…, or the Choose… button in the settings.</p>
