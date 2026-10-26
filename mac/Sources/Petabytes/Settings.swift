@@ -31,6 +31,18 @@ enum Settings {
         set { defaults.set(newValue, forKey: "showInDock") }
     }
 
+    /** Whether the pet in the Dock icon talks in a bubble above it (needs Accessibility to find the icon). */
+    static var talkInDock: Bool {
+        get { defaults.object(forKey: "talkInDock") as? Bool ?? true }
+        set { defaults.set(newValue, forKey: "talkInDock") }
+    }
+
+    /** Whether we've explained and asked for Accessibility once already, so it isn't asked again unbidden. */
+    static var askedForAccessibility: Bool {
+        get { defaults.bool(forKey: "askedForAccessibility") }
+        set { defaults.set(newValue, forKey: "askedForAccessibility") }
+    }
+
     /** Whether the pet steps aside while an app is full screen. */
     static var hideInFullScreen: Bool {
         get { defaults.object(forKey: "hideInFullScreen") as? Bool ?? true }

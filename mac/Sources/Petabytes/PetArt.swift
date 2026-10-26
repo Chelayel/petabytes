@@ -52,6 +52,10 @@ struct ArtPart {
 
 struct PetArt {
     let id: String
+    let name: String
+    let label: String
+    /** The pet's own lines; the rest come from the shared ones. */
+    private let lines: [String: [String]]
     let flip: Bool
     let bob: (amount: Double, period: Double)
     let accent: CGColor
@@ -64,6 +68,9 @@ struct PetArt {
 
     /** What each reaction key makes the pet do, from pets.json's reactions. */
     static let reactions: [String: [String: Any]] = (root["reactions"] as? [String: [String: Any]]) ?? [:]
+    /** The snacks Feed drops; each has the key of the lines the pet says eating it. */
+    static let snacks: [[String: String]] = (root["snacks"] as? [[String: String]]) ?? []
+    private static let sharedLines: [String: [String]] = (root["lines"] as? [String: [String]]) ?? [:]
 
     private static let root: [String: Any] =
         (try? JSONSerialization.jsonObject(with: Data(Catalog.json.utf8))) as? [String: Any] ?? [:]
@@ -76,6 +83,9 @@ struct PetArt {
 
     private init(id: String, _ m: [String: Any]) {
         self.id = id
+        name = m["name"] as? String ?? id
+        label = m["label"] as? String ?? id
+        lines = m["lines"] as? [String: [String]] ?? [:]
         flip = m["flip"] as? Bool ?? false
         let b = numbers(m["bob"]) ?? [4, 3]
         bob = (b[0], b[1])
@@ -95,6 +105,14 @@ struct PetArt {
         let box = parts.filter { $0.when == nil }.reduce(CGRect.null) { $0.union($1.path.boundingBoxOfPath.insetBy(dx: -$1.strokeWidth / 2, dy: -$1.strokeWidth / 2)) }
         let half = max(60 - box.minX, box.maxX - 60)
         bounds = CGRect(x: 60 - half, y: box.minY, width: 2 * half, height: box.height)
+    }
+
+    /** A line for the key, the pet's own if it has one, with {name}, {kind} and the given values filled in. */
+    func line(_ key: String, vars: [String: String] = [:]) -> String? {
+        guard let line = (lines[key] ?? Self.sharedLines[key])?.randomElement() else { return nil }
+        let values = ["name": Settings.name.isEmpty ? name : Settings.name, "kind": label.lowercased(), "task": "The task"]
+            .merging(vars) { _, given in given }
+        return values.reduce(line) { text, pair in text.replacingOccurrences(of: "{\(pair.key)}", with: pair.value) }
     }
 
     /** The pet standing still with its eyes open, as big as fits in the middle of the picture. */

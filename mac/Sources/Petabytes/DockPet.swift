@@ -3,7 +3,8 @@ import AppKit
 /**
  The pet living inside its Dock icon, drawn natively (15 frames a second, 4 asleep): no web page runs meanwhile.
  It takes the same messages as pet.html (react, typing, active, feed) and follows the same rules, cut down
- to what fits in an icon: moods, poses, turning around, naps, and a one-glyph bubble instead of sentences.
+ to what fits in an icon: moods, poses, turning around, naps, and a one-glyph bubble in the icon's corner.
+ What it says goes to onSay, which shows it above the icon when it can (DockSpeech).
  */
 final class DockPet {
     private static let sleepAfter: TimeInterval = 3 * 60
@@ -25,12 +26,21 @@ final class DockPet {
     private var poses: [String: Pose] = [:]
     /** A glyph in a bubble at the icon's corner, until the date. */
     private var bubble: (glyph: String, until: Date)?
+    private var lastTypingLine = Date.distantPast
+    /** A line the pet says, for a bubble above the Dock icon. */
+    var onSay: (String) -> Void = { _ in }
 
     func start() {
         art = PetArt.load(Settings.pet)
         poses = [:]
         NSApp.dockTile.contentView = view
         schedule()
+        // Say hi once the icon has had a moment to appear.
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) { [weak self] in self?.say("hello") }
+    }
+
+    private func say(_ key: String, vars: [String: String] = [:]) {
+        if let line = art.line(key, vars: vars) { onSay(line) }
     }
 
     private func schedule() {
@@ -72,6 +82,7 @@ final class DockPet {
         schedule()
         flash("curious", 1.2)
         show("!", 1.5)
+        say("wake")
         return true
     }
 
@@ -88,13 +99,19 @@ final class DockPet {
             if let mood { flash(mood, ((r["ms"] as? Double) ?? 1200) / 1000) }
             if Double.random(in: 0..<1) < ((r["chance"] as? Double) ?? 1) {
                 show(mood == "hiding" ? "!" : (r["hearts"] != nil || mood == "happy") ? "♥" : mood == "curious" ? "?" : "…")
+                say(key, vars: message["vars"] as? [String: String] ?? [:])
             }
         case "feed":
             wake()
             flash("happy", 1.1)
             show("♥", 2.2)
+            say(PetArt.snacks.randomElement()?["key"] ?? "eatCurly")
         case "typing":
-            wake()
+            // Now and then, as pet.html does: not every burst of typing gets a line.
+            if !wake() && Date().timeIntervalSince(lastTypingLine) > 90 && Double.random(in: 0..<1) < 0.3 {
+                lastTypingLine = Date()
+                say("typing")
+            }
             flash("excited", 2.5)
         default: // "active", and anything else, means someone's there
             wake()
@@ -122,6 +139,7 @@ final class DockPet {
             sleeping = true
             schedule()
             show("z", .infinity)
+            say("sleep")
         }
         if !sleeping, bubble?.glyph == "z" { bubble = nil }
         // Walking in place, it turns around now and then, as it would at the end of the Dock.

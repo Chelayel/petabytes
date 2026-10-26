@@ -11,6 +11,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     private var signals: Signals!
     private var statusItem: NSStatusItem!
     private let dockPet = DockPet()
+    private let speech = DockSpeech()
     private let picker = PetPicker()
 
     private static let sizes: [(String, CGFloat)] = [("Small", 1.0), ("Medium", 1.3), ("Large", 1.7)]
@@ -72,9 +73,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         window.wanted = !inDock && Settings.visible
         if inDock {
             window.orderOut(nil)
+            dockPet.onSay = { [weak self] line in self?.speech.say(line) }
             dockPet.start()
         } else {
             dockPet.stop()
+            speech.hide()
             if Settings.visible { window.orderFrontRegardless() }
         }
     }
@@ -120,6 +123,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
 
         menu.addItem(.separator())
         menu.addItem(item(Settings.showInDock ? "Move to Menu Bar" : "Move to Dock", #selector(toggleShowInDock)))
+        if Settings.showInDock {
+            let talk = item("Talk Above the Dock Icon", #selector(toggleTalkInDock))
+            talk.state = Settings.talkInDock && DockSpeech.allowed ? .on : .off
+            menu.addItem(talk)
+        }
         let fullScreen = item("Hide in Full Screen", #selector(toggleHideInFullScreen))
         fullScreen.state = Settings.hideInFullScreen ? .on : .off
         menu.addItem(fullScreen)
@@ -186,6 +194,32 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     @objc private func toggleShowInDock() {
         Settings.showInDock.toggle()
         applyDockIcon()
+        if Settings.showInDock && Settings.talkInDock && !DockSpeech.allowed && !Settings.askedForAccessibility {
+            askForAccessibility()
+        }
+    }
+
+    @objc private func toggleTalkInDock() {
+        if Settings.talkInDock && DockSpeech.allowed {
+            Settings.talkInDock = false
+            speech.hide()
+        } else {
+            Settings.talkInDock = true
+            if !DockSpeech.allowed { askForAccessibility() }
+        }
+    }
+
+    /** Says why, then lets macOS ask: its prompt leads to Privacy & Security, where Petabytes gets switched on. */
+    private func askForAccessibility() {
+        Settings.askedForAccessibility = true
+        let alert = NSAlert()
+        alert.messageText = "Let your pet talk above its Dock icon?"
+        alert.informativeText = "To put a speech bubble above its icon, Petabytes needs to know where the icon is in the Dock, and macOS only tells apps that through the Accessibility permission. Petabytes uses it for nothing else.\n\nIn System Settings, switch on Petabytes under Privacy & Security → Accessibility. Until then, your pet still shows how it feels in the corner of its icon."
+        alert.addButton(withTitle: "Continue")
+        alert.addButton(withTitle: "Not Now")
+        NSApp.activate(ignoringOtherApps: true)
+        guard alert.runModal() == .alertFirstButtonReturn else { return }
+        DockSpeech.requestAccess()
     }
 
     @objc private func toggleHideInFullScreen() {
