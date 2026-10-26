@@ -124,7 +124,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         menu.addItem(.separator())
         menu.addItem(item(Settings.showInDock ? "Move to Menu Bar" : "Move to Dock", #selector(toggleShowInDock)))
         if Settings.showInDock {
-            let talk = item("Talk Above the Dock Icon", #selector(toggleTalkInDock))
+            // Switched on but not allowed: say so, since macOS forgets the permission when the app changes (see below).
+            let needsAccess = Settings.talkInDock && !DockSpeech.allowed
+            let talk = item(needsAccess ? "Talk Above the Dock Icon (Needs Accessibility)" : "Talk Above the Dock Icon", #selector(toggleTalkInDock))
             talk.state = Settings.talkInDock && DockSpeech.allowed ? .on : .off
             menu.addItem(talk)
         }
@@ -214,7 +216,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         Settings.askedForAccessibility = true
         let alert = NSAlert()
         alert.messageText = "Let your pet talk above its Dock icon?"
-        alert.informativeText = "To put a speech bubble above its icon, Petabytes needs to know where the icon is in the Dock, and macOS only tells apps that through the Accessibility permission. Petabytes uses it for nothing else.\n\nIn System Settings, switch on Petabytes under Privacy & Security → Accessibility. Until then, your pet still shows how it feels in the corner of its icon."
+        alert.informativeText = "To put a speech bubble above its icon, Petabytes needs to know where the icon is in the Dock, and macOS only tells apps that through the Accessibility permission. Petabytes uses it for nothing else.\n\nIn System Settings, switch on Petabytes under Privacy & Security → Accessibility. After an update, macOS may not recognize the new version: if Petabytes is already in the list, switch it off and on again, or remove it and add it back.\n\nUntil then, your pet still shows how it feels in the corner of its icon."
         alert.addButton(withTitle: "Continue")
         alert.addButton(withTitle: "Not Now")
         NSApp.activate(ignoringOtherApps: true)
