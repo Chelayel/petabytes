@@ -12,6 +12,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     private var statusItem: NSStatusItem!
     private let dockPet = DockPet()
     private let speech = DockSpeech()
+    private let claudeCode = ClaudeCodeLink()
     private let picker = PetPicker()
 
     private static let sizes: [(String, CGFloat)] = [("Small", 1.0), ("Medium", 1.3), ("Large", 1.7)]
@@ -26,6 +27,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
 
         signals = Signals { [weak self] message in self?.send(message) }
         signals.start()
+        claudeCode.onReact = { [weak self] message in self?.send(message) }
+        if Settings.claudeCode { claudeCode.start() }
 
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
         statusItem.autosaveName = "Petabytes"
@@ -130,6 +133,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
             talk.state = Settings.talkInDock && DockSpeech.allowed ? .on : .off
             menu.addItem(talk)
         }
+        let claude = item("React to Claude Code", #selector(toggleClaudeCode))
+        claude.state = Settings.claudeCode ? .on : .off
+        menu.addItem(claude)
         let fullScreen = item("Hide in Full Screen", #selector(toggleHideInFullScreen))
         fullScreen.state = Settings.hideInFullScreen ? .on : .off
         menu.addItem(fullScreen)
@@ -222,6 +228,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         NSApp.activate(ignoringOtherApps: true)
         guard alert.runModal() == .alertFirstButtonReturn else { return }
         DockSpeech.requestAccess()
+    }
+
+    @objc private func toggleClaudeCode() {
+        Settings.claudeCode.toggle()
+        if Settings.claudeCode { claudeCode.start() } else { claudeCode.stop() }
     }
 
     @objc private func toggleHideInFullScreen() {

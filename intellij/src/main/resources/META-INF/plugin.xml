@@ -49,6 +49,7 @@
     ]]></description>
 
     <change-notes><![CDATA[
+        <p><b>1.5.0</b> — No changes in the editor: the Mac app's pet can now react to what Claude Code is doing.</p>
         <p><b>1.4.2</b> — No changes in the editor: the Mac app is now signed with its own certificate, so macOS keeps its permissions across updates.</p>
         <p><b>1.4.1</b> — No changes in the editor: this release is for the Mac app, whose pet now talks in a bubble above its Dock icon.</p>
         <p><b>1.4.0</b> — Meet Loopee, a small, fluffy white German Spitz, in the Home set.</p>

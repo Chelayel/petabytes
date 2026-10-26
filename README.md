@@ -94,6 +94,8 @@ It reacts to your Mac, and none of it asks for a permission:
 | A download finishes, you take a screenshot, you copy something | "Download done!", "Cheese!", "Copy-paste? I saw nothing." |
 | The Mac heats up, switches to dark mode | "It's getting hot in here.", "Lights out!" |
 
+**With Claude Code**, the Mac pet also reacts to what Claude is doing: curious when it reads, excited when it edits, fingers crossed for tests and a cheer or a hide at the result, and "Done!" when it finishes. That comes from the Petabytes add-on for Claude Code, which tells the app on 127.0.0.1 only; **React to Claude Code** in the menu turns it off.
+
 It only ever learns *that* a key was pressed, never which, and *that* the clipboard changed, never what's on it. It draws at 20 frames a second (fewer while it sleeps, almost none while the screen is locked).
 
 ## How it's built

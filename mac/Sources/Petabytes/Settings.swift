@@ -43,6 +43,12 @@ enum Settings {
         set { defaults.set(newValue, forKey: "askedForAccessibility") }
     }
 
+    /** Whether the pet reacts to what Claude Code is doing (the Petabytes add-on for Claude Code tells it). */
+    static var claudeCode: Bool {
+        get { defaults.object(forKey: "claudeCode") as? Bool ?? true }
+        set { defaults.set(newValue, forKey: "claudeCode") }
+    }
+
     /** Whether the pet steps aside while an app is full screen. */
     static var hideInFullScreen: Bool {
         get { defaults.object(forKey: "hideInFullScreen") as? Bool ?? true }

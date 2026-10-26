@@ -1381,6 +1381,29 @@ LINES.update({
   "longSession": ["You've been at it a while. Stretch break?", "Water break? I'm already in water.", "Blink a few times. Eyes need breaks too."],
 })
 
+# What Claude Code tells the Mac app it's doing (the Petabytes add-on for Claude Code sends these).
+REACTIONS.update({
+  "claudeStart":   {"mood": "curious", "ms": 1500, "cooldown": 5},
+  "claudeRead":    {"mood": "curious", "ms": 1200, "chance": 0.5, "cooldown": 30},
+  "claudeEdit":    {"mood": "excited", "ms": 2500, "chance": 0.6, "cooldown": 30},
+  "claudeWeb":     {"mood": "curious", "ms": 1500, "chance": 0.7, "cooldown": 30},
+  "claudeAgent":   {"mood": "excited", "ms": 2000, "cooldown": 30},
+  "claudeTestsOk": {"mood": "happy", "ms": 1100, "bubbles": 6, "cooldown": 5},
+  "claudeTestsFailed": {"mood": "hiding", "ms": 2200, "cooldown": 5},
+  "claudeDone":    {"mood": "happy", "ms": 1100, "bubbles": 3, "cooldown": 5},
+})
+
+LINES.update({
+  "claudeStart": ["On it!", "Ooh, a new task.", "Let's go!", "Claude's on it.", "Good one."],
+  "claudeRead": ["Reading up...", "Looking around the code.", "What's in here?", "Research time."],
+  "claudeEdit": ["Ooh, new code.", "Look at it go!", "Fresh code, coming up.", "Claude's typing!"],
+  "claudeWeb": ["To the internet!", "Researching!", "Looking it up."],
+  "claudeAgent": ["Calling in a friend!", "Teamwork!", "More helpers!"],
+  "claudeTestsOk": ["All green!", "Tests passed!", "Woohoo, it works!"],
+  "claudeTestsFailed": ["Oof, tests failed.", "Red. We'll get it.", "*hides* Not green..."],
+  "claudeDone": ["Done! Nice work.", "All done!", "Ta-da!", "Claude's done. Your turn!"],
+})
+
 # Things only the Mac app sees: the Mac itself, and the apps you switch to. Switching apps always gets a
 # reaction and a line; the cooldowns keep a busy afternoon of switching from turning into chatter.
 REACTIONS.update({
