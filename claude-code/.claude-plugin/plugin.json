@@ -1,0 +1,9 @@
+{
+  "name": "petabytes",
+  "version": "1.0.0",
+  "description": "Your Petabytes pet reacts to what Claude does: reading, editing, running tests, pushing and finishing. Drives the Petabytes Mac app's pet, with an optional pixel-art pet above the prompt.",
+  "author": { "name": "Chelayel", "url": "https://www.chelayel.com" },
+  "homepage": "https://github.com/Chelayel/petabytes",
+  "license": "MIT",
+  "types": "./types/index.d.ts"
+}

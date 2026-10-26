@@ -463,7 +463,8 @@ def fluff(cx, cy, rx, ry, n=14, puff=1.2):
         d += f" Q{cx + rx * puff * math.cos(a):.1f} {cy + ry * puff * math.sin(a):.1f} {nx:.1f} {ny:.1f}"
     return d + "Z"
 
-seye, snow, snow_line, snow_shade = "#111827", "#FFFFFF", "#CBD5E1", "#F1F5F9"
+# Loopee is a real dog: white and very fluffy, with a big mane, pink-lined ears and a pinkish-brown nose.
+seye, snow, snow_line, snow_shade, nose = "#2B1A12", "#FFFFFF", "#CBD5E1", "#F1F5F9", "#B77B7B"
 def short_leg(x, y, dx, color, ph):
     """A Spitz's short, fluffy leg: a soft outline under a white stroke, paddling quickly."""
     d = f"M{x} {y} l{dx} 13"
@@ -478,14 +479,16 @@ PETS["spitz"] = {
     p(fluff(40, 32, 13, 11, 12, 1.25), "tail", fill=snow, stroke=snow_line, sw=1.4, pivot=[44, 44], rot=[12, 0.5, 0]),
     p(fluff(58, 52, 22, 13, 16, 1.18), "body", fill=snow, stroke=snow_line, sw=1.4),
     *short_leg(54, 60, 1, snow, 0), *short_leg(67, 60, -1, snow, 0.5),
-    # Head: a ruff of fur, small pointed ears and a fox-like muzzle.
-    p("M77 24 l2 -11 l8 8z", "face", fill=snow, stroke=snow_line, sw=1.3), p("M79.5 20 l1 -5 l3.5 3.5z", "face", fill="#F9A8D4"),
-    p("M90 21 l6 -9 l2 11z", "face", fill=snow, stroke=snow_line, sw=1.3), p("M92.5 19 l3 -4 l1 5z", "face", fill="#F9A8D4"),
-    p(fluff(86, 33, 14, 13, 13, 1.2), "face", fill=snow, stroke=snow_line, sw=1.4),
-    p("M95 34 q8 1 10 5 q-3 4 -11 3z", "face", fill=snow, stroke=snow_line, sw=1.2),
-    c(104.5, 38.5, 2.2, "face", fill=seye),
-    *eye_set(85, 31, 2.3, "face", seye), *eye_set(94, 31, 2.1, "face", seye),
-    p("M99 42 q2 2 4 0", "face", stroke=seye, sw=1.1),
+    # Her mane: a big ruff of fur around the neck and chest, framing the face.
+    p(fluff(84, 41, 17, 15, 15, 1.22), "face", fill=snow, stroke=snow_line, sw=1.4),
+    # Upright, pointed ears with pink insides, then the head and a fox-like muzzle.
+    p("M75 25 l3 -14 l9 10z", "face", fill=snow, stroke=snow_line, sw=1.3), p("M78 21 l1.5 -7 l4.5 4.5z", "face", fill="#F4A3B5"),
+    p("M89 21 l7 -11 l2 13z", "face", fill=snow, stroke=snow_line, sw=1.3), p("M92 19 l3.5 -6 l1 6.5z", "face", fill="#F4A3B5"),
+    p(fluff(86, 32, 13, 12, 13, 1.18), "face", fill=snow, stroke=snow_line, sw=1.4),
+    p("M95 33 q8 1 10 5 q-3 4 -11 3z", "face", fill=snow, stroke=snow_line, sw=1.2),
+    c(104.5, 37.5, 2.3, "face", fill=nose),
+    *eye_set(86, 30, 2.4, "face", seye), *eye_set(95, 30, 2.2, "face", seye),
+    p("M99 41 q2 2 4 0", "face", stroke=nose, sw=1.1),
     p("M100 43 q1 5 3 4 q1.5 -2 0 -4.5z", "face", fill="#F472B6", when=["eyesHappy"]),
     c(82, 37, 2.4, "face", fill="#FBCFE8", opacity=0.8),
     p("M81 25.5 l6 1.5 M97 25.5 l-5 1.5", "face", stroke=seye, sw=1.3, when=["worried"]),

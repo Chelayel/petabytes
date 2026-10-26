@@ -67,6 +67,7 @@ In both editors, **Choose Pet** opens a picker with a tab per set (the IntelliJ 
 | --- | --- | --- | --- |
 | VS Code | [`vscode/`](vscode/) | A **Petabytes** panel in the Explorer (VS Code doesn't let extensions draw over the editor) | **Petabytes: Choose Pet** / **Toggle Pet**, or the `petabytes.*` settings |
 | JetBrains (2024.2+) | [`intellij/`](intellij/) | Swimming up and down the editor's right edge, or along its bottom edge. Drag it to move it; it fades and lets clicks through when your cursor is right beside it | Right-click the pet or **Tools → Petabytes** → **Choose Pet…**; position, size and name in **Settings → Tools → Petabytes** |
+| Claude Code | [`claude-code/`](claude-code/) | Drives the Mac app's pet; optionally a small pixel-art pet above the prompt | `/pet`, `/pet on`, `/pet off` |
 | Mac (macOS 13+) | [`mac/`](mac/) | Standing on top of the Dock, or floating wherever you drag it; or, after **Move to Dock**, inside its own Dock icon | Right-click the pet, or the paw in the menu bar (the Dock icon, once moved there) |
 
 ## On your Mac
@@ -97,6 +98,14 @@ It reacts to your Mac, and none of it asks for a permission:
 **With Claude Code**, the Mac pet also reacts to what Claude is doing: curious when it reads, excited when it edits, fingers crossed for tests and a cheer or a hide at the result, and "Done!" when it finishes. That comes from the Petabytes add-on for Claude Code, which tells the app on 127.0.0.1 only; **React to Claude Code** in the menu turns it off.
 
 It only ever learns *that* a key was pressed, never which, and *that* the clipboard changed, never what's on it. It draws at 20 frames a second (fewer while it sleeps, almost none while the screen is locked).
+
+## With Claude Code
+
+The Petabytes add-on for Claude Code ([`claude-code/`](claude-code/)) lets your pet react to what Claude does: curious when it reads files, excited when it edits code, fingers crossed for tests and a cheer or a hide at the result, and "Done!" when it finishes. It drives the pet in the Mac app, at full size; `/pet on` also puts a small pixel-art pet above the prompt. At a Claude Code prompt:
+
+```
+/plugin install petabytes --marketplace Chelayel/petabytes
+```
 
 ## How it's built
 

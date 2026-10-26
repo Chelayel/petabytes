@@ -1,0 +1,15 @@
+{
+  "name": "petabytes",
+  "description": "Petabytes: small companions with a big appetite, for Claude Code.",
+  "owner": {
+    "name": "Chelayel",
+    "url": "https://www.chelayel.com"
+  },
+  "plugins": [
+    {
+      "name": "petabytes",
+      "source": "./claude-code",
+      "description": "Your Petabytes pet reacts to what Claude does: reading, editing, running tests, pushing and finishing."
+    }
+  ]
+}
