@@ -27,8 +27,8 @@ final class DockPet {
     /** A glyph in a bubble at the icon's corner, until the date. */
     private var bubble: (glyph: String, until: Date)?
     private var lastTypingLine = Date.distantPast
-    /** A line the pet says, for a bubble above the Dock icon. */
-    var onSay: (String) -> Void = { _ in }
+    /** A line the pet says, for a bubble above the Dock icon; true when it was shown there. */
+    var onSay: (String) -> Bool = { _ in false }
 
     func start() {
         art = PetArt.load(Settings.pet)
@@ -39,8 +39,10 @@ final class DockPet {
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) { [weak self] in self?.say("hello") }
     }
 
-    private func say(_ key: String, vars: [String: String] = [:]) {
-        if let line = art.line(key, vars: vars) { onSay(line) }
+    /** Says a line above the icon; when that can't be shown, the glyph in the icon's corner speaks instead. */
+    private func say(_ key: String, vars: [String: String] = [:], glyph: String? = nil, seconds: Double = 2.6) {
+        if let line = art.line(key, vars: vars), onSay(line) { return }
+        if let glyph { show(glyph, seconds) }
     }
 
     private func schedule() {
@@ -81,8 +83,7 @@ final class DockPet {
         sleeping = false
         schedule()
         flash("curious", 1.2)
-        show("!", 1.5)
-        say("wake")
+        say("wake", glyph: "!", seconds: 1.5)
         return true
     }
 
@@ -98,14 +99,13 @@ final class DockPet {
             let mood = r["mood"] as? String
             if let mood { flash(mood, ((r["ms"] as? Double) ?? 1200) / 1000) }
             if Double.random(in: 0..<1) < ((r["chance"] as? Double) ?? 1) {
-                show(mood == "hiding" ? "!" : (r["hearts"] != nil || mood == "happy") ? "♥" : mood == "curious" ? "?" : "…")
-                say(key, vars: message["vars"] as? [String: String] ?? [:])
+                say(key, vars: message["vars"] as? [String: String] ?? [:],
+                    glyph: mood == "hiding" ? "!" : (r["hearts"] != nil || mood == "happy") ? "♥" : mood == "curious" ? "?" : "…")
             }
         case "feed":
             wake()
             flash("happy", 1.1)
-            show("♥", 2.2)
-            say(PetArt.snacks.randomElement()?["key"] ?? "eatCurly")
+            say(PetArt.snacks.randomElement()?["key"] ?? "eatCurly", glyph: "♥", seconds: 2.2)
         case "typing":
             // Now and then, as pet.html does: not every burst of typing gets a line.
             if !wake() && Date().timeIntervalSince(lastTypingLine) > 90 && Double.random(in: 0..<1) < 0.3 {

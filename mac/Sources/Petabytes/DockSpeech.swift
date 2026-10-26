@@ -33,9 +33,11 @@ final class DockSpeech {
         AXIsProcessTrustedWithOptions([prompt: true] as CFDictionary)
     }
 
-    func say(_ text: String) {
+    /** Shows the line above the icon; false when it can't (no permission, switched off, or no icon to point at). */
+    @discardableResult
+    func say(_ text: String) -> Bool {
         guard Settings.talkInDock, Self.allowed, let tile = Self.tileFrame(),
-              let screen = NSScreen.screens.first(where: { $0.frame.intersects(tile) }) else { return }
+              let screen = NSScreen.screens.first(where: { $0.frame.intersects(tile) }) else { return false }
         let frame = screen.frame
         // Which edge the Dock is on decides where the bubble goes and which way its tail points.
         let tail: SpeechBubble.Tail = tile.minX - frame.minX < 8 ? .left : frame.maxX - tile.maxX < 8 ? .right : .down
@@ -53,6 +55,7 @@ final class DockSpeech {
         panel.orderFrontRegardless()
         hideTimer?.invalidate()
         hideTimer = Timer.scheduledTimer(withTimeInterval: 3, repeats: false) { [weak self] _ in self?.hide() }
+        return true
     }
 
     func hide() {

@@ -73,7 +73,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         window.wanted = !inDock && Settings.visible
         if inDock {
             window.orderOut(nil)
-            dockPet.onSay = { [weak self] line in self?.speech.say(line) }
+            dockPet.onSay = { [weak self] line in self?.speech.say(line) ?? false }
             dockPet.start()
         } else {
             dockPet.stop()
