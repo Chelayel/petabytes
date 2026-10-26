@@ -28,52 +28,21 @@ class PetView {
   }
 
   html() {
-    const nonce = crypto.randomBytes(16).toString("base64");
-    const media = path.join(this.extensionPath, "media");
-    const page = fs.readFileSync(path.join(media, "pet.html"), "utf8");
-    // Inlined as a script literal: escape "<" so the art can never close the script tag.
-    const pets = fs.readFileSync(path.join(media, "pets.json"), "utf8").replace(/</g, "\\u003c");
-    const csp = `default-src 'none'; style-src 'unsafe-inline'; script-src 'nonce-${nonce}';`;
-    return page.replaceAll("{{csp}}", csp).replaceAll("{{nonce}}", nonce).replaceAll("{{pets}}", () => pets);
+    return page(this.extensionPath, "pet.html");
   }
 }
 
-const PETS = [
-  { id: "turtle", label: "Sea turtle", detail: "Shelly: swims, paddles, and hides in her shell" },
-  { id: "jellyfish", label: "Jellyfish", detail: "Bloop: pulses, drifts, and glows" },
-  { id: "octopus", label: "Octopus", detail: "Inky: waves eight arms and hides in an ink cloud" },
-  { id: "crab", label: "Crab", detail: "Pinchy: scuttles along the sand and snaps its claws" },
-  { id: "pufferfish", label: "Pufferfish", detail: "Puff: puffs up when errors appear" },
-  { id: "whale", label: "Whale", detail: "Blue: cruises slowly and spouts when happy" },
-  { id: "clownfish", label: "Clownfish", detail: "Clem: zippy, stripy and always excited" },
-  { id: "seahorse", label: "Seahorse", detail: "Sandy: bobs upright and flutters its fin" },
-  { id: "shark", label: "Shark", detail: "Finn: friendly, and vegetarian" },
-  { id: "dolphin", label: "Dolphin", detail: "Splash: fast, chatty and loves a flip" },
-  { id: "angelfish", label: "Angelfish", detail: "Angie: glides gracefully, trailing long fins" },
-  { id: "tang", label: "Blue tang", detail: "Indigo: friendly, if a little forgetful" },
-  { id: "retriever", label: "Golden retriever", detail: "Biscuit: wags, tilts its head, and loves a treat" },
-  { id: "cat", label: "Cat", detail: "Byte: purrs, judges, and sits on your keyboard" },
-  { id: "bunny", label: "Bunny", detail: "Clover: hops, wiggles its nose, and flattens its ears" },
-  { id: "hamster", label: "Hamster", detail: "Nugget: scurries, and stuffs its cheeks with snacks" },
-  { id: "burger", label: "Burger", detail: "Patty: a burger with legs, and a thumbs-up for your code" },
-  { id: "sushi", label: "Sushi", detail: "Nori: rolls along, and hides under its salmon" },
-  { id: "pizza", label: "Pizza", detail: "Pepe: a pepperoni slice that droops when it's scared" },
-  { id: "donut", label: "Donut", detail: "Sprinkles: sweet, sprinkled, and full of donut puns" },
-  { id: "taco", label: "Taco", detail: "Tuesday: crunchy, and every day is its day" },
-  { id: "slime", label: "Slime", detail: "Squish: a bouncy pixel slime, level 1" },
-  { id: "ghost", label: "Ghost", detail: "Boo: a shy pixel ghost that floats and blushes" },
-  { id: "knight", label: "Knight", detail: "Sir Pix: a pixel knight on a quest to slay your bugs" },
-  { id: "robot", label: "Robot", detail: "Bolt: a pixel robot with a screen for a face" },
-  { id: "laptop", label: "Laptop", detail: "Lappy: its screen is its face, and it naps with the screen dimmed" },
-  { id: "controller", label: "Controller", detail: "Joy: Player 1, with buttons that light up" },
-  { id: "mug", label: "Coffee mug", detail: "Java: steaming, and asking for a refill" },
-  { id: "duck", label: "Rubber duck", detail: "Quackers: rubber-duck debugging, for real" },
-  { id: "cactus", label: "Cactus", detail: "Spike: prickly, and blooms when you fix things" },
-  { id: "floppy", label: "Floppy disk", detail: "Floppy: the save icon, in person" },
-  { id: "mouse", label: "Mouse", detail: "Click: a computer mouse with a wagging cable tail" },
-  { id: "headphones", label: "Headphones", detail: "Beats: bops along to your music" },
-  { id: "sticky", label: "Sticky note", detail: "Post: reminds you to write the tests" },
-];
+/** One of the shared pages in media/, with its placeholders filled in. */
+function page(extensionPath, file, extra = {}) {
+  const nonce = crypto.randomBytes(16).toString("base64");
+  const media = path.join(extensionPath, "media");
+  const html = fs.readFileSync(path.join(media, file), "utf8");
+  // Inlined as a script literal: escape "<" so the art can never close the script tag.
+  const pets = fs.readFileSync(path.join(media, "pets.json"), "utf8").replace(/</g, "\\u003c");
+  const csp = `default-src 'none'; style-src 'unsafe-inline'; script-src 'nonce-${nonce}';`;
+  const values = { csp, nonce, pets, ...extra };
+  return html.replace(/\{\{(\w+)\}\}/g, (match, key) => (key in values ? values[key] : match));
+}
 
 // Terminal commands worth a reaction, checked in order.
 const COMMANDS = [
@@ -121,16 +90,19 @@ function activate(context) {
     vscode.commands.executeCommand(`${VIEW_ID}.focus`);
   }));
   sub(vscode.commands.registerCommand("petabytes.hide", () => setEnabled(false)));
-  sub(vscode.commands.registerCommand("petabytes.choose", async () => {
-    const current = vscode.workspace.getConfiguration(SECTION).get("pet");
-    const choice = await vscode.window.showQuickPick(
-      PETS.map((p) => ({ ...p, description: p.id === current ? "current" : "" })),
-      { placeHolder: "Choose your pet" },
-    );
-    if (!choice) return;
-    await vscode.workspace.getConfiguration(SECTION).update("pet", choice.id, vscode.ConfigurationTarget.Global);
-    await setEnabled(true);
-    vscode.commands.executeCommand(`${VIEW_ID}.focus`);
+  // Choose a Pet: an editor tab with every pet as a card, a tab per set (media/picker.html).
+  let picker;
+  sub(vscode.commands.registerCommand("petabytes.choose", () => {
+    if (picker) { picker.reveal(); return; }
+    picker = vscode.window.createWebviewPanel("petabytes.picker", "Choose a Pet", vscode.ViewColumn.Active, { enableScripts: true, localResourceRoots: [] });
+    picker.iconPath = vscode.Uri.file(path.join(context.extensionPath, "media", "icon.png"));
+    picker.webview.html = page(context.extensionPath, "picker.html", { current: JSON.stringify(config().pet) });
+    picker.webview.onDidReceiveMessage(async (msg) => {
+      if (!msg || msg.type !== "choose") return;
+      await vscode.workspace.getConfiguration(SECTION).update("pet", msg.id, vscode.ConfigurationTarget.Global);
+      await setEnabled(true);
+    });
+    picker.onDidDispose(() => { picker = undefined; });
   }));
 
   sub(vscode.commands.registerCommand("petabytes.feed", async () => {
@@ -139,7 +111,10 @@ function activate(context) {
   }));
 
   sub(vscode.workspace.onDidChangeConfiguration((e) => {
-    if (e.affectsConfiguration(`${SECTION}.name`) || e.affectsConfiguration(`${SECTION}.pet`)) pet.post(config());
+    if (e.affectsConfiguration(`${SECTION}.name`) || e.affectsConfiguration(`${SECTION}.pet`)) {
+      pet.post(config());
+      if (picker) picker.webview.postMessage({ type: "current", pet: config().pet });
+    }
   }));
 
   // Typing: one message per burst; the pet keeps swimming fast for a moment on its own.

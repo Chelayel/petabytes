@@ -6,3 +6,4 @@
 # The VS Code extension gets its copy of the shared page at package time.
 vscode/media/pet.html
 vscode/media/pets.json
+vscode/media/picker.html

@@ -1,6 +1,5 @@
 package com.chelayel.petabytes
 
-import com.chelayel.petabytes.pet.PetCatalog
 import com.intellij.openapi.actionSystem.ActionGroup
 import com.intellij.openapi.actionSystem.ActionUpdateThread
 import com.intellij.openapi.actionSystem.AnAction
@@ -14,11 +13,10 @@ import com.intellij.openapi.project.DumbAwareToggleAction
 /** Tools → Petabytes: show or hide the pet, pick one, open the settings. */
 class PetMenu : ActionGroup() {
     private val children: Array<AnAction> by lazy {
-        val pets = PetCatalog.load().pets.values.map { ChoosePet(it.id, "${it.label} (${it.name})") }
         arrayOf(
-            FeedPet(), ShowPet(), Roam(),
+            FeedPet(), ChoosePet(), ShowPet(), Roam(),
             Separator.create("Where"), Position("right", "Right Edge (Up and Down)"), Position("bottom", "Bottom Edge"),
-            Separator.create("Pet"), *pets.toTypedArray(), Separator.create(), OpenSettings(),
+            Separator.create(), OpenSettings(),
         )
     }
 
@@ -60,15 +58,10 @@ class Position(private val id: String, label: String) : DumbAwareToggleAction(la
     }
 }
 
-class ChoosePet(private val id: String, label: String) : DumbAwareToggleAction(label) {
+/** Opens Choose a Pet, a card for every pet, a tab per set. */
+class ChoosePet : DumbAwareAction("Choose Pet…") {
     override fun getActionUpdateThread() = ActionUpdateThread.BGT
-    override fun isSelected(e: AnActionEvent) = PetSettings.get().state.pet == id
-    override fun setSelected(e: AnActionEvent, state: Boolean) {
-        val s = PetSettings.get().state
-        s.pet = id
-        s.enabled = true
-        PetService.refreshAll()
-    }
+    override fun actionPerformed(e: AnActionEvent) { ChoosePetDialog(e.project).show() }
 }
 
 class OpenSettings : DumbAwareAction("Settings…") {

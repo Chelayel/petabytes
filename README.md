@@ -53,10 +53,16 @@ In VS Code, the pet lives in a **Petabytes** panel in the Explorer:
 
 ![Pepe the pizza in the Petabytes panel in VS Code, eating a curly brace](docs/vscode-panel.png)
 
+In both editors, **Choose Pet** opens a picker with a tab per set (the IntelliJ one, then the VS Code one):
+
+![Choose a Pet in IntelliJ IDEA, showing the Gadgets set](docs/intellij-picker.png)
+
+![Choose a Pet in VS Code, showing the Gadgets set](docs/vscode-picker.png)
+
 | Editor | Folder | Where the pet lives | Choose, show or hide |
 | --- | --- | --- | --- |
 | VS Code | [`vscode/`](vscode/) | A **Petabytes** panel in the Explorer (VS Code doesn't let extensions draw over the editor) | **Petabytes: Choose Pet** / **Toggle Pet**, or the `petabytes.*` settings |
-| JetBrains (2024.2+) | [`intellij/`](intellij/) | Swimming up and down the editor's right edge, or along its bottom edge. Drag it to move it; it fades and lets clicks through when your cursor is right beside it | Right-click the pet or **Tools → Petabytes**; position, size and name in **Settings → Tools → Petabytes** |
+| JetBrains (2024.2+) | [`intellij/`](intellij/) | Swimming up and down the editor's right edge, or along its bottom edge. Drag it to move it; it fades and lets clicks through when your cursor is right beside it | Right-click the pet or **Tools → Petabytes** → **Choose Pet…**; position, size and name in **Settings → Tools → Petabytes** |
 | Mac (macOS 13+) | [`mac/`](mac/) | Standing on top of the Dock, or floating wherever you drag it; or, after **Move to Dock**, inside its own Dock icon | Right-click the pet, or the paw in the menu bar (the Dock icon, once moved there) |
 
 ## On your Mac

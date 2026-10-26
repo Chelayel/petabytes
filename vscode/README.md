@@ -29,7 +29,7 @@ Small companions with a big appetite. A pet lives in a **Petabytes** panel in yo
 
 ## Choose, show or hide
 
-- Command Palette → **Petabytes: Choose Pet**, **Feed Pet**, **Toggle Pet**, **Show Pet** or **Hide Pet**
+- Command Palette → **Petabytes: Choose Pet** (a picker with a tab per set), **Feed Pet**, **Toggle Pet**, **Show Pet** or **Hide Pet**
 - The buttons on the panel's title bar
 - The settings below
 

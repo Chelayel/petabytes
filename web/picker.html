@@ -1,0 +1,129 @@
+<!doctype html>
+<!--
+  Petabytes: Choose a Pet, the VS Code picker. Draws every pet in web/pets.json as a card, a tab per set;
+  clicking a card tells the extension. The host fills in the double-brace placeholders: the content security
+  policy, the script nonce, the pets and the current pet's id (as JSON).
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="{{csp}}">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  body {
+    margin: 0; padding: 20px 24px;
+    color: var(--vscode-foreground, #E4E4E7);
+    background: var(--vscode-editor-background, #1A1D21);
+    font: 13px/1.4 var(--vscode-font-family, -apple-system, "Segoe UI", sans-serif);
+  }
+  h1 { font-size: 20px; font-weight: 600; margin: 0 0 12px; }
+  .tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--vscode-panel-border, #2A2E33); margin-bottom: 16px; }
+  .tab {
+    background: none; border: none; border-bottom: 2px solid transparent; padding: 8px 12px; margin-bottom: -1px;
+    color: var(--vscode-descriptionForeground, #A1A1AA); font: inherit; cursor: pointer;
+  }
+  .tab:hover { color: var(--vscode-foreground, #E4E4E7); }
+  .tab[aria-selected="true"] { color: var(--vscode-foreground, #E4E4E7); border-bottom-color: var(--vscode-focusBorder, #3B82F6); }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; max-width: 900px; }
+  .card {
+    display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 12px 8px 10px;
+    background: var(--vscode-editorWidget-background, #24272B); color: inherit; font: inherit;
+    border: 2px solid transparent; border-radius: 12px; cursor: pointer;
+  }
+  .card:hover { border-color: var(--vscode-widget-border, #3F444A); }
+  .card:focus-visible { outline: 1px solid var(--vscode-focusBorder, #3B82F6); outline-offset: 2px; }
+  .card[aria-pressed="true"] { border-color: var(--vscode-focusBorder, #3B82F6); }
+  .card svg { width: 120px; height: 72px; overflow: visible; }
+  .name { font-weight: 600; }
+  .kind { font-size: 12px; color: var(--vscode-descriptionForeground, #A1A1AA); }
+  .hint { margin-top: 16px; color: var(--vscode-descriptionForeground, #A1A1AA); }
+</style>
+</head>
+<body>
+<h1>Choose a Pet</h1>
+<div class="tabs" role="tablist" id="tabs"></div>
+<div class="grid" id="grid"></div>
+<p class="hint">Click one to switch pets. To rename it, set <code>petabytes.name</code>.</p>
+
+<script nonce="{{nonce}}">
+(() => {
+  const DATA = {{pets}};
+  const vscode = acquireVsCodeApi();
+  const NS = "http://www.w3.org/2000/svg";
+  const SETS = [["tide", "Tide"], ["home", "Home"], ["snacks", "Snacks"], ["games", "Games"], ["gadgets", "Gadgets"]];
+  const $ = (id) => document.getElementById(id);
+  let current = {{current}};
+  let set = (DATA.pets[current] || {}).set || "tide";
+
+  // The same shapes as pet.html, standing still with eyes open.
+  function shape(part) {
+    let el;
+    if (part.path) { el = document.createElementNS(NS, "path"); el.setAttribute("d", part.path); }
+    else if (part.circle) { el = document.createElementNS(NS, "circle"); const [cx, cy, r] = part.circle; el.setAttribute("cx", cx); el.setAttribute("cy", cy); el.setAttribute("r", r); }
+    else { el = document.createElementNS(NS, "ellipse"); const [cx, cy, rx, ry] = part.ellipse; el.setAttribute("cx", cx); el.setAttribute("cy", cy); el.setAttribute("rx", rx); el.setAttribute("ry", ry); }
+    el.setAttribute("fill", part.fill || "none");
+    if (part.stroke) { el.setAttribute("stroke", part.stroke); el.setAttribute("stroke-width", part.sw || 1); el.setAttribute("stroke-linecap", "round"); el.setAttribute("stroke-linejoin", "round"); }
+    if (part.opacity != null) el.setAttribute("opacity", part.opacity);
+    return el;
+  }
+
+  function picture(pet) {
+    const svg = document.createElementNS(NS, "svg");
+    svg.setAttribute("aria-hidden", "true");
+    const art = document.createElementNS(NS, "g");
+    for (const part of pet.parts) {
+      if (!part.when || part.when.includes("eyesOpen")) art.appendChild(shape(part));
+    }
+    svg.appendChild(art);
+    return svg;
+  }
+
+  function render() {
+    const tabs = $("tabs");
+    tabs.textContent = "";
+    for (const [id, title] of SETS) {
+      if (!DATA.order.some((p) => DATA.pets[p].set === id)) continue;
+      const tab = document.createElement("button");
+      tab.className = "tab";
+      tab.setAttribute("role", "tab");
+      tab.setAttribute("aria-selected", id === set);
+      tab.textContent = title;
+      tab.addEventListener("click", () => { set = id; render(); });
+      tabs.appendChild(tab);
+    }
+    const grid = $("grid");
+    grid.textContent = "";
+    for (const id of DATA.order.filter((p) => DATA.pets[p].set === set)) {
+      const pet = DATA.pets[id];
+      const card = document.createElement("button");
+      card.className = "card";
+      card.setAttribute("aria-pressed", id === current);
+      card.setAttribute("aria-label", `${pet.name} the ${pet.label.toLowerCase()}`);
+      const svg = picture(pet);
+      const name = document.createElement("span");
+      name.className = "name";
+      name.textContent = pet.name;
+      const kind = document.createElement("span");
+      kind.className = "kind";
+      kind.textContent = pet.label;
+      card.append(svg, name, kind);
+      card.addEventListener("click", () => {
+        current = id;
+        render();
+        vscode.postMessage({ type: "choose", id });
+      });
+      grid.appendChild(card);
+      // Fit the picture to the art, now that it's in the page and can be measured.
+      const box = svg.firstChild.getBBox();
+      svg.setAttribute("viewBox", `${box.x - 2} ${box.y - 2} ${box.width + 4} ${box.height + 4}`);
+    }
+  }
+
+  window.addEventListener("message", (e) => {
+    if (e.data && e.data.type === "current") { current = e.data.pet; render(); }
+  });
+  render();
+})();
+</script>
+</body>
+</html>

@@ -52,6 +52,8 @@ class Pet(
     val poses: Map<String, Map<String, Pose>>,
     val groupMotion: Map<String, GroupMotion>,
     val lines: Map<String, List<String>>,
+    /** tide, home, snacks, games or gadgets: the tab it's under in Choose a Pet. */
+    val set: String = "tide",
 )
 
 /** What an IDE event (by key) makes the pet do; see REACTIONS in tools/pets.py. */
@@ -109,7 +111,7 @@ class PetCatalog(
             return Pet(
                 id, m["label"] as String, m["name"] as String, m["flip"] as Boolean, m["floor"] as Boolean,
                 (m["speed"] as Double), bob[0], bob[1], accent, mouth[0], mouth[1], head[0], head[1],
-                parts, poses, motion, stringLists(m["lines"]),
+                parts, poses, motion, stringLists(m["lines"]), (m["set"] as String?) ?: "tide",
             )
         }
 

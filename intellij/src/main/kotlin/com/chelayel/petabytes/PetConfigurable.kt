@@ -8,17 +8,27 @@ import com.intellij.ui.dsl.builder.bindSelected
 import com.intellij.ui.dsl.builder.bindText
 import com.intellij.ui.dsl.builder.panel
 import com.intellij.ui.dsl.listCellRenderer.textListCellRenderer
+import javax.swing.JLabel
+import javax.swing.JTextField
 
 /** Settings → Tools → Petabytes. */
 class PetConfigurable : BoundConfigurable("Petabytes") {
     override fun createPanel(): DialogPanel {
         val settings = PetSettings.get().state
-        val pets = PetCatalog.load().pets.values.toList()
+        val catalog = PetCatalog.load()
+        fun chosen() = catalog.pet(settings.pet).let { "${it.name} the ${it.label.lowercase()}" }
+        lateinit var chosenLabel: JLabel
+        lateinit var nameField: JTextField
         return panel {
             row { checkBox("Show a pet along the bottom of the editor").bindSelected(settings::enabled) }
             row("Pet:") {
-                comboBox(pets.map { it.id }, textListCellRenderer { id -> pets.find { it.id == id }?.let { "${it.label} (${it.name})" } })
-                    .bindItem({ settings.pet ?: "turtle" }, { settings.pet = it ?: "turtle" })
+                chosenLabel = label(chosen()).component
+                button("Choose…") {
+                    ChoosePetDialog(null).show()
+                    chosenLabel.text = chosen()
+                    // Choosing a pet resets its name; don't let Apply put the old one back.
+                    nameField.text = settings.name ?: ""
+                }
             }
             row("Where:") {
                 comboBox(listOf("right", "bottom"), textListCellRenderer { if (it == "bottom") "Bottom edge of the editor" else "Right edge, swimming up and down" })
@@ -31,8 +41,8 @@ class PetConfigurable : BoundConfigurable("Petabytes") {
                     .bindItem({ settings.size ?: "medium" }, { settings.size = it ?: "medium" })
             }
             row("Name:") {
-                textField().bindText({ settings.name ?: "" }, { settings.name = it.trim() })
-                    .comment("Leave empty for the pet's own name.")
+                nameField = textField().bindText({ settings.name ?: "" }, { settings.name = it.trim() })
+                    .comment("Leave empty for the pet's own name.").component
             }
         }
     }
