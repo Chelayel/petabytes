@@ -12,6 +12,10 @@ Small companions with a big appetite. They keep you company while you code, in V
 
 ![Shelly swimming faster while you type, worrying about an error and celebrating the fix; Byte the cat hiding from failed tests; Patty the burger eating a curly brace; Sir Pix the knight napping and waking up](docs/demo.gif)
 
+[![Watch the 50-second video: the pets in your editor and on your Mac](docs/petabytes-video.png)](docs/petabytes-video.mp4)
+
+**▶ [Watch the 50-second video](docs/petabytes-video.mp4)**: the pets in your editor, then on your Mac.
+
 ![All thirty-five pets](docs/pets.png)
 
 ## Which one do I need?
