@@ -49,23 +49,9 @@ final class PetWindow: NSPanel {
         orderFrontRegardless() // moves it to this Space
     }
 
-    /** Whether the app in front has a window covering a whole screen: full screen, or a game or video player. */
+    /** Steps aside while an app is full screen (see FullScreen), if Hide in Full Screen is on. */
     func checkFullScreen() {
-        guard Settings.hideInFullScreen, let front = NSWorkspace.shared.frontmostApplication,
-              front.processIdentifier != ProcessInfo.processInfo.processIdentifier else {
-            fullScreenApp = false
-            return
-        }
-        let windows = CGWindowListCopyWindowInfo([.optionOnScreenOnly, .excludeDesktopElements], kCGNullWindowID) as? [[String: Any]] ?? []
-        // A full-screen window spans the screen's width and its height below the notch, if it has one.
-        let screens = NSScreen.screens.map { ($0.frame.width, $0.frame.height - $0.safeAreaInsets.top) }
-        fullScreenApp = windows.contains { window in
-            guard window[kCGWindowOwnerPID as String] as? pid_t == front.processIdentifier,
-                  window[kCGWindowLayer as String] as? Int == 0,
-                  let raw = window[kCGWindowBounds as String] as? NSDictionary,
-                  let bounds = CGRect(dictionaryRepresentation: raw) else { return false }
-            return screens.contains { width, height in bounds.width >= width && bounds.height >= height - 1 }
-        }
+        fullScreenApp = Settings.hideInFullScreen && FullScreen.appInFront()
     }
 
     init() {

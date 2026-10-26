@@ -21,8 +21,12 @@ final class DockSpeech {
         panel.ignoresMouseEvents = true
         panel.hidesOnDeactivate = false
         panel.level = NSWindow.Level(rawValue: Int(CGWindowLevelForKey(.dockWindow)) + 1)
-        panel.collectionBehavior = [.canJoinAllSpaces, .stationary, .ignoresCycle]
+        // Not on every Space: shown on the current one when there's something to say, never in a full-screen one.
+        panel.collectionBehavior = [.moveToActiveSpace, .stationary, .ignoresCycle]
         panel.contentView = host
+        NSWorkspace.shared.notificationCenter.addObserver(forName: NSWorkspace.activeSpaceDidChangeNotification, object: nil, queue: .main) { [weak self] _ in
+            self?.hide()
+        }
     }
 
     static var allowed: Bool { AXIsProcessTrusted() }
@@ -33,10 +37,10 @@ final class DockSpeech {
         AXIsProcessTrustedWithOptions([prompt: true] as CFDictionary)
     }
 
-    /** Shows the line above the icon; false when it can't (no permission, switched off, or no icon to point at). */
+    /** Shows the line above the icon; false when it can't (no permission, switched off, an app full screen, or no icon). */
     @discardableResult
     func say(_ text: String) -> Bool {
-        guard Settings.talkInDock, Self.allowed, let tile = Self.tileFrame(),
+        guard Settings.talkInDock, Self.allowed, !(Settings.hideInFullScreen && FullScreen.appInFront()), let tile = Self.tileFrame(),
               let screen = NSScreen.screens.first(where: { $0.frame.intersects(tile) }) else { return false }
         let frame = screen.frame
         // Which edge the Dock is on decides where the bubble goes and which way its tail points.

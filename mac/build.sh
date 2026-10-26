@@ -45,9 +45,16 @@ if [ -n "$p12" ]; then
   security unlock-keychain -p "$keychain_password" "$keychain"
   security import "$p12" -k "$keychain" -P "$password" -T /usr/bin/codesign >/dev/null
   security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "$keychain_password" "$keychain" >/dev/null
+  # Some macOS versions' codesign only looks in the keychain search list, so add it there while signing,
+  # and put the list back however the build ends.
+  searched=$(security list-keychains -d user | tr -d '"')
+  trap 'security list-keychains -d user -s $searched; security delete-keychain "$keychain" 2>/dev/null || true' EXIT
+  security list-keychains -d user -s "$keychain" $searched
   identity=$(security find-identity -p codesigning "$keychain" | awk '/\)/ { print $2; exit }')
   codesign --force --sign "$identity" --keychain "$keychain" "$app"
+  security list-keychains -d user -s $searched
   security delete-keychain "$keychain"
+  trap - EXIT
   [ -n "${MAC_SIGNING_P12:-}" ] && rm -f build/signing.p12
 else
   codesign --force --sign - "$app"
