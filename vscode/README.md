@@ -41,7 +41,7 @@ Small companions with a big appetite. A pet lives in a **Petabytes** panel in yo
 | `petabytes.pet` | `"turtle"` | `turtle`, `jellyfish`, `octopus`, `crab`, `pufferfish`, `whale`, `clownfish`, `seahorse`, `shark`, `dolphin`, `angelfish`, `tang`, `retriever`, `spitz`, `cat`, `bunny`, `hamster`, `burger`, `sushi`, `pizza`, `donut`, `taco`, `slime`, `ghost`, `knight`, `robot`, `laptop`, `controller`, `mug`, `duck`, `cactus`, `floppy`, `mouse`, `headphones` or `sticky` |
 | `petabytes.name` | `""` | Your pet's name; empty for its own (Shelly, Bloop, Inky, Pinchy, Puff, Blue, Clem, Sandy, Finn, Splash, Angie, Indigo, Biscuit, Loopee, Byte, Clover, Nugget, Patty, Nori, Pepe, Sprinkles, Tuesday, Squish, Boo, Sir Pix, Bolt, Lappy, Joy, Java, Quackers, Spike, Floppy, Click, Beats or Post) |
 
-Works with any theme. In [JetBrains IDEs](https://plugins.jetbrains.com/search?search=petabytes) the pet swims along the editor's right edge.
+Works with any theme. In [JetBrains IDEs](https://plugins.jetbrains.com/plugin/35446-petabytes) the pet swims along the editor's right edge.
 
 There's also [a Mac app](https://github.com/Chelayel/petabytes#on-your-mac) whose pet walks along your Dock and reacts to your Mac (the app in front, battery, Wi-Fi, screenshots). It's separate: it can't see your code, so keep this extension for that.
 
