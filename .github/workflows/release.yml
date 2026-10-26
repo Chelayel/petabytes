@@ -20,6 +20,8 @@
 #   AZURE_CLIENT_ID, AZURE_TENANT_ID  VS Code Marketplace through a managed identity
 #                                instead, trusted for the marketplace-publish environment
 #   OVSX_PAT                     Open VSX, optional
+#   MAC_SIGNING_P12, MAC_SIGNING_PASSWORD  the Mac app's self-signed certificate (base64 .p12) and its
+#                                password; the same one in ~/.config/petabytes signs local builds
 name: release
 
 on:
@@ -97,13 +99,18 @@ jobs:
           name: pets
           path: dist/*
 
-  # Unsigned for now (signed ad hoc): the first launch needs right-click > Open.
+  # Signed with the project's own certificate when the secrets are set, so macOS sees every version as the
+  # same app and keeps its permissions across updates (ad hoc otherwise). It isn't notarized: the first launch
+  # needs right-click > Open.
   mac:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v7
       - name: Mac app
         working-directory: mac
+        env:
+          MAC_SIGNING_P12: ${{ secrets.MAC_SIGNING_P12 }}
+          MAC_SIGNING_PASSWORD: ${{ secrets.MAC_SIGNING_PASSWORD }}
         run: |
           version="${GITHUB_REF_NAME#v}"
           ./build.sh ${{ startsWith(github.ref, 'refs/tags/v') && '"$version"' || '' }}
