@@ -452,6 +452,62 @@ PETS["retriever"] = {
             "eatCurly": ["Crunchy! Like kibble.", "Mmm, curly braces!"]},
 }
 
+# ---- German Spitz -------------------------------------------------------
+def fluff(cx, cy, rx, ry, n=14, puff=1.2):
+    """A fluffy, scalloped ellipse: n tufts bulging out between points on the ellipse."""
+    pts = [(cx + rx * math.cos(2 * math.pi * i / n), cy + ry * math.sin(2 * math.pi * i / n)) for i in range(n)]
+    d = f"M{pts[0][0]:.1f} {pts[0][1]:.1f}"
+    for i in range(n):
+        a = 2 * math.pi * (i + 0.5) / n
+        nx, ny = pts[(i + 1) % n]
+        d += f" Q{cx + rx * puff * math.cos(a):.1f} {cy + ry * puff * math.sin(a):.1f} {nx:.1f} {ny:.1f}"
+    return d + "Z"
+
+seye, snow, snow_line, snow_shade = "#111827", "#FFFFFF", "#CBD5E1", "#F1F5F9"
+def short_leg(x, y, dx, color, ph):
+    """A Spitz's short, fluffy leg: a soft outline under a white stroke, paddling quickly."""
+    d = f"M{x} {y} l{dx} 13"
+    return [p(d, "legs", stroke=snow_line, sw=7.5, pivot=[x, y], rot=[16, 0.5, ph]),
+            p(d, "legs", stroke=color, sw=5, pivot=[x, y], rot=[16, 0.5, ph])]
+PETS["spitz"] = {
+  "label": "German Spitz", "name": "Loopee", "set": "home", "flip": True, "floor": True, "speed": 1.2,
+  "bob": [1.5, 0.4], "glow": "rgba(226,232,240,0.5)", "mouth": [103, 41], "head": [86, 16],
+  "parts": [
+    *short_leg(48, 58, -1, snow_shade, 0.5), *short_leg(73, 58, 1, snow_shade, 0),
+    # The plumed tail, curled up over the back.
+    p(fluff(40, 32, 13, 11, 12, 1.25), "tail", fill=snow, stroke=snow_line, sw=1.4, pivot=[44, 44], rot=[12, 0.5, 0]),
+    p(fluff(58, 52, 22, 13, 16, 1.18), "body", fill=snow, stroke=snow_line, sw=1.4),
+    *short_leg(54, 60, 1, snow, 0), *short_leg(67, 60, -1, snow, 0.5),
+    # Head: a ruff of fur, small pointed ears and a fox-like muzzle.
+    p("M77 24 l2 -11 l8 8z", "face", fill=snow, stroke=snow_line, sw=1.3), p("M79.5 20 l1 -5 l3.5 3.5z", "face", fill="#F9A8D4"),
+    p("M90 21 l6 -9 l2 11z", "face", fill=snow, stroke=snow_line, sw=1.3), p("M92.5 19 l3 -4 l1 5z", "face", fill="#F9A8D4"),
+    p(fluff(86, 33, 14, 13, 13, 1.2), "face", fill=snow, stroke=snow_line, sw=1.4),
+    p("M95 34 q8 1 10 5 q-3 4 -11 3z", "face", fill=snow, stroke=snow_line, sw=1.2),
+    c(104.5, 38.5, 2.2, "face", fill=seye),
+    *eye_set(85, 31, 2.3, "face", seye), *eye_set(94, 31, 2.1, "face", seye),
+    p("M99 42 q2 2 4 0", "face", stroke=seye, sw=1.1),
+    p("M100 43 q1 5 3 4 q1.5 -2 0 -4.5z", "face", fill="#F472B6", when=["eyesHappy"]),
+    c(82, 37, 2.4, "face", fill="#FBCFE8", opacity=0.8),
+    p("M81 25.5 l6 1.5 M97 25.5 l-5 1.5", "face", stroke=seye, sw=1.3, when=["worried"]),
+    sweat(76, 18),
+    *lens(116, 50),
+  ],
+  "poses": {
+    "hiding":   {"face": {"tx": -6, "ty": 6, "s": 0.85, "p": [84, 40]}, "tail": {"s": 0.7, "p": [44, 40]}},
+    "sleeping": {"body": {"ty": 8}, "face": {"tx": -2, "ty": 11, "r": 10, "p": [84, 40]}, "legs": {"s": 0.3, "p": [60, 74]}, "tail": {"ty": 8}},
+    "curious":  {"face": {"r": -14, "p": [84, 40]}},
+  },
+  "lines": {"click": ["Yip!", "Floof incoming!", "I'm small but mighty.", "*zoomies*"],
+            "pet": ["*tail-wag tornado*", "More! More!", "*happy little yips*"],
+            "yikes": ["*yips at the error*", "Yip yip! Go away, bug!"],
+            "typing": ["*zoomies around the keyboard*", "Yip! Typing!", "Go go go!"],
+            "feed": ["A snack? For me?!", "Yip! Food!"],
+            "eatCurly": ["Crunchy! Yip!", "Mmm, curly braces!"],
+            "fixed": ["Yip yip! You did it!", "All clear! Zoomies time."],
+            "hungry": ["*puppy eyes* Snack?", "I'm small, but I'm hungry."],
+            "file": ["*sniff sniff*", "Ooh, a new file."]},
+}
+
 # ---- Cat ----------------------------------------------------------------
 keye, grey, grey_dark = "#1F2937", "#9CA3AF", "#6B7280"
 PETS["cat"] = {

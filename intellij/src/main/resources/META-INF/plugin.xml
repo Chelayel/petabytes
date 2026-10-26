@@ -9,7 +9,7 @@
         you do. Pick a sea creature from the <b>Tide</b> set, a pet from the <b>Home</b> set, a <b>Snack</b>, a pixel character from the <b>Games</b> set, or a desk <b>Gadget</b>: <b>Shelly</b> the sea turtle, <b>Bloop</b> the jellyfish, <b>Inky</b> the octopus,
         <b>Pinchy</b> the crab, <b>Puff</b> the pufferfish, <b>Blue</b> the whale, <b>Clem</b> the clownfish,
         <b>Sandy</b> the seahorse, <b>Finn</b> the shark, <b>Splash</b> the dolphin, <b>Angie</b> the angelfish
-        <b>Indigo</b> the blue tang, <b>Biscuit</b> the golden retriever, <b>Byte</b> the cat, <b>Clover</b> the bunny
+        <b>Indigo</b> the blue tang, <b>Biscuit</b> the golden retriever, <b>Loopee</b> the German Spitz, <b>Byte</b> the cat, <b>Clover</b> the bunny
         <b>Nugget</b> the hamster, <b>Patty</b> the burger, <b>Nori</b> the sushi, <b>Pepe</b> the pizza,
         <b>Sprinkles</b> the donut, <b>Tuesday</b> the taco, <b>Squish</b> the slime, <b>Boo</b> the ghost,
         <b>Sir Pix</b> the knight, <b>Bolt</b> the robot, <b>Lappy</b> the laptop, <b>Joy</b> the controller,
@@ -49,6 +49,7 @@
     ]]></description>
 
     <change-notes><![CDATA[
+        <p><b>1.4.0</b> — Meet Loopee, a small, fluffy white German Spitz, in the Home set.</p>
         <p><b>1.3.0</b> — Choose a Pet: a picker with a card for every pet and a tab per set, instead of a 34-item menu. Right-click the pet or use Tools → Petabytes → Choose Pet…, or the Choose… button in the settings.</p>
         <p><b>1.2.0</b> — A new set, Gadgets: Lappy the laptop, Joy the controller, Java the coffee mug, Quackers the rubber duck (who helps you debug), Spike the cactus, Floppy the floppy disk, Click the mouse, Beats the headphones and Post the sticky note.</p>
         <p><b>1.1.1</b> — With nothing to do, the pet wanders along its whole edge instead of staying near one spot.</p>

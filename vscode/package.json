@@ -2,7 +2,7 @@
   "name": "petabytes",
   "displayName": "Petabytes",
   "description": "Small companions with a big appetite. Sea creatures that live in your Explorer and react to what you do: they swim faster while you type, celebrate saves, commits and passing tests, notice the terminal and your AI assistant, eat the curly braces you feed them, and nap when you're away.",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "publisher": "chelayel",
   "author": { "name": "Chelayel", "url": "https://www.chelayel.com" },
   "license": "MIT",
@@ -131,6 +131,7 @@
             "angelfish",
             "tang",
             "retriever",
+            "spitz",
             "cat",
             "bunny",
             "hamster",
@@ -167,6 +168,7 @@
             "Angie the angelfish",
             "Indigo the blue tang",
             "Biscuit the golden retriever",
+            "Loopee the German Spitz",
             "Byte the cat",
             "Clover the bunny",
             "Nugget the hamster",
@@ -194,7 +196,7 @@
         "petabytes.name": {
           "type": "string",
           "default": "",
-          "description": "Your pet's name. Leave empty for its own (Shelly, Bloop, Inky, Pinchy, Puff, Blue, Clem, Sandy, Finn, Splash, Angie, Indigo, Biscuit, Byte, Clover, Nugget, Patty, Nori, Pepe, Sprinkles, Tuesday, Squish, Boo, Sir Pix, Bolt, Lappy, Joy, Java, Quackers, Spike, Floppy, Click, Beats or Post)."
+          "description": "Your pet's name. Leave empty for its own (Shelly, Bloop, Inky, Pinchy, Puff, Blue, Clem, Sandy, Finn, Splash, Angie, Indigo, Biscuit, Loopee, Byte, Clover, Nugget, Patty, Nori, Pepe, Sprinkles, Tuesday, Squish, Boo, Sir Pix, Bolt, Lappy, Joy, Java, Quackers, Spike, Floppy, Click, Beats or Post)."
         }
       }
     }
