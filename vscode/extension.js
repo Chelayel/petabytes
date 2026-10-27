@@ -3,6 +3,7 @@ const vscode = require("vscode");
 const crypto = require("crypto");
 const fs = require("fs");
 const path = require("path");
+const os = require("os");
 
 const VIEW_ID = "petabytes.pet";
 const SECTION = "petabytes";
@@ -72,6 +73,39 @@ function errorCount(uri) {
     .filter((d) => d.severity === vscode.DiagnosticSeverity.Error).length;
 }
 
+const DAY = 24 * 60 * 60 * 1000;
+
+/**
+ After a week with the pet, asks once for a rating or a coffee. Not Now asks again in a month; rating, the coffee,
+ or Don't Ask Again, and it never asks again. VS Code rates on its Marketplace; Cursor, VSCodium and friends on Open VSX.
+ */
+async function askForSupport(context) {
+  const state = context.globalState;
+  const first = state.get("firstSeen") || Date.now();
+  if (!state.get("firstSeen")) await state.update("firstSeen", first);
+  const due = state.get("askForSupportAfter", first + 7 * DAY);
+  if (Date.now() < due || !vscode.window.state.focused) return;
+
+  const { pet, name } = config();
+  let petName = name;
+  try {
+    petName ||= JSON.parse(fs.readFileSync(path.join(context.extensionPath, "media", "pets.json"), "utf8")).pets[pet].name;
+  } catch {
+    petName ||= "your pet";
+  }
+  const rate = "Rate Petabytes", coffee = "Buy Me a Coffee", later = "Not Now", never = "Don't Ask Again";
+  const answer = await vscode.window.showInformationMessage(
+    `Enjoying ${petName}? Petabytes is free and made by one person: a rating helps others find it, and a coffee keeps new pets coming.`,
+    rate, coffee, later, never);
+  const reviews = vscode.env.uriScheme === "vscode" || vscode.env.uriScheme === "vscode-insiders"
+    ? "https://marketplace.visualstudio.com/items?itemName=chelayel.petabytes&ssr=false#review-details"
+    : "https://open-vsx.org/extension/chelayel/petabytes/reviews";
+  if (answer === rate) vscode.env.openExternal(vscode.Uri.parse(reviews));
+  if (answer === coffee) vscode.env.openExternal(vscode.Uri.parse("https://buymeacoffee.com/chelayel"));
+  // Closing the message without an answer counts as Not Now.
+  await state.update("askForSupportAfter", answer && answer !== later ? Number.MAX_SAFE_INTEGER : Date.now() + 30 * DAY);
+}
+
 function activate(context) {
   const pet = new PetView(context.extensionPath);
   const sub = (d) => context.subscriptions.push(d);
@@ -79,6 +113,12 @@ function activate(context) {
     vscode.workspace.getConfiguration(SECTION).update("enabled", value, vscode.ConfigurationTarget.Global);
 
   sub(vscode.window.registerWebviewViewProvider(VIEW_ID, pet));
+
+  // Not as the window opens: a few minutes in, then every few hours for windows left open for days.
+  const ask = () => askForSupport(context).catch(() => {});
+  const firstAsk = setTimeout(ask, 3 * 60 * 1000);
+  const laterAsks = setInterval(ask, 6 * 60 * 60 * 1000);
+  sub({ dispose: () => { clearTimeout(firstAsk); clearInterval(laterAsks); } });
 
   sub(vscode.commands.registerCommand("petabytes.toggle", async () => {
     const next = !vscode.workspace.getConfiguration(SECTION).get("enabled");
@@ -141,6 +181,20 @@ function activate(context) {
       if (change.text.length >= 120 && change.text.split("\n").length >= 4) pet.post({ type: "react", key: "aiBig" });
     }
   }));
+
+  // What Claude Code is doing, from the Petabytes add-on for Claude Code: it writes its latest event to this file,
+  // which every window checks. Only fresh news counts: not an event from before this window looked.
+  const claudeEvents = path.join(os.homedir(), ".petabytes", "claude-code.json");
+  fs.watchFile(claudeEvents, { interval: 800 }, (now, before) => {
+    if (now.mtimeMs <= before.mtimeMs) return;
+    try {
+      const { key, at } = JSON.parse(fs.readFileSync(claudeEvents, "utf8"));
+      if (typeof key === "string" && Date.now() - at < 15000) pet.post({ type: "react", key });
+    } catch {
+      // Half-written, or not there any more: the next event will do.
+    }
+  });
+  sub({ dispose: () => fs.unwatchFile(claudeEvents) });
 
   // AI edits: Copilot's chat and agent edits open documents under their own schemes.
   sub(vscode.workspace.onDidOpenTextDocument((doc) => {

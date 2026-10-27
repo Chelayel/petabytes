@@ -19,6 +19,7 @@ Small companions with a big appetite. A pet lives in a **Petabytes** panel in yo
 - **Running the app, builds, tests:** "It's alive!", "Compiling, hold on.", "Fingers crossed!"
 - **The terminal:** notices when you open it, and reacts to `git push`, installs, tests and risky commands like `rm -rf`
 - **Copilot:** notices AI edits and big blocks of code appearing at once
+- **Claude Code:** with the [Petabytes add-on for Claude Code](https://github.com/Chelayel/petabytes#with-claude-code), reacts to what Claude is doing: curious when it reads, excited when it edits, fingers crossed for tests, "Done!" when it finishes
 - **Commits and branches:** celebrates a commit, notices a new branch
 - **Late nights, mornings, long sessions:** says so, and suggests a stretch
 - **Clicked / double-clicked:** does a spin / shows hearts

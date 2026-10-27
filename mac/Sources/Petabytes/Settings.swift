@@ -55,6 +55,31 @@ enum Settings {
         set { defaults.set(newValue, forKey: "hideInFullScreen") }
     }
 
+    /** When the app last asked GitHub for a newer version. */
+    static var lastUpdateCheck: Date {
+        get { defaults.object(forKey: "lastUpdateCheck") as? Date ?? .distantPast }
+        set { defaults.set(newValue, forKey: "lastUpdateCheck") }
+    }
+
+    /** The newest version the app has already offered unasked, so the daily check offers each one once. */
+    static var offeredUpdate: String {
+        get { defaults.string(forKey: "offeredUpdate") ?? "" }
+        set { defaults.set(newValue, forKey: "offeredUpdate") }
+    }
+
+    /** When the app first ran, set on first read. */
+    static var firstRun: Date {
+        if let date = defaults.object(forKey: "firstRun") as? Date { return date }
+        defaults.set(Date(), forKey: "firstRun")
+        return Date()
+    }
+
+    /** When to next ask for a star or a coffee; distantFuture once answered or turned down for good. */
+    static var askForSupportAfter: Date? {
+        get { defaults.object(forKey: "askForSupportAfter") as? Date }
+        set { defaults.set(newValue, forKey: "askForSupportAfter") }
+    }
+
     static var visible: Bool {
         get { defaults.object(forKey: "visible") as? Bool ?? true }
         set { defaults.set(newValue, forKey: "visible") }

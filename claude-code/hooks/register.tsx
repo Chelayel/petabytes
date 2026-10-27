@@ -116,8 +116,17 @@ const hidden = atom({ plugin: 'petabytes', key: 'hidden' } as const, true)
 /** Where the Petabytes Mac app listens for what Claude is doing (ClaudeCodeLink in the app). */
 const MAC_APP = 'http://127.0.0.1:47365/'
 
-/** Tells the Mac app; it decides whether its pet reacts (cooldowns, chance) and says what. Never fails. */
+/**
+ Tells the Mac app, and leaves the news in ~/.petabytes/claude-code.json for the pets in VS Code and IntelliJ,
+ which watch that file. Each pet decides whether it reacts (cooldowns, chance) and says what. Never fails.
+ */
 async function tell($: EngineInterface, key: string) {
+  try {
+    const home = await $.env.get('HOME')
+    if (home) await $.fs.write(`${home}/.petabytes/claude-code.json`, JSON.stringify({ key, at: Date.now() }))
+  } catch {
+    // Nowhere to write: the IDE pets just don't hear about it.
+  }
   try {
     await $.http.fetch(MAC_APP, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ type: 'react', key }) })
   } catch {

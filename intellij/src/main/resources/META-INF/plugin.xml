@@ -26,6 +26,7 @@
             <li><b>Errors fixed</b> — celebrates</li>
             <li><b>Run configurations</b> — spins when the app starts, cheers when a run passes, hides when it fails</li>
             <li><b>AI assistants</b> — notices when you open Copilot, AI Assistant, Junie and friends, and when a big block of code appears at once</li>
+            <li><b>Claude Code</b> — with the Petabytes add-on for Claude Code, reacts to what Claude is doing: reading, editing, running tests, done</li>
             <li><b>The terminal</b> — says hello when you open it</li>
             <li><b>Branches and undo</b> — notices a new branch, and a run of undos</li>
             <li><b>Late nights, mornings, long sessions</b> — says so, and suggests a stretch</li>
@@ -49,6 +50,7 @@
     ]]></description>
 
     <change-notes><![CDATA[
+        <p><b>1.6.0</b> — The pet reacts to what Claude Code is doing (with the Petabytes add-on for Claude Code), and notices more AI tools: Copilot, AI Assistant, Junie, Gemini, Codeium, Tabnine, Amazon Q and more. After a week, it asks once whether you'd rate it.</p>
         <p><b>1.5.0</b> — No changes in the editor: the Mac app's pet can now react to what Claude Code is doing.</p>
         <p><b>1.4.2</b> — No changes in the editor: the Mac app is now signed with its own certificate, so macOS keeps its permissions across updates.</p>
         <p><b>1.4.1</b> — No changes in the editor: this release is for the Mac app, whose pet now talks in a bubble above its Dock icon.</p>
@@ -78,6 +80,7 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <postStartupActivity implementation="com.chelayel.petabytes.PetStartup"/>
+        <notificationGroup id="Petabytes" displayType="BALLOON"/>
         <applicationConfigurable
             parentId="tools"
             instance="com.chelayel.petabytes.PetConfigurable"

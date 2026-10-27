@@ -14,6 +14,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     private let speech = DockSpeech()
     private let claudeCode = ClaudeCodeLink()
     private let picker = PetPicker()
+    private let updater = Updater()
+    private var dailyChecks: Timer?
 
     private static let sizes: [(String, CGFloat)] = [("Small", 1.0), ("Medium", 1.3), ("Large", 1.7)]
 
@@ -37,8 +39,14 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         menu.delegate = self
         statusItem.menu = menu
         applyDockIcon()
+        // Updates and the occasional ask for support: a minute after launch, then hourly (each has its own pace).
+        _ = Settings.firstRun
+        dailyChecks = Timer.scheduledTimer(withTimeInterval: 60 * 60, repeats: true) { [weak self] _ in self?.dailyCheck() }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 60) { [weak self] in self?.dailyCheck() }
         // open -a Petabytes --args --choose-pet: start with the picker open.
         if CommandLine.arguments.contains("--choose-pet") { picker.show() }
+        // open -a Petabytes --args --check-for-updates: check right away, and say what was found.
+        if CommandLine.arguments.contains("--check-for-updates") { updater.check(quietly: false) }
         // A full menu bar (on a MacBook, whatever doesn't fit beside the notch) hides new items without a word.
         // Then the app shows its icon in the Dock too, so its menu can always be found.
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) { [weak self] in
@@ -46,6 +54,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
                   button.window?.occlusionState.contains(.visible) != true else { return }
             NSApp.setActivationPolicy(.regular)
         }
+    }
+
+    private func dailyCheck() {
+        updater.checkIfDue()
+        SupportReminder.askIfDue(petName: petName())
     }
 
     /** Where the Mac's news goes: the pet on the Dock (its web page), or the one in the Dock icon. */
@@ -143,6 +156,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         login.state = SMAppService.mainApp.status == .enabled ? .on : .off
         menu.addItem(login)
         menu.addItem(.separator())
+        if let release = updater.available {
+            menu.addItem(item("Update to \(release.version)…", #selector(installUpdate)))
+        } else {
+            menu.addItem(item("Check for Updates…", #selector(checkForUpdates)))
+        }
+        menu.addItem(item("Star on GitHub…", #selector(starOnGitHub)))
         menu.addItem(item("Buy Me a Coffee…", #selector(buyCoffee)))
         if withQuit { menu.addItem(item("Quit Petabytes", #selector(NSApplication.terminate(_:)), key: "q")) }
         return menu
@@ -167,7 +186,19 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     @objc private func showPicker() { picker.show() }
 
     @objc private func buyCoffee() {
-        NSWorkspace.shared.open(URL(string: "https://buymeacoffee.com/chelayel")!)
+        NSWorkspace.shared.open(SupportReminder.coffee)
+        Settings.askForSupportAfter = .distantFuture
+    }
+
+    @objc private func starOnGitHub() {
+        NSWorkspace.shared.open(SupportReminder.github)
+        Settings.askForSupportAfter = .distantFuture
+    }
+
+    @objc private func checkForUpdates() { updater.check(quietly: false) }
+
+    @objc private func installUpdate() {
+        if let release = updater.available { updater.offer(release) }
     }
 
     private func choose(_ id: String) {

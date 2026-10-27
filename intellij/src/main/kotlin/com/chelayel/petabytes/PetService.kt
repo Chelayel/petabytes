@@ -39,6 +39,7 @@ import javax.swing.JLayeredPane
 import javax.swing.RootPaneContainer
 import javax.swing.SwingUtilities
 import javax.swing.Timer
+import java.io.File
 
 /**
  * One pet per project window: it floats along the bottom of the selected editor and
@@ -129,6 +130,7 @@ class PetService(private val project: Project) : Disposable {
         o.isVisible = true
         o.brain.avoid(caretOverPet(editor, o, target))
         watchToolWindows()
+        watchClaudeCode()
         if (vertical) o.brain.update(dtMs, bounds.height.toDouble(), o.painter.spriteHeight, room = JBUI.scale(6).toDouble())
         else o.brain.update(dtMs, bounds.width.toDouble(), o.painter.spriteWidth, room = JBUI.scale(10).toDouble())
         o.repaint()
@@ -281,6 +283,26 @@ class PetService(private val project: Project) : Disposable {
         activeWindow = active
     }
 
+    // What Claude Code is doing, from the Petabytes add-on for Claude Code: it writes its latest event to this file,
+    // which every open window checks (a cheap look at the file's time, a read only when it changed).
+    private val claudeEvents = File(System.getProperty("user.home"), ".petabytes/claude-code.json")
+    private var claudeSeen = claudeEvents.lastModified()
+    private var lastClaudeCheck = 0L
+
+    private fun watchClaudeCode() {
+        val now = System.currentTimeMillis()
+        if (now - lastClaudeCheck < 800) return
+        lastClaudeCheck = now
+        val modified = claudeEvents.lastModified()
+        if (modified <= claudeSeen) return
+        claudeSeen = modified
+        val text = runCatching { claudeEvents.readText() }.getOrNull() ?: return
+        val key = CLAUDE_KEY.find(text)?.groupValues?.get(1) ?: return
+        val at = CLAUDE_AT.find(text)?.groupValues?.get(1)?.toLongOrNull() ?: return
+        // Only fresh news: an event from a minute ago isn't one to react to now.
+        if (now - at < 15_000) overlay?.brain?.react(key)
+    }
+
     private fun errorsInSelectedEditor(): Int {
         val editor = FileEditorManager.getInstance(project).selectedTextEditor ?: return 0
         val markup = DocumentMarkupModel.forDocument(editor.document, project, false) ?: return 0
@@ -290,7 +312,9 @@ class PetService(private val project: Project) : Disposable {
     override fun dispose() = hide()
 
     companion object {
-        private val AI_WINDOWS = Regex("copilot|ai assistant|ai chat|junie|claude|gemini|ai relay|codeium|tabnine|chatgpt|cody|continue", RegexOption.IGNORE_CASE)
+        private val AI_WINDOWS = Regex("copilot|ai ?assistant|ai chat|jetbrains ai|junie|claude|gemini|ai relay|codeium|windsurf|tabnine|chatgpt|codex|cody|continue|cline|amazon q", RegexOption.IGNORE_CASE)
+        private val CLAUDE_KEY = Regex("\"key\"\\s*:\\s*\"(\\w+)\"")
+        private val CLAUDE_AT = Regex("\"at\"\\s*:\\s*(\\d+)")
         private val TEST_RUN = Regex("\\btests?\\b|spec", RegexOption.IGNORE_CASE)
 
         /** Apply changed settings in every open project. */

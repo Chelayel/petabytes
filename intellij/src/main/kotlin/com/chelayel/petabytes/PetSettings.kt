@@ -24,6 +24,10 @@ class PetSettings : SimplePersistentStateComponent<PetSettings.Options>(Options(
         var home by property(0.95f)
         /** small, medium or large. */
         var size by string("medium")
+        /** When the pet was first seen, for asking for a rating after a week (milliseconds; 0 until then). */
+        var firstSeen by property(0L)
+        /** When to next ask for a rating or a coffee; Long.MAX_VALUE once answered or turned down for good. */
+        var askForSupportAfter by property(0L)
     }
 
     companion object {
