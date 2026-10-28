@@ -2,7 +2,7 @@
   "name": "petabytes",
   "displayName": "Petabytes",
   "description": "Small companions with a big appetite. Sea creatures that live in your Explorer and react to what you do: they swim faster while you type, celebrate saves, commits and passing tests, notice the terminal and your AI assistant, eat the curly braces you feed them, and nap when you're away.",
-  "version": "1.6.0",
+  "version": "1.6.1",
   "publisher": "chelayel",
   "author": { "name": "Chelayel", "url": "https://www.chelayel.com" },
   "license": "MIT",

@@ -50,6 +50,7 @@
     ]]></description>
 
     <change-notes><![CDATA[
+        <p><b>1.6.1</b> — The pet stays beside your code: it no longer jumps into Copilot's chat or other tool windows when you switch between them.</p>
         <p><b>1.6.0</b> — The pet reacts to what Claude Code is doing (with the Petabytes add-on for Claude Code), and notices more AI tools: Copilot, AI Assistant, Junie, Gemini, Codeium, Tabnine, Amazon Q and more. After a week, it asks once whether you'd rate it.</p>
         <p><b>1.5.0</b> — No changes in the editor: the Mac app's pet can now react to what Claude Code is doing.</p>
         <p><b>1.4.2</b> — No changes in the editor: the Mac app is now signed with its own certificate, so macOS keeps its permissions across updates.</p>

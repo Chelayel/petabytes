@@ -93,6 +93,7 @@ class PetService(private val project: Project) : Disposable {
 
     private fun hide() {
         timer.stop()
+        lastFileEditor = null
         overlay?.let { o -> layer?.remove(o); layer?.repaint() }
         overlay = null
         layer = null
@@ -104,7 +105,7 @@ class PetService(private val project: Project) : Disposable {
         val dtMs = (nowNs - lastTick) / 1_000_000.0
         lastTick = nowNs
 
-        val editor = FileEditorManager.getInstance(project).selectedTextEditor
+        val editor = fileEditor()
         val frame = WindowManager.getInstance().getFrame(project) as? RootPaneContainer
         val target = frame?.layeredPane
         if (editor == null || target == null || !editor.component.isShowing) { o.isVisible = false; return }
@@ -134,6 +135,30 @@ class PetService(private val project: Project) : Disposable {
         if (vertical) o.brain.update(dtMs, bounds.height.toDouble(), o.painter.spriteHeight, room = JBUI.scale(6).toDouble())
         else o.brain.update(dtMs, bounds.width.toDouble(), o.painter.spriteWidth, room = JBUI.scale(10).toDouble())
         o.repaint()
+    }
+
+    private var lastFileEditor: com.intellij.openapi.editor.Editor? = null
+
+    /**
+     * The file editor the pet swims beside. Not just the "selected" one: with focus in a tool window, that can be the
+     * tool window's own editor (Copilot's chat box, AI Assistant's, a diff preview), and the pet would jump in there.
+     * So only a main editor outside every tool window counts, and while focus is elsewhere it stays by the last one.
+     */
+    private fun fileEditor(): com.intellij.openapi.editor.Editor? {
+        val selected = FileEditorManager.getInstance(project).selectedTextEditor
+        if (selected != null && isFileEditor(selected)) lastFileEditor = selected
+        val editor = lastFileEditor ?: return null
+        if (editor.isDisposed) { lastFileEditor = null; return null }
+        return editor.takeIf { it.component.isShowing && isFileEditor(it) }
+    }
+
+    private fun isFileEditor(editor: com.intellij.openapi.editor.Editor): Boolean {
+        if (editor.editorKind != EditorKind.MAIN_EDITOR) return false
+        val twm = ToolWindowManager.getInstance(project)
+        return twm.toolWindowIds.none { id ->
+            val window = twm.getToolWindow(id)
+            window != null && window.isVisible && SwingUtilities.isDescendingFrom(editor.component, window.component)
+        }
     }
 
     /**
@@ -304,7 +329,7 @@ class PetService(private val project: Project) : Disposable {
     }
 
     private fun errorsInSelectedEditor(): Int {
-        val editor = FileEditorManager.getInstance(project).selectedTextEditor ?: return 0
+        val editor = fileEditor() ?: return 0
         val markup = DocumentMarkupModel.forDocument(editor.document, project, false) ?: return 0
         return markup.allHighlighters.count { HighlightInfo.fromRangeHighlighter(it)?.severity == HighlightSeverity.ERROR }
     }
