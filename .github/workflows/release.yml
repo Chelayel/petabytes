@@ -146,6 +146,33 @@ jobs:
           version=$(sed -n 's/^pluginVersion=//p' ../intellij/gradle.properties | tr -d '\r')
           npx --yes @tauri-apps/cli@2.9.4 build --config "{\"version\":\"$version\"}"
           mkdir -p ../dist && cp src-tauri/target/release/bundle/nsis/*-setup.exe ../dist/
+      # Installs it, starts it, and checks it keeps running and hears Claude Code; the screenshot is in the
+      # run's windows-screenshot artifact.
+      - name: Smoke test
+        shell: pwsh
+        run: |
+          $setup = Get-ChildItem dist\*-setup.exe | Select-Object -First 1
+          Start-Process $setup.FullName -ArgumentList "/S" -Wait
+          $exe = Get-ChildItem "$env:LOCALAPPDATA\Petabytes" -Filter *.exe | Where-Object Name -notlike "uninstall*" | Select-Object -First 1
+          Start-Process $exe.FullName
+          Start-Sleep 10
+          if (-not (Get-Process -Name $exe.BaseName -ErrorAction SilentlyContinue)) { throw "Petabytes isn't running" }
+          $reply = Invoke-WebRequest -Uri http://127.0.0.1:47365/ -Method Post -ContentType application/json -Body '{"type":"react","key":"claudeDone"}' -UseBasicParsing
+          if ($reply.StatusCode -ne 204) { throw "The Claude Code link answered $($reply.StatusCode)" }
+          Start-Sleep 1
+          Add-Type -AssemblyName System.Windows.Forms, System.Drawing
+          $bounds = [System.Windows.Forms.Screen]::PrimaryScreen.Bounds
+          $shot = New-Object System.Drawing.Bitmap $bounds.Width, $bounds.Height
+          [System.Drawing.Graphics]::FromImage($shot).CopyFromScreen($bounds.Location, [System.Drawing.Point]::Empty, $bounds.Size)
+          $shot.Save("$pwd\windows-screenshot.png")
+          if (-not (Get-Process -Name $exe.BaseName -ErrorAction SilentlyContinue)) { throw "Petabytes stopped" }
+          Stop-Process -Name $exe.BaseName
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: windows-screenshot
+          path: windows-screenshot.png
+          if-no-files-found: ignore
       - uses: actions/upload-artifact@v7
         with:
           name: windows
