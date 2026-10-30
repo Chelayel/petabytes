@@ -74,7 +74,13 @@ In both editors, **Choose Pet** opens a picker with a tab per set (the IntelliJ 
 
 ## On your Mac
 
-Download `Petabytes-<version>.dmg` from the [latest release](https://github.com/Chelayel/petabytes/releases/latest) and drag Petabytes to Applications. It isn't notarized yet, so the first time, right-click it and choose **Open**.
+With [Homebrew](https://brew.sh):
+
+```
+brew install --cask chelayel/tap/petabytes
+```
+
+Or download `Petabytes-<version>.dmg` from the [latest release](https://github.com/Chelayel/petabytes/releases/latest) and drag Petabytes to Applications. It isn't notarized yet, so the first time, right-click it and choose **Open** (on recent macOS: try to open it, then **Open Anyway** in System Settings → Privacy & Security).
 
 The pet walks along the top of your Dock, out of the way: clicks go through everywhere except on the pet itself. Drag it off the Dock to float it anywhere. **Move to Dock** puts it inside its own Dock icon instead, where you can keep it: it stays animated, a little bubble shows how it feels (z, !, ♥, ?) or that it's talking, and clicking the icon feeds it.
 

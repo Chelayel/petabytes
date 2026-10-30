@@ -145,6 +145,34 @@ jobs:
             gh release create "$tag" dist/* --target "$GITHUB_SHA" --title "$tag" --generate-notes
           fi
 
+      # brew install --cask chelayel/tap/petabytes. The tap is its own repository, so the workflow's token can't
+      # push to it: a deploy key on Chelayel/homebrew-tap with write access can (TAP_DEPLOY_KEY holds its private
+      # half), scoped to that one repo. Never fatal: the release is out either way.
+      - name: Homebrew tap
+        continue-on-error: true
+        env:
+          TAP_DEPLOY_KEY: ${{ secrets.TAP_DEPLOY_KEY }}
+        run: |
+          version="${{ needs.build.outputs.version }}"
+          sha=$(sha256sum dist/Petabytes-*.dmg | cut -d' ' -f1)
+          sed -e "s/{{version}}/$version/" -e "s/{{sha256}}/$sha/" mac/homebrew/petabytes.rb > petabytes.rb
+          if [ -z "$TAP_DEPLOY_KEY" ]; then
+            echo "::warning::TAP_DEPLOY_KEY is not set; the Homebrew tap was not updated. Copy the cask below to Chelayel/homebrew-tap Casks/petabytes.rb by hand."
+            cat petabytes.rb
+            exit 0
+          fi
+          mkdir -p ~/.ssh && chmod 700 ~/.ssh
+          printf '%s\n' "$TAP_DEPLOY_KEY" > ~/.ssh/tap_key && chmod 600 ~/.ssh/tap_key
+          ssh-keyscan -t ed25519,rsa github.com >> ~/.ssh/known_hosts 2>/dev/null
+          export GIT_SSH_COMMAND="ssh -i ~/.ssh/tap_key -o IdentitiesOnly=yes"
+          git clone --depth 1 git@github.com:Chelayel/homebrew-tap.git /tmp/tap
+          mkdir -p /tmp/tap/Casks && cp petabytes.rb /tmp/tap/Casks/petabytes.rb
+          cd /tmp/tap
+          git add Casks/petabytes.rb
+          git -c user.name="petabytes release" -c user.email="release@petabytes.invalid" commit -m "petabytes $version" >/dev/null 2>&1 || { echo "Tap already at $version."; exit 0; }
+          git push origin HEAD
+          echo "Tap updated to $version."
+
   # Each store gets the version only when it does not have it already.
   # Tokens: see the top of this file.
   stores:
