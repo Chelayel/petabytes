@@ -24,6 +24,7 @@ There are three, and they don't depend on each other:
 
 - **In your editor**, to react to your code (saves, errors, tests, runs, debugging, commits): install the plugin in each IDE you use, the [VS Code extension](https://marketplace.visualstudio.com/items?itemName=chelayel.petabytes) or the [JetBrains plugin](https://plugins.jetbrains.com/plugin/35446-petabytes). The pet lives inside that IDE.
 - **On your Mac desktop**, to react to your Mac (the app in front, typing, battery, Wi-Fi, downloads, screenshots): [the Mac app](#on-your-mac). It walks along your Dock, but it can't see your code; for that, add the editor plugin too.
+- **On your Windows desktop**: [the Windows app](#on-windows), which walks along the top of your taskbar and reacts to the app in front, your battery and Claude Code.
 
 ## In your editor
 
@@ -70,6 +71,7 @@ In both editors, **Choose Pet** opens a picker with a tab per set (the IntelliJ 
 | VS Code | [`vscode/`](vscode/) | A **Petabytes** panel in the Explorer (VS Code doesn't let extensions draw over the editor) | **Petabytes: Choose Pet** / **Toggle Pet**, or the `petabytes.*` settings |
 | JetBrains (2024.2+) | [`intellij/`](intellij/) | Swimming up and down the editor's right edge, or along its bottom edge. Drag it to move it; it fades and lets clicks through when your cursor is right beside it | Right-click the pet or **Tools → Petabytes** → **Choose Pet…**; position, size and name in **Settings → Tools → Petabytes** |
 | Claude Code | [`claude-code/`](claude-code/) | Drives the pets in the Mac app, VS Code and IntelliJ; optionally a small pixel-art pet above the prompt | `/pet`, `/pet on`, `/pet off` |
+| Windows (10 and 11) | [`windows/`](windows/) | Walking along the top of the taskbar | Right-click the pet, or the tray icon |
 | Mac (macOS 13+) | [`mac/`](mac/) | Standing on top of the Dock, or floating wherever you drag it; or, after **Move to Dock**, inside its own Dock icon | Right-click the pet, or the paw in the menu bar (the Dock icon, once moved there) |
 
 ## On your Mac
@@ -109,9 +111,17 @@ It reacts to your Mac, and none of it asks for a permission:
 
 It only ever learns *that* a key was pressed, never which, and *that* the clipboard changed, never what's on it. It draws at 20 frames a second (fewer while it sleeps, almost none while the screen is locked).
 
+## On Windows
+
+Download `Petabytes_<version>_x64-setup.exe` from the [latest release](https://github.com/Chelayel/petabytes/releases/latest) and run it; it installs for you alone, no administrator needed. It isn't code-signed yet, so Windows SmartScreen asks first: **More info**, then **Run anyway**.
+
+The pet walks along the top of your taskbar; clicks go through everywhere except on the pet itself. Right-click it, or the tray icon, to feed it, choose a pet, change its size, or turn on **Open at Login**. It reacts to the app in front (terminals, editors, browsers, chat, games and more), says hello when you come back, warns when the battery runs low, steps aside while a game, a video or a presentation is full screen, and reacts to Claude Code like the Mac pet. On battery saver it draws fewer frames and skips its antics. It checks for a new version once a day and offers the installer.
+
+It's [Tauri](https://tauri.app) around the same `web/pet.html` as VS Code, so it's small and uses Windows' own WebView2.
+
 ## With Claude Code
 
-The Petabytes add-on for Claude Code ([`claude-code/`](claude-code/)) lets your pet react to what Claude does: curious when it reads files, excited when it edits code, fingers crossed for tests and a cheer or a hide at the result, and "Done!" when it finishes. It drives the pet in the Mac app, at full size, and the pets in VS Code and IntelliJ; `/pet on` also puts a small pixel-art pet above the prompt. It tells the Mac app on 127.0.0.1, and leaves the latest event in `~/.petabytes/claude-code.json` for the editors; nothing leaves your computer. At a Claude Code prompt:
+The Petabytes add-on for Claude Code ([`claude-code/`](claude-code/)) lets your pet react to what Claude does: curious when it reads files, excited when it edits code, fingers crossed for tests and a cheer or a hide at the result, and "Done!" when it finishes. It drives the pet in the Mac and Windows apps, at full size, and the pets in VS Code and IntelliJ; `/pet on` also puts a small pixel-art pet above the prompt. It tells the desktop app on 127.0.0.1, and leaves the latest event in `~/.petabytes/claude-code.json` for the editors; nothing leaves your computer. At a Claude Code prompt:
 
 ```
 /plugin install petabytes --marketplace Chelayel/petabytes
@@ -138,6 +148,7 @@ python3 tools/pets.py > web/pets.json          # after changing the art
 cd vscode && npx @vscode/vsce package           # petabytes-<version>.vsix
 cd intellij && ./gradlew runIde                 # an IDE sandbox with the plugin
 mac/build.sh && open mac/build/Petabytes.app    # the Mac app, and mac/build/Petabytes-<version>.dmg
+cd windows && npx @tauri-apps/cli build         # the Windows app's installer (on Windows, with Rust)
 ```
 
 ## Support
