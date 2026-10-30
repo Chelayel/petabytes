@@ -70,6 +70,12 @@ struct PetArt {
     static let reactions: [String: [String: Any]] = (root["reactions"] as? [String: [String: Any]]) ?? [:]
     /** The snacks Feed drops; each has the key of the lines the pet says eating it. */
     static let snacks: [[String: String]] = (root["snacks"] as? [[String: String]]) ?? []
+    /** Reaction keys the pet picks from to do something on its own now and then, and how often (seconds). */
+    static let antics: [String] = (root["antics"] as? [String]) ?? []
+    static let anticEvery: ClosedRange<Double> = {
+        guard let every = root["anticEvery"] as? [Double], every.count == 2, every[0] <= every[1] else { return 70...160 }
+        return every[0]...every[1]
+    }()
     private static let sharedLines: [String: [String]] = (root["lines"] as? [String: [String]]) ?? [:]
 
     private static let root: [String: Any] =

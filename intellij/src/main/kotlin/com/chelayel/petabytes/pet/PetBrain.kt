@@ -63,6 +63,12 @@ class PetBrain(
     var dodging = false; private set
     private var avoidX = 0.0
 
+    /**
+     * When the pet next does something on its own (pets.json's antics). Off while [quiet]: the IDE's power save mode.
+     */
+    private var nextAntic = 0L
+    var quiet = false
+
     private val lastReact = HashMap<String, Long>()
     private var sessionMark = clock()
     private var lastFed = clock()
@@ -157,6 +163,27 @@ class PetBrain(
         if (random.nextDouble() < r.chance) sayLine(key, vars = vars)
     }
 
+    /**
+     * Now and then, while you pause, a spin, the zoomies, a hum or a passing thought. Not activity: the pet still
+     * falls asleep. Not mid-flow, and not over something else it's doing or saying.
+     */
+    private fun maybeAntic(t: Long) {
+        if (catalog.antics.isEmpty() || t < nextAntic) return
+        // Busy now: try again shortly, so a pause soon after still gets one.
+        nextAntic = t + 20_000
+        if (t - lastActivity < 15_000) return
+        val f = flags()
+        if (quiet || dragging || sleeping || debugging || food != null || "hiding" in f || "worried" in f || active("excited") || t <= speechUntil) return
+        val (lo, hi) = catalog.anticEvery
+        nextAntic = t + ((lo + random.nextDouble() * (hi - lo)) * 1000).toLong()
+        val key = catalog.antics.random(random)
+        val r = catalog.reactions[key] ?: return
+        r.mood?.let { flash(it, r.ms) }
+        if (r.bubbles > 0) blow(r.bubbles)
+        if (r.hearts > 0) blow(r.hearts, heart = true)
+        if (random.nextDouble() < r.chance) sayLine(key, 2400)
+    }
+
     /** Drop a snack (a random one unless [text] names it) somewhere across an area [width] wide. */
     fun feed(width: Double, text: String? = null) {
         if (food != null) return
@@ -245,6 +272,7 @@ class PetBrain(
         if (sleeping) sessionMark = t // a break resets the long-session clock
         if (!sleeping && t - sessionMark > 90 * 60_000) { sessionMark = t; react("longSession") }
         if (!sleeping && food == null && t - lastFed > 60 * 60_000) react("hungry")
+        maybeAntic(t)
 
         val f = flags()
         val excited = active("excited") && !sleeping

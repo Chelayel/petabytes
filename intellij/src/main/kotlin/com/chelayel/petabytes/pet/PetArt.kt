@@ -66,6 +66,9 @@ class PetCatalog(
     private val lines: Map<String, List<String>>,
     val reactions: Map<String, Reaction> = emptyMap(),
     val snacks: List<Snack> = listOf(Snack("{ }", "eatCurly")),
+    /** Reaction keys the pet picks from to do something on its own now and then, and how often (seconds). */
+    val antics: List<String> = emptyList(),
+    val anticEvery: Pair<Double, Double> = 70.0 to 160.0,
 ) {
     fun pet(id: String?): Pet = pets[id] ?: pets.getValue("turtle")
     fun lines(pet: Pet, key: String): List<String> = pet.lines[key] ?: lines[key] ?: listOf("")
@@ -89,7 +92,9 @@ class PetCatalog(
                 )
             }
             val snacks = (root["snacks"] as List<Map<String, Any?>>? ?: emptyList()).map { Snack(it["text"] as String, it["key"] as String) }
-            return PetCatalog(pets, stringLists(root["lines"]), reactions, snacks.ifEmpty { listOf(Snack("{ }", "eatCurly")) })
+            val antics = (root["antics"] as List<String>?) ?: emptyList()
+            val every = (root["anticEvery"] as List<Double>?)?.takeIf { it.size == 2 }?.let { it[0] to it[1] } ?: (70.0 to 160.0)
+            return PetCatalog(pets, stringLists(root["lines"]), reactions, snacks.ifEmpty { listOf(Snack("{ }", "eatCurly")) }, antics, every)
         }
 
         @Suppress("UNCHECKED_CAST")

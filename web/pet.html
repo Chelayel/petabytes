@@ -85,6 +85,7 @@
     until: { excited: 0, happy: 0, curious: 0, hiding: 0, spin: 0 }, happyAt: 0, spinAt: 0,
     lastActivity: now(), lastTypingLine: 0, sayTimer: 0, poses: {},
     lastReact: {}, sessionMark: now(), lastFed: now(), eaten: 0, food: null, foodEl: null, goal: null, restUntil: 0,
+    nextAntic: 0, lowBattery: false, quiet: false,
   };
 
   // ---- Building the pet from pets.json ---------------------------------
@@ -244,6 +245,43 @@
     if (Math.random() < (r.chance ?? 1)) sayLine(key, 2600, vars);
   }
 
+  // ---- Antics -------------------------------------------------------------
+
+  /**
+   Now and then, while you pause, the pet does something on its own (pets.json's antics: a spin, the zoomies, a
+   hum, a passing thought). It rides on the 5-second check below, so it costs no timer of its own; it isn't
+   activity, so the pet still falls asleep; and it skips while the battery is low or motion is reduced.
+   */
+  function scheduleAntic() {
+    const [lo, hi] = DATA.anticEvery || [70, 160];
+    state.nextAntic = now() + (lo + Math.random() * (hi - lo)) * 1000;
+  }
+  function maybeAntic() {
+    const keys = DATA.antics || [];
+    if (!keys.length || now() < state.nextAntic) return;
+    // Busy now: try again shortly, so a pause soon after still gets one.
+    state.nextAntic = now() + 20 * 1000;
+    const f = flags();
+    // Not mid-flow (typing a moment ago), and not over something else it's doing or saying.
+    if (reduced || state.lowBattery || state.quiet || document.hidden || state.sleeping || state.debugging || state.food
+      || f.hiding || f.worried || active("excited") || sayEl.classList.contains("on")
+      || now() - state.lastActivity < 15 * 1000) return;
+    scheduleAntic();
+    const key = pick(keys), r = DATA.reactions[key] || {};
+    if (r.mood) flash(r.mood, r.ms || 1200);
+    if (r.bubbles) bubbles(r.bubbles);
+    if (r.hearts) hearts(r.hearts);
+    if (Math.random() < (r.chance ?? 1)) sayLine(key, 2400);
+  }
+  scheduleAntic();
+  // Where the browser says (VS Code's Electron does): a laptop under 20% and unplugged gets no antics.
+  navigator.getBattery?.().then((battery) => {
+    const check = () => { state.lowBattery = !battery.charging && battery.level < 0.2; };
+    check();
+    battery.addEventListener("levelchange", check);
+    battery.addEventListener("chargingchange", check);
+  }).catch(() => {});
+
   /** Drop a snack from above; the pet swims over and eats it. */
   function feed(text) {
     if (state.food) return;
@@ -292,6 +330,8 @@
       if (msg.background) document.body.style.background = msg.background;
       // The Mac app caps the frame rate (0: the display's) and sets ground while the pet walks along the Dock.
       if (msg.fps != null) state.fps = msg.fps;
+      // The Mac app in Low Power Mode: no antics.
+      if (msg.quiet != null) state.quiet = !!msg.quiet;
       if (msg.ground != null && msg.ground !== state.ground) { state.ground = msg.ground; newDepth(); }
       for (const [k, v] of Object.entries(msg.vars || {})) document.documentElement.style.setProperty(k, v);
       return;
@@ -345,6 +385,7 @@
     if (state.sleeping) state.sessionMark = now(); // a break resets the long-session clock
     if (!state.sleeping && now() - state.sessionMark > 90 * 60 * 1000) { state.sessionMark = now(); react("longSession"); }
     if (!state.sleeping && !state.food && now() - state.lastFed > 60 * 60 * 1000) react("hungry");
+    maybeAntic();
   }, 5000);
 
   // Drift up and down every few seconds; floor pets, sleepers and pets on the ground stay at the bottom.

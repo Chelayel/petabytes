@@ -1479,4 +1479,51 @@ PETS["pufferfish"]["lines"].update({"pet": ["*puffs happily*", "Hehe, don't pop 
 PETS["jellyfish"]["lines"].update({"pet": ["*glows brighter*", "Bloop! Thank you."], "lateNight": ["It's late. Good thing I glow."]})
 PETS["turtle"]["lines"].update({"pet": ["*happy flipper flaps*", "Hehe, my shell is ticklish."], "longSession": ["Even turtles take breaks. Stretch?"]})
 
-print(json.dumps({"version": 1, "box": [120, 80], "lines": LINES, "reactions": REACTIONS, "snacks": SNACKS, "order": list(PETS), "pets": PETS}, indent=1))
+# Antics: what a pet does on its own, now and then, while you pause (not while it sleeps, hides, eats or worries).
+# Each is a reaction (mood, bubbles, hearts, and how likely it is to say something), picked at random every
+# ANTIC_EVERY seconds or so. "glyph" is what the Dock icon's corner shows when the line can't go above the icon.
+ANTICS = {
+  "anticSpin":    {"mood": "spin", "ms": 800, "bubbles": 2, "chance": 0.5, "glyph": "!"},
+  "anticHop":     {"mood": "happy", "ms": 1100, "chance": 0.5, "glyph": "♥"},
+  "anticLook":    {"mood": "curious", "ms": 1800, "chance": 0.6, "glyph": "?"},
+  "anticZoomies": {"mood": "excited", "ms": 3500, "chance": 0.6, "glyph": "!"},
+  "anticHum":     {"chance": 1, "glyph": "♪"},
+  "anticHearts":  {"hearts": 3, "chance": 0.5, "glyph": "♥"},
+  "anticThink":   {"mood": "curious", "ms": 1200, "chance": 1, "glyph": "?"},
+  "anticYawn":    {"chance": 1, "glyph": "…"},
+  "anticBubbles": {"bubbles": 6, "chance": 0.3, "glyph": "○"},
+}
+ANTIC_EVERY = [70, 160]
+REACTIONS.update(ANTICS)
+
+LINES.update({
+  "anticSpin": ["Wheee!", "Did you see that?", "Again! Again!", "*twirls*"],
+  "anticHop": ["Boing!", "Hop!", "Just stretching my legs.", "*does a little dance*"],
+  "anticLook": ["Did you hear that?", "What's over there?", "Hmm...", "*looks around*"],
+  "anticZoomies": ["Zoomies!", "Gotta go fast!", "Can't stop, won't stop!", "*races around*"],
+  "anticHum": ["♪ la la la ♪", "♪ do-do-do ♪", "*hums a little tune*", "♪ hmm hmm hmm ♪"],
+  "anticHearts": ["I like it here.", "You're doing great.", "Best desk ever.", "*happy sigh*"],
+  "anticThink": ["Do bugs have bugs?", "Is a semicolon a snack?", "What if the cloud is just someone else's computer?",
+                 "Tabs or spaces? Don't answer.", "I wonder what's for lunch.", "Is it Friday yet?", "Thinking about snacks."],
+  "anticYawn": ["*yawns*", "*stretches*", "*big stretch*", "Mm, cozy."],
+  "anticBubbles": ["Blub blub.", "Bubble time!", "*blows bubbles*"],
+})
+
+# Each set does them its own way too (a pet's own lines still come first).
+SET_ANTIC_LINES = {
+  "tide": {"anticZoomies": ["Full speed ahead!", "Riding the current!", "*splashes around*"],
+           "anticHum": ["*sings a sea shanty*", "♪ yo ho, yo ho ♪", "*hums with the waves*"]},
+  "home": {"anticZoomies": ["Zoomies!", "*runs in circles*", "*chases own tail*"],
+           "anticLook": ["*sniffs around*", "Did someone say treat?", "*ears perk up*"]},
+  "snacks": {"anticThink": ["Do I need more salt?", "Am I a sandwich?", "Feeling saucy.", "Is it snack o'clock?"],
+             "anticHop": ["*sizzles*", "Fresh out of the oven!", "Hot and ready!"]},
+  "games": {"anticSpin": ["Combo!", "*double jump*", "Achievement unlocked: spin!"],
+            "anticThink": ["Is there a save point nearby?", "I should grind some XP.", "Side quest?"]},
+  "gadgets": {"anticThink": ["Have you tried turning it off and on again?", "Running diagnostics... all good!", "*defragments quietly*"],
+              "anticHum": ["*beeps a tune*", "♪ beep boop ♪", "*whirrs along*"]},
+}
+for pet in PETS.values():
+    pet["lines"] = {**SET_ANTIC_LINES.get(pet["set"], {}), **pet["lines"]}
+
+print(json.dumps({"version": 1, "box": [120, 80], "lines": LINES, "reactions": REACTIONS, "snacks": SNACKS,
+                  "antics": list(ANTICS), "anticEvery": ANTIC_EVERY, "order": list(PETS), "pets": PETS}, indent=1))

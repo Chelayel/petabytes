@@ -91,6 +91,7 @@ final class PetWindow: NSPanel {
                 self?.configure()
             }
         }
+        NotificationCenter.default.addObserver(forName: .NSProcessInfoPowerStateDidChange, object: nil, queue: .main) { [weak self] _ in self?.configure() }
         NotificationCenter.default.addObserver(forName: NSApplication.didChangeScreenParametersNotification, object: nil, queue: .main) { [weak self] _ in self?.place() }
         // The Dock can grow, shrink or move without the screen changing; check now and then.
         Timer.scheduledTimer(withTimeInterval: 3, repeats: true) { [weak self] _ in
@@ -150,7 +151,10 @@ final class PetWindow: NSPanel {
     }
 
     func configure() {
-        send(["type": "config", "pet": Settings.pet, "name": Settings.name, "ground": Settings.place == .dock, "fps": dragging ? 0 : fps])
+        // In Low Power Mode: fewer frames, and no antics.
+        let lowPower = ProcessInfo.processInfo.isLowPowerModeEnabled
+        send(["type": "config", "pet": Settings.pet, "name": Settings.name, "ground": Settings.place == .dock,
+              "fps": dragging ? 0 : lowPower ? min(fps, 20) : fps, "quiet": lowPower])
     }
 
     fileprivate func received(_ body: Any) {

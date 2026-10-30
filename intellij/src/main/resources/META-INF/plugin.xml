@@ -32,6 +32,7 @@
             <li><b>Late nights, mornings, long sessions</b> — says so, and suggests a stretch</li>
             <li><b>Debugging</b> — brings out a magnifying glass</li>
             <li><b>Switching files</b> — looks around</li>
+            <li><b>Pauses</b> — now and then it does something on its own: a spin, the zoomies, a hum, a passing thought</li>
             <li><b>Idle for a few minutes</b> — naps</li>
             <li><b>Clicked / double-clicked</b> — does a spin / shows hearts</li>
         </ul>
@@ -50,6 +51,7 @@
     ]]></description>
 
     <change-notes><![CDATA[
+        <p><b>1.7.0</b> — Your pet has a life of its own: now and then, while you pause, it spins, hops, gets the zoomies, hums, blows bubbles or wonders aloud. It also uses less power: fewer frames while it sleeps, while the IDE is in the background, and in Power Save Mode (which also keeps it calm).</p>
         <p><b>1.6.1</b> — The pet stays beside your code: it no longer jumps into Copilot's chat or other tool windows when you switch between them.</p>
         <p><b>1.6.0</b> — The pet reacts to what Claude Code is doing (with the Petabytes add-on for Claude Code), and notices more AI tools: Copilot, AI Assistant, Junie, Gemini, Codeium, Tabnine, Amazon Q and more. After a week, it asks once whether you'd rate it.</p>
         <p><b>1.5.0</b> — No changes in the editor: the Mac app's pet can now react to what Claude Code is doing.</p>

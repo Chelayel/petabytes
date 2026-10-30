@@ -43,6 +43,7 @@ There are three, and they don't depend on each other:
 | Undo several times in a row | "Rewinding time?" |
 | Switch files | Looks around |
 | Code late at night, early in the morning, or for hours | "It's late. The tide's out.", "Stretch break?" (Home pets say it their own way) |
+| Pause for a moment | Now and then does something on its own: spins, hops, gets the zoomies, hums, blows bubbles, or wonders aloud ("Do bugs have bugs?"). Never in Low Power Mode, Power Save Mode or on a low battery |
 | Step away for 3 minutes | Naps |
 | Click it / double-click it | Does a spin / shows hearts |
 

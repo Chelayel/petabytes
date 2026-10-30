@@ -10,6 +10,7 @@ import com.intellij.execution.executors.DefaultDebugExecutor
 import com.intellij.execution.executors.DefaultRunExecutor
 import com.intellij.openapi.command.CommandProcessor
 import com.intellij.openapi.vcs.BranchChangeListener
+import com.intellij.ide.PowerSaveMode
 import com.intellij.openapi.editor.EditorKind
 import com.intellij.openapi.fileEditor.FileDocumentManager
 import com.intellij.openapi.wm.ToolWindowManager
@@ -106,9 +107,20 @@ class PetService(private val project: Project) : Disposable {
         lastTick = nowNs
 
         val editor = fileEditor()
-        val frame = WindowManager.getInstance().getFrame(project) as? RootPaneContainer
+        val window = WindowManager.getInstance().getFrame(project)
+        val frame = window as? RootPaneContainer
         val target = frame?.layeredPane
-        if (editor == null || target == null || !editor.component.isShowing) { o.isVisible = false; return }
+        // As few frames as look right: fewer with the IDE in the background or saving power, fewer still asleep.
+        val powerSave = PowerSaveMode.isEnabled()
+        o.brain.quiet = powerSave
+        val hidden = editor == null || target == null || !editor.component.isShowing
+        timer.delay = when {
+            hidden -> 250
+            o.brain.sleeping -> 166
+            powerSave || window?.isActive != true -> 66
+            else -> 33
+        }
+        if (hidden || editor == null || target == null) { o.isVisible = false; return }
         if (layer !== target) {
             layer?.remove(o)
             // As Any: from Kotlin the Integer unboxes to the add(Component, int) overload, which

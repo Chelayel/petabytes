@@ -64,8 +64,9 @@ function commandReaction(line) {
 
 function config() {
   const settings = vscode.workspace.getConfiguration(SECTION);
-  // An empty name means the pet's own (Shelly, Bloop, ...).
-  return { type: "config", pet: settings.get("pet") || "turtle", name: settings.get("name") || "" };
+  // An empty name means the pet's own (Shelly, Bloop, ...). 30 frames a second is plenty for a pet, and on a
+  // 120 Hz screen a quarter of the work; asleep, pet.html drops to 6.
+  return { type: "config", pet: settings.get("pet") || "turtle", name: settings.get("name") || "", fps: 30 };
 }
 
 function errorCount(uri) {

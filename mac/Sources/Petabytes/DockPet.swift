@@ -1,7 +1,8 @@
 import AppKit
 
 /**
- The pet living inside its Dock icon, drawn natively (15 frames a second, 4 asleep): no web page runs meanwhile.
+ The pet living inside its Dock icon, drawn natively (15 frames a second while something's happening, 10 when calm,
+ 4 asleep, and fewer in Low Power Mode): no web page runs meanwhile.
  It takes the same messages as pet.html (react, typing, active, feed) and follows the same rules, cut down
  to what fits in an icon: moods, poses, turning around, naps, and a one-glyph bubble in the icon's corner.
  What it says goes to onSay, which shows it above the icon when it can (DockSpeech).
@@ -27,6 +28,9 @@ final class DockPet {
     /** A glyph in a bubble at the icon's corner, until the date. */
     private var bubble: (glyph: String, until: Date)?
     private var lastTypingLine = Date.distantPast
+    /** When the pet next does something on its own (pets.json's antics). */
+    private var nextAntic = Date().addingTimeInterval(.random(in: PetArt.anticEvery))
+    private var interval = 0.0
     /** A line the pet says, for a bubble above the Dock icon; true when it was shown there. */
     var onSay: (String) -> Bool = { _ in false }
 
@@ -45,9 +49,37 @@ final class DockPet {
         if let glyph { show(glyph, seconds) }
     }
 
+    /** Redraws only as often as it shows: each frame redraws the whole Dock icon. */
     private func schedule() {
+        let lowPower = ProcessInfo.processInfo.isLowPowerModeEnabled
+        let busy = !until.values.allSatisfy { $0 < Date() } || Date().timeIntervalSince(lastActivity) < 20
+        let fps: Double = sleeping ? (lowPower ? 2 : 4) : busy ? (lowPower ? 10 : 15) : (lowPower ? 6 : 10)
+        guard timer == nil || interval != 1 / fps else { return }
+        interval = 1 / fps
         timer?.invalidate()
-        timer = Timer.scheduledTimer(withTimeInterval: sleeping ? 1.0 / 4 : 1.0 / 15, repeats: true) { [weak self] _ in self?.frame() }
+        timer = Timer.scheduledTimer(withTimeInterval: interval, repeats: true) { [weak self] _ in self?.frame() }
+        timer?.tolerance = interval / 4
+    }
+
+    /**
+     Now and then, while you pause, a spin, the zoomies, a hum or a passing thought. Not activity: the pet still
+     falls asleep. Not in Low Power Mode, and not over something else it's doing or showing.
+     */
+    private func maybeAntic(_ now: Date) {
+        guard !PetArt.antics.isEmpty, now >= nextAntic else { return }
+        // Busy now: try again shortly, so a pause soon after still gets one.
+        nextAntic = now.addingTimeInterval(20)
+        let f = flags()
+        guard !sleeping, !ProcessInfo.processInfo.isLowPowerModeEnabled, now.timeIntervalSince(lastActivity) > 15,
+              !f.contains("hiding"), !active("excited"), !(bubble.map { $0.until > now } ?? false),
+              let key = PetArt.antics.randomElement(), let r = PetArt.reactions[key] else { return }
+        nextAntic = now.addingTimeInterval(.random(in: PetArt.anticEvery))
+        if let mood = r["mood"] as? String { flash(mood, ((r["ms"] as? Double) ?? 1200) / 1000) }
+        if Double.random(in: 0..<1) < ((r["chance"] as? Double) ?? 1) {
+            say(key, glyph: r["glyph"] as? String ?? "…", seconds: 2.4)
+        } else if let glyph = r["glyph"] as? String, r["mood"] == nil {
+            show(glyph, 1.6)
+        }
     }
 
     func stop() {
@@ -81,7 +113,6 @@ final class DockPet {
         lastActivity = Date()
         guard sleeping else { return false }
         sleeping = false
-        schedule()
         flash("curious", 1.2)
         say("wake", glyph: "!", seconds: 1.5)
         return true
@@ -142,6 +173,8 @@ final class DockPet {
             say("sleep")
         }
         if !sleeping, bubble?.glyph == "z" { bubble = nil }
+        maybeAntic(now)
+        schedule()
         // Walking in place, it turns around now and then, as it would at the end of the Dock.
         if art.flip && !sleeping && now > nextTurn {
             facingLeft.toggle()

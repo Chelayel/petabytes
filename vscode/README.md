@@ -15,6 +15,7 @@ Small companions with a big appetite. A pet lives in a **Petabytes** panel in yo
 - **Tasks:** cheers when one passes, hides when one fails
 - **Debugging:** brings out a magnifying glass
 - **Switching files:** looks around
+- **Pauses:** now and then it does something on its own: a spin, the zoomies, a hum, a passing thought (not on a low battery)
 - **Away for 3 minutes:** naps
 - **Running the app, builds, tests:** "It's alive!", "Compiling, hold on.", "Fingers crossed!"
 - **The terminal:** notices when you open it, and reacts to `git push`, installs, tests and risky commands like `rm -rf`

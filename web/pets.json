@@ -397,6 +397,62 @@
   "passwords": [
    "*covers eyes*",
    "I'm not looking!"
+  ],
+  "anticSpin": [
+   "Wheee!",
+   "Did you see that?",
+   "Again! Again!",
+   "*twirls*"
+  ],
+  "anticHop": [
+   "Boing!",
+   "Hop!",
+   "Just stretching my legs.",
+   "*does a little dance*"
+  ],
+  "anticLook": [
+   "Did you hear that?",
+   "What's over there?",
+   "Hmm...",
+   "*looks around*"
+  ],
+  "anticZoomies": [
+   "Zoomies!",
+   "Gotta go fast!",
+   "Can't stop, won't stop!",
+   "*races around*"
+  ],
+  "anticHum": [
+   "\u266a la la la \u266a",
+   "\u266a do-do-do \u266a",
+   "*hums a little tune*",
+   "\u266a hmm hmm hmm \u266a"
+  ],
+  "anticHearts": [
+   "I like it here.",
+   "You're doing great.",
+   "Best desk ever.",
+   "*happy sigh*"
+  ],
+  "anticThink": [
+   "Do bugs have bugs?",
+   "Is a semicolon a snack?",
+   "What if the cloud is just someone else's computer?",
+   "Tabs or spaces? Don't answer.",
+   "I wonder what's for lunch.",
+   "Is it Friday yet?",
+   "Thinking about snacks."
+  ],
+  "anticYawn": [
+   "*yawns*",
+   "*stretches*",
+   "*big stretch*",
+   "Mm, cozy."
+  ],
+  "anticBubbles": [
+   "Blub blub.",
+   "Bubble time!",
+   "*blows bubbles*"
   ]
  },
  "reactions": {
@@ -704,6 +760,55 @@
    "mood": "hiding",
    "ms": 1500,
    "cooldown": 600
+  },
+  "anticSpin": {
+   "mood": "spin",
+   "ms": 800,
+   "bubbles": 2,
+   "chance": 0.5,
+   "glyph": "!"
+  },
+  "anticHop": {
+   "mood": "happy",
+   "ms": 1100,
+   "chance": 0.5,
+   "glyph": "\u2665"
+  },
+  "anticLook": {
+   "mood": "curious",
+   "ms": 1800,
+   "chance": 0.6,
+   "glyph": "?"
+  },
+  "anticZoomies": {
+   "mood": "excited",
+   "ms": 3500,
+   "chance": 0.6,
+   "glyph": "!"
+  },
+  "anticHum": {
+   "chance": 1,
+   "glyph": "\u266a"
+  },
+  "anticHearts": {
+   "hearts": 3,
+   "chance": 0.5,
+   "glyph": "\u2665"
+  },
+  "anticThink": {
+   "mood": "curious",
+   "ms": 1200,
+   "chance": 1,
+   "glyph": "?"
+  },
+  "anticYawn": {
+   "chance": 1,
+   "glyph": "\u2026"
+  },
+  "anticBubbles": {
+   "bubbles": 6,
+   "chance": 0.3,
+   "glyph": "\u25cb"
   }
  },
  "snacks": [
@@ -727,6 +832,21 @@
    "text": ";",
    "key": "eatSemicolon"
   }
+ ],
+ "antics": [
+  "anticSpin",
+  "anticHop",
+  "anticLook",
+  "anticZoomies",
+  "anticHum",
+  "anticHearts",
+  "anticThink",
+  "anticYawn",
+  "anticBubbles"
+ ],
+ "anticEvery": [
+  70,
+  160
  ],
  "order": [
   "turtle",
@@ -984,6 +1104,16 @@
     }
    },
    "lines": {
+    "anticZoomies": [
+     "Full speed ahead!",
+     "Riding the current!",
+     "*splashes around*"
+    ],
+    "anticHum": [
+     "*sings a sea shanty*",
+     "\u266a yo ho, yo ho \u266a",
+     "*hums with the waves*"
+    ],
     "click": [
      "Hi!",
      "Hehe.",
@@ -1351,6 +1481,16 @@
     }
    },
    "lines": {
+    "anticZoomies": [
+     "Full speed ahead!",
+     "Riding the current!",
+     "*splashes around*"
+    ],
+    "anticHum": [
+     "*sings a sea shanty*",
+     "\u266a yo ho, yo ho \u266a",
+     "*hums with the waves*"
+    ],
     "click": [
      "Bloop!",
      "*wobbles*",
@@ -1777,6 +1917,16 @@
     }
    },
    "lines": {
+    "anticZoomies": [
+     "Full speed ahead!",
+     "Riding the current!",
+     "*splashes around*"
+    ],
+    "anticHum": [
+     "*sings a sea shanty*",
+     "\u266a yo ho, yo ho \u266a",
+     "*hums with the waves*"
+    ],
     "click": [
      "Hi!",
      "*waves all eight arms*",
@@ -2210,6 +2360,16 @@
     }
    },
    "lines": {
+    "anticZoomies": [
+     "Full speed ahead!",
+     "Riding the current!",
+     "*splashes around*"
+    ],
+    "anticHum": [
+     "*sings a sea shanty*",
+     "\u266a yo ho, yo ho \u266a",
+     "*hums with the waves*"
+    ],
     "click": [
      "Snip snip!",
      "*clack clack*",
@@ -2565,6 +2725,16 @@
     }
    },
    "lines": {
+    "anticZoomies": [
+     "Full speed ahead!",
+     "Riding the current!",
+     "*splashes around*"
+    ],
+    "anticHum": [
+     "*sings a sea shanty*",
+     "\u266a yo ho, yo ho \u266a",
+     "*hums with the waves*"
+    ],
     "click": [
      "Puff!",
      "*puffs a little*",
@@ -2811,6 +2981,16 @@
     }
    },
    "lines": {
+    "anticZoomies": [
+     "Full speed ahead!",
+     "Riding the current!",
+     "*splashes around*"
+    ],
+    "anticHum": [
+     "*sings a sea shanty*",
+     "\u266a yo ho, yo ho \u266a",
+     "*hums with the waves*"
+    ],
     "click": [
      "Hello there!",
      "*whale song*",
@@ -3059,6 +3239,16 @@
     }
    },
    "lines": {
+    "anticZoomies": [
+     "Full speed ahead!",
+     "Riding the current!",
+     "*splashes around*"
+    ],
+    "anticHum": [
+     "*sings a sea shanty*",
+     "\u266a yo ho, yo ho \u266a",
+     "*hums with the waves*"
+    ],
     "click": [
      "Hi hi hi!",
      "*zooms*",
@@ -3286,6 +3476,16 @@
     }
    },
    "lines": {
+    "anticZoomies": [
+     "Full speed ahead!",
+     "Riding the current!",
+     "*splashes around*"
+    ],
+    "anticHum": [
+     "*sings a sea shanty*",
+     "\u266a yo ho, yo ho \u266a",
+     "*hums with the waves*"
+    ],
     "click": [
      "Hello, hello!",
      "*bobs politely*",
@@ -3505,6 +3705,16 @@
     }
    },
    "lines": {
+    "anticZoomies": [
+     "Full speed ahead!",
+     "Riding the current!",
+     "*splashes around*"
+    ],
+    "anticHum": [
+     "*sings a sea shanty*",
+     "\u266a yo ho, yo ho \u266a",
+     "*hums with the waves*"
+    ],
     "click": [
      "Don't worry, I'm vegetarian.",
      "Fin-tastic!",
@@ -3732,6 +3942,16 @@
     }
    },
    "lines": {
+    "anticZoomies": [
+     "Full speed ahead!",
+     "Riding the current!",
+     "*splashes around*"
+    ],
+    "anticHum": [
+     "*sings a sea shanty*",
+     "\u266a yo ho, yo ho \u266a",
+     "*hums with the waves*"
+    ],
     "click": [
      "Ee-ee-ee!",
      "*does a flip*",
@@ -3999,6 +4219,16 @@
     }
    },
    "lines": {
+    "anticZoomies": [
+     "Full speed ahead!",
+     "Riding the current!",
+     "*splashes around*"
+    ],
+    "anticHum": [
+     "*sings a sea shanty*",
+     "\u266a yo ho, yo ho \u266a",
+     "*hums with the waves*"
+    ],
     "click": [
      "Hello, darling.",
      "*glides gracefully*",
@@ -4221,6 +4451,16 @@
     }
    },
    "lines": {
+    "anticZoomies": [
+     "Full speed ahead!",
+     "Riding the current!",
+     "*splashes around*"
+    ],
+    "anticHum": [
+     "*sings a sea shanty*",
+     "\u266a yo ho, yo ho \u266a",
+     "*hums with the waves*"
+    ],
     "click": [
      "Hi! Wait, what was I doing?",
      "*swims in a happy circle*",
@@ -4541,6 +4781,16 @@
     }
    },
    "lines": {
+    "anticZoomies": [
+     "Zoomies!",
+     "*runs in circles*",
+     "*chases own tail*"
+    ],
+    "anticLook": [
+     "*sniffs around*",
+     "Did someone say treat?",
+     "*ears perk up*"
+    ],
     "fixed": [
      "Good job! Good job!",
      "All clear! Treat?"
@@ -5017,6 +5267,16 @@
     }
    },
    "lines": {
+    "anticZoomies": [
+     "Zoomies!",
+     "*runs in circles*",
+     "*chases own tail*"
+    ],
+    "anticLook": [
+     "*sniffs around*",
+     "Did someone say treat?",
+     "*ears perk up*"
+    ],
     "fixed": [
      "Yip yip! You did it!",
      "All clear! Zoomies time."
@@ -5461,6 +5721,16 @@
     }
    },
    "lines": {
+    "anticZoomies": [
+     "Zoomies!",
+     "*runs in circles*",
+     "*chases own tail*"
+    ],
+    "anticLook": [
+     "*sniffs around*",
+     "Did someone say treat?",
+     "*ears perk up*"
+    ],
     "fixed": [
      "All clear!",
      "Fixed it!",
@@ -5847,6 +6117,16 @@
     }
    },
    "lines": {
+    "anticZoomies": [
+     "Zoomies!",
+     "*runs in circles*",
+     "*chases own tail*"
+    ],
+    "anticLook": [
+     "*sniffs around*",
+     "Did someone say treat?",
+     "*ears perk up*"
+    ],
     "fixed": [
      "All clear!",
      "Fixed it!",
@@ -6193,6 +6473,16 @@
     }
    },
    "lines": {
+    "anticZoomies": [
+     "Zoomies!",
+     "*runs in circles*",
+     "*chases own tail*"
+    ],
+    "anticLook": [
+     "*sniffs around*",
+     "Did someone say treat?",
+     "*ears perk up*"
+    ],
     "fixed": [
      "All clear!",
      "Fixed it!",
@@ -6711,6 +7001,17 @@
     }
    },
    "lines": {
+    "anticThink": [
+     "Do I need more salt?",
+     "Am I a sandwich?",
+     "Feeling saucy.",
+     "Is it snack o'clock?"
+    ],
+    "anticHop": [
+     "*sizzles*",
+     "Fresh out of the oven!",
+     "Hot and ready!"
+    ],
     "fixed": [
      "Well done! Like my patty.",
      "All clear!",
@@ -7130,6 +7431,17 @@
     }
    },
    "lines": {
+    "anticThink": [
+     "Do I need more salt?",
+     "Am I a sandwich?",
+     "Feeling saucy.",
+     "Is it snack o'clock?"
+    ],
+    "anticHop": [
+     "*sizzles*",
+     "Fresh out of the oven!",
+     "Hot and ready!"
+    ],
     "fixed": [
      "Rice work!",
      "All clear!"
@@ -7529,6 +7841,17 @@
     }
    },
    "lines": {
+    "anticThink": [
+     "Do I need more salt?",
+     "Am I a sandwich?",
+     "Feeling saucy.",
+     "Is it snack o'clock?"
+    ],
+    "anticHop": [
+     "*sizzles*",
+     "Fresh out of the oven!",
+     "Hot and ready!"
+    ],
     "fixed": [
      "That's a-more like it!",
      "All clear!"
@@ -7920,6 +8243,17 @@
     }
    },
    "lines": {
+    "anticThink": [
+     "Do I need more salt?",
+     "Am I a sandwich?",
+     "Feeling saucy.",
+     "Is it snack o'clock?"
+    ],
+    "anticHop": [
+     "*sizzles*",
+     "Fresh out of the oven!",
+     "Hot and ready!"
+    ],
     "fixed": [
      "Donut worry, all fixed!",
      "All clear!"
@@ -8368,6 +8702,17 @@
     }
    },
    "lines": {
+    "anticThink": [
+     "Do I need more salt?",
+     "Am I a sandwich?",
+     "Feeling saucy.",
+     "Is it snack o'clock?"
+    ],
+    "anticHop": [
+     "*sizzles*",
+     "Fresh out of the oven!",
+     "Hot and ready!"
+    ],
     "fixed": [
      "Nacho problem anymore!",
      "All clear!"
@@ -8648,6 +8993,16 @@
     }
    },
    "lines": {
+    "anticSpin": [
+     "Combo!",
+     "*double jump*",
+     "Achievement unlocked: spin!"
+    ],
+    "anticThink": [
+     "Is there a save point nearby?",
+     "I should grind some XP.",
+     "Side quest?"
+    ],
     "fixed": [
      "LEVEL UP!",
      "Boss defeated!",
@@ -8965,6 +9320,16 @@
     }
    },
    "lines": {
+    "anticSpin": [
+     "Combo!",
+     "*double jump*",
+     "Achievement unlocked: spin!"
+    ],
+    "anticThink": [
+     "Is there a save point nearby?",
+     "I should grind some XP.",
+     "Side quest?"
+    ],
     "fixed": [
      "LEVEL UP!",
      "Boss defeated!",
@@ -9259,6 +9624,16 @@
     }
    },
    "lines": {
+    "anticSpin": [
+     "Combo!",
+     "*double jump*",
+     "Achievement unlocked: spin!"
+    ],
+    "anticThink": [
+     "Is there a save point nearby?",
+     "I should grind some XP.",
+     "Side quest?"
+    ],
     "fixed": [
      "The bug is slain!",
      "LEVEL UP!"
@@ -9591,6 +9966,16 @@
     }
    },
    "lines": {
+    "anticSpin": [
+     "Combo!",
+     "*double jump*",
+     "Achievement unlocked: spin!"
+    ],
+    "anticThink": [
+     "Is there a save point nearby?",
+     "I should grind some XP.",
+     "Side quest?"
+    ],
     "fixed": [
      "LEVEL UP!",
      "Boss defeated!",
@@ -9979,6 +10364,16 @@
     }
    },
    "lines": {
+    "anticThink": [
+     "Have you tried turning it off and on again?",
+     "Running diagnostics... all good!",
+     "*defragments quietly*"
+    ],
+    "anticHum": [
+     "*beeps a tune*",
+     "\u266a beep boop \u266a",
+     "*whirrs along*"
+    ],
     "fixed": [
      "All clear!",
      "Fixed it!",
@@ -10383,6 +10778,16 @@
     }
    },
    "lines": {
+    "anticThink": [
+     "Have you tried turning it off and on again?",
+     "Running diagnostics... all good!",
+     "*defragments quietly*"
+    ],
+    "anticHum": [
+     "*beeps a tune*",
+     "\u266a beep boop \u266a",
+     "*whirrs along*"
+    ],
     "fixed": [
      "LEVEL UP!",
      "High score!"
@@ -10799,6 +11204,16 @@
     }
    },
    "lines": {
+    "anticThink": [
+     "Have you tried turning it off and on again?",
+     "Running diagnostics... all good!",
+     "*defragments quietly*"
+    ],
+    "anticHum": [
+     "*beeps a tune*",
+     "\u266a beep boop \u266a",
+     "*whirrs along*"
+    ],
     "fixed": [
      "All clear!",
      "Fixed it!",
@@ -11083,6 +11498,16 @@
     }
    },
    "lines": {
+    "anticThink": [
+     "Have you tried turning it off and on again?",
+     "Running diagnostics... all good!",
+     "*defragments quietly*"
+    ],
+    "anticHum": [
+     "*beeps a tune*",
+     "\u266a beep boop \u266a",
+     "*whirrs along*"
+    ],
     "fixed": [
      "See? Talking it through works.",
      "Quack-tastic!"
@@ -11520,6 +11945,16 @@
     }
    },
    "lines": {
+    "anticThink": [
+     "Have you tried turning it off and on again?",
+     "Running diagnostics... all good!",
+     "*defragments quietly*"
+    ],
+    "anticHum": [
+     "*beeps a tune*",
+     "\u266a beep boop \u266a",
+     "*whirrs along*"
+    ],
     "fixed": [
      "Look, I bloomed!",
      "All clear!"
@@ -11870,6 +12305,16 @@
     }
    },
    "lines": {
+    "anticThink": [
+     "Have you tried turning it off and on again?",
+     "Running diagnostics... all good!",
+     "*defragments quietly*"
+    ],
+    "anticHum": [
+     "*beeps a tune*",
+     "\u266a beep boop \u266a",
+     "*whirrs along*"
+    ],
     "fixed": [
      "Error-free, like a fresh disk.",
      "All clear!"
@@ -12238,6 +12683,16 @@
     }
    },
    "lines": {
+    "anticThink": [
+     "Have you tried turning it off and on again?",
+     "Running diagnostics... all good!",
+     "*defragments quietly*"
+    ],
+    "anticHum": [
+     "*beeps a tune*",
+     "\u266a beep boop \u266a",
+     "*whirrs along*"
+    ],
     "fixed": [
      "Point and fixed!",
      "All clear!"
@@ -12614,6 +13069,16 @@
     }
    },
    "lines": {
+    "anticThink": [
+     "Have you tried turning it off and on again?",
+     "Running diagnostics... all good!",
+     "*defragments quietly*"
+    ],
+    "anticHum": [
+     "*beeps a tune*",
+     "\u266a beep boop \u266a",
+     "*whirrs along*"
+    ],
     "fixed": [
      "All clear!",
      "Fixed it!",
@@ -12975,6 +13440,16 @@
     }
    },
    "lines": {
+    "anticThink": [
+     "Have you tried turning it off and on again?",
+     "Running diagnostics... all good!",
+     "*defragments quietly*"
+    ],
+    "anticHum": [
+     "*beeps a tune*",
+     "\u266a beep boop \u266a",
+     "*whirrs along*"
+    ],
     "fixed": [
      "Crossed off the list!",
      "All clear!"
