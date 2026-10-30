@@ -3,13 +3,14 @@
 # to the same number and push to main. Once everything builds and verifies, a version
 # without a v<version> tag yet is published: the JetBrains plugin and the VS Code
 # extension to their marketplaces (each only when it doesn't have that version), and
-# a GitHub release, which creates the tag, with the Mac app's DMG only. The release
+# a GitHub release, which creates the tag, with the Mac app's DMG and the Windows
+# app's installer only. The release
 # happens in this same run: a tag created by the workflow can't start another one.
 #
 # Other pushes to main that touch the pets, and "Run workflow" by hand, build and
 # verify everything as a check and publish nothing. Pushing a v* tag by hand still
 # releases that version, and re-running a release is safe. The built files are in
-# the run's `pets` and `mac` artifacts either way; a missing token skips that store
+# the run's `pets`, `mac` and `windows` artifacts either way; a missing token skips that store
 # with a warning.
 #
 # A new JetBrains plugin's first version is uploaded by hand from the pets artifact
@@ -33,6 +34,7 @@ on:
       - "vscode/**"
       - "web/**"
       - "mac/**"
+      - "windows/**"
       - ".github/workflows/release.yml"
   workflow_dispatch:
 
@@ -120,11 +122,40 @@ jobs:
           name: mac
           path: dist/*
 
-  # The GitHub release carries the Mac app only: the extension and the plugin are
+  # The Windows app (windows/): Tauri around the same pet page, built into an installer for the current user.
+  # It isn't code-signed, so SmartScreen asks once ("More info", then "Run anyway").
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            windows/src-tauri/target
+          key: windows-${{ hashFiles('windows/src-tauri/Cargo.toml', 'windows/src-tauri/Cargo.lock') }}
+          restore-keys: windows-
+      - name: Windows app
+        working-directory: windows
+        shell: bash
+        run: |
+          version=$(sed -n 's/^pluginVersion=//p' ../intellij/gradle.properties | tr -d '\r')
+          npx --yes @tauri-apps/cli@2.9.4 build --config "{\"version\":\"$version\"}"
+          mkdir -p ../dist && cp src-tauri/target/release/bundle/nsis/*-setup.exe ../dist/
+      - uses: actions/upload-artifact@v7
+        with:
+          name: windows
+          path: dist/*
+
+  # The GitHub release carries the Mac and Windows apps only: the extension and the plugin are
   # installed from their marketplaces, which also keep them up to date.
   # Idempotent: a rerun finds the release already there and refreshes its DMG.
   github-release:
-    needs: [build, mac]
+    needs: [build, mac, windows]
     if: needs.build.outputs.release == 'true'
     runs-on: ubuntu-latest
     steps:
@@ -132,6 +163,10 @@ jobs:
       - uses: actions/download-artifact@v8
         with:
           name: mac
+          path: dist
+      - uses: actions/download-artifact@v8
+        with:
+          name: windows
           path: dist
       - name: Publish
         env:

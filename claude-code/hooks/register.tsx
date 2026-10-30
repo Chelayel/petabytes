@@ -117,12 +117,13 @@ const hidden = atom({ plugin: 'petabytes', key: 'hidden' } as const, true)
 const MAC_APP = 'http://127.0.0.1:47365/'
 
 /**
- Tells the Mac app, and leaves the news in ~/.petabytes/claude-code.json for the pets in VS Code and IntelliJ,
+ Tells the Mac or Windows app, and leaves the news in ~/.petabytes/claude-code.json for the pets in VS Code and IntelliJ,
  which watch that file. Each pet decides whether it reacts (cooldowns, chance) and says what. Never fails.
  */
 async function tell($: EngineInterface, key: string) {
   try {
-    const home = await $.env.get('HOME')
+    // Windows keeps the home folder in USERPROFILE.
+    const home = (await $.env.get('HOME')) ?? (await $.env.get('USERPROFILE'))
     if (home) await $.fs.write(`${home}/.petabytes/claude-code.json`, JSON.stringify({ key, at: Date.now() }))
   } catch {
     // Nowhere to write: the IDE pets just don't hear about it.
