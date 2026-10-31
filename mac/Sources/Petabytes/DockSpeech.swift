@@ -44,7 +44,7 @@ final class DockSpeech {
               let screen = NSScreen.screens.first(where: { $0.frame.intersects(tile) }) else { return false }
         let frame = screen.frame
         // Which edge the Dock is on decides where the bubble goes and which way its tail points.
-        let tail: SpeechBubble.Tail = tile.minX - frame.minX < 8 ? .left : frame.maxX - tile.maxX < 8 ? .right : .down
+        let tail = Self.tail(for: tile, on: frame)
         host.rootView = SpeechBubble(text: text, tail: tail)
         let size = host.fittingSize
         var origin: CGPoint
@@ -54,6 +54,7 @@ final class DockSpeech {
         case .right: origin = CGPoint(x: tile.minX - size.width - 2, y: tile.midY - size.height / 2)
         }
         origin.x = min(max(origin.x, frame.minX + 4), frame.maxX - size.width - 4)
+        origin.y = min(max(origin.y, frame.minY + 4), frame.maxY - size.height - 4)
         panel.setFrame(NSRect(origin: origin, size: size), display: true)
         panel.alphaValue = 1
         panel.orderFrontRegardless()
@@ -66,6 +67,22 @@ final class DockSpeech {
         hideTimer?.invalidate()
         NSAnimationContext.runAnimationGroup({ $0.duration = 0.25; panel.animator().alphaValue = 0 }) { [panel] in
             if panel.alphaValue == 0 { panel.orderOut(nil) }
+        }
+    }
+
+    /**
+     Above the icon with the Dock along the bottom, beside it with the Dock at a side. The Dock's own setting says
+     which; a long bottom Dock reaches the screen's sides, so an icon near a side edge doesn't mean a side Dock.
+     Without the setting, the edge the icon is nearest to.
+     */
+    private static func tail(for tile: NSRect, on frame: NSRect) -> SpeechBubble.Tail {
+        switch UserDefaults(suiteName: "com.apple.dock")?.string(forKey: "orientation") {
+        case "left": return .left
+        case "right": return .right
+        case "bottom": return .down
+        default:
+            let bottom = tile.minY - frame.minY, left = tile.minX - frame.minX, right = frame.maxX - tile.maxX
+            return bottom <= min(left, right) ? .down : left < right ? .left : .right
         }
     }
 
