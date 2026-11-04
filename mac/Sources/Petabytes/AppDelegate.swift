@@ -83,6 +83,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
      inside its own Dock icon instead, drawn natively; its window and web page are put away meanwhile.
      */
     private func applyDockIcon() {
+        PetEffectWindow.dismiss()
         let inDock = Settings.showInDock
         NSApp.setActivationPolicy(inDock ? .regular : .accessory)
         statusItem.isVisible = !inDock
@@ -112,6 +113,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     private func petMenu(withQuit: Bool) -> NSMenu {
         let menu = NSMenu()
         menu.addItem(item("Feed \(petName())", #selector(feed)))
+        menu.addItem(item("Poke \(petName())", #selector(poke)))
 
         menu.addItem(item("Choose Pet…", #selector(showPicker)))
 
@@ -181,6 +183,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
 
     @objc private func feed() {
         send(["type": "feed", "key": "feed"])
+    }
+
+    @objc private func poke() {
+        send(["type": "poke"])
     }
 
     @objc private func showPicker() { picker.show() }

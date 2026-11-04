@@ -8,7 +8,8 @@ oscillate (rot / sx / sy / ty: [amount, period in seconds, phase 0-1]).
 worried, debugging, hiding.
 Run: python3 tools/pets.py > web/pets.json
 """
-import json, math
+import json
+import re, math
 
 def p(d, group, **kw):  return {"path": d, "group": group, **kw}
 def c(cx, cy, r, group, **kw): return {"circle": [cx, cy, r], "group": group, **kw}
@@ -21,7 +22,7 @@ def lens(x, y):
 def eye_set(cx, cy, r, grp, eye, sclera=None, hl=True):
     parts = []
     if sclera: parts.append(c(cx - 1.5, cy, r + 2.6, grp, fill=sclera, when=["eyesOpen"]))
-    parts.append(c(cx, cy, r, grp, fill=eye, when=["eyesOpen"]))
+    parts.append(c(cx, cy, r, grp, fill=eye, when=["eyesOpen"], eyes=[[cx, cy, r]]))
     if hl: parts.append(c(cx + r * 0.4, cy - r * 0.4, r * 0.32, grp, fill="#FFFFFF", when=["eyesOpen"]))
     w = r * 1.25
     parts.append(p(f"M{cx-w} {cy} q{w} {r} {2*w} 0", grp, stroke=eye, sw=1.6, when=["eyesClosed"]))
@@ -46,7 +47,7 @@ PETS["turtle"] = {
     c(104, 45, 1.6, "face", fill="#2DD4BF"),
     *eye_set(109, 38, 2.5, "face", eye),
     p("M105 33.5 l7 2", "face", stroke=eye, sw=1.4, when=["worried"]),
-    p("M111 45 q3 1.5 5.5 -1", "face", stroke=eye, sw=1.2),
+    p("M111 45 q3 1.5 5.5 -1", "face", stroke=eye, sw=1.2, mouth=True),
     sweat(100, 29),
     *lens(117, 52),
   ],
@@ -76,7 +77,7 @@ PETS["jellyfish"] = {
     p("M42 30 Q45 19 57 16", "bell", stroke="#FAE8FF", sw=2, opacity=0.6),
     c(47, 34, 2, "bell", fill="#F9A8D4", opacity=0.8), c(73, 34, 2, "bell", fill="#F9A8D4", opacity=0.8),
     *eye_set(53, 29, 2.4, "bell", jeye), *eye_set(67, 29, 2.4, "bell", jeye),
-    p("M57 35 q3 2 6 0", "bell", stroke=jeye, sw=1.2),
+    p("M57 35 q3 2 6 0", "bell", stroke=jeye, sw=1.2, mouth=True),
     p("M50 24.5 l5 1.5", "bell", stroke=jeye, sw=1.3, when=["worried"]),
     p("M70 24.5 l-5 1.5", "bell", stroke=jeye, sw=1.3, when=["worried"]),
     p("M82 17 q-2.5 4.5 0 5.5 q2.5 -1 0 -5.5z", "bell", fill="#7DD3FC", when=["worried"]),
@@ -109,7 +110,7 @@ PETS["octopus"] = {
     c(42, 22, 3, "head", fill="#C4B5FD", opacity=0.8), c(51, 13, 2, "head", fill="#C4B5FD", opacity=0.8),
     c(38, 33, 2, "head", fill="#C4B5FD", opacity=0.8),
     *eye_set(69, 30, 2.4, "head", oeye, sclera="#F5F3FF"), *eye_set(82, 30, 2.4, "head", oeye, sclera="#F5F3FF"),
-    p("M73 40 q3 2 6 0", "head", stroke=oeye, sw=1.4),
+    p("M73 40 q3 2 6 0", "head", stroke=oeye, sw=1.4, mouth=True),
     p("M64 22.5 l8 2.5", "head", stroke=oeye, sw=1.4, when=["worried"]),
     p("M87 22.5 l-6 2.5", "head", stroke=oeye, sw=1.4, when=["worried"]),
     p("M92 12 q-2.5 4.5 0 5.5 q2.5 -1 0 -5.5z", "head", fill="#7DD3FC", when=["worried"]),
@@ -147,7 +148,7 @@ PETS["crab"] = {
     e(60, 48, 24, 13, "body", fill=cshell, stroke=cdark, sw=1.5),
     p("M44 52 q16 8 32 0", "body", stroke=cdark, sw=1.2, opacity=0.6),
     c(52, 42, 1.5, "body", fill=cdark, opacity=0.6), c(68, 42, 1.5, "body", fill=cdark, opacity=0.6), c(60, 39, 1.5, "body", fill=cdark, opacity=0.6),
-    p("M56 50 q4 3 8 0", "body", stroke=ceye, sw=1.4),
+    p("M56 50 q4 3 8 0", "body", stroke=ceye, sw=1.4, mouth=True),
     p("M54 37 l-2 -10", "eyes", stroke=cdark, sw=2.5), p("M66 37 l2 -10", "eyes", stroke=cdark, sw=2.5),
     c(52, 25, 4.2, "eyes", fill="#FFF7ED"), c(68, 25, 4.2, "eyes", fill="#FFF7ED"),
     *eye_set(53, 25, 2, "eyes", ceye, hl=False), *eye_set(69, 25, 2, "eyes", ceye, hl=False),
@@ -187,7 +188,7 @@ PETS["pufferfish"] = {
     c(48, 37, 1.4, "body", fill="#D97706", opacity=0.7),
     *eye_set(70, 36, 3, "body", peye, sclera="#FFFFFF"),
     p("M64 28.5 l9 2.5", "body", stroke=peye, sw=1.4, when=["worried"]),
-    c(80, 44, 2.2, "body", stroke=peye, sw=1.4),
+    c(80, 44, 2.2, "body", stroke=peye, sw=1.4, mouth=True),
     p("M50 44 q-9 2 -11 9 q7 0 11 -5z", "body", fill="#F59E0B", opacity=0.9, pivot=[50, 45], rot=[18, 0.7, 0.3]),
     p("M86 20 q-2.5 4.5 0 5.5 q2.5 -1 0 -5.5z", "body", fill="#7DD3FC", when=["worried"]),
     *lens(96, 56),
@@ -217,7 +218,7 @@ PETS["whale"] = {
     p("M44 59 l2 4 M54 60 l1.5 4 M64 60 l1 3.6 M74 59 l0.5 3.4", "body", stroke="#93C5FD", sw=1.2),
     c(94, 46, 2.2, "body", fill="#F9A8D4", opacity=0.8),
     *eye_set(88, 40, 2.6, "body", weye),
-    p("M92 49 q5 3 10 -1", "body", stroke=weye, sw=1.4),
+    p("M92 49 q5 3 10 -1", "body", stroke=weye, sw=1.4, mouth=True),
     p("M84 33 l8 2", "body", stroke=weye, sw=1.4, when=["worried"]),
     p("M102 26 q-2.5 4.5 0 5.5 q2.5 -1 0 -5.5z", "body", fill="#7DD3FC", when=["worried"]),
     p("M70 15 q-6 -6 -10 -6 M70 15 q6 -6 10 -6 M70 15 l0 -9", "spout", stroke="#BFDBFE", sw=2.2, when=["happy"]),
@@ -246,7 +247,7 @@ PETS["clownfish"] = {
     p("M68 25.4 Q73 40 68 54.6 Q64 55 61 54.6 Q65 40 61 25.4 Q64 25 68 25.4Z", "body", fill="#FFFFFF", stroke=fdark, sw=1.1),
     p("M80 29 Q84 40 80 51 Q78 50.6 76.5 50 Q79.5 40 76.5 30 Q78 29.4 80 29Z", "body", fill="#FFFFFF", stroke=fdark, sw=1.1),
     *eye_set(79, 36, 2.2, "body", fdark, sclera="#FFFFFF"),
-    p("M83 44 q2 1.6 3.6 0", "body", stroke=fdark, sw=1.2),
+    p("M83 44 q2 1.6 3.6 0", "body", stroke=fdark, sw=1.2, mouth=True),
     p("M74 29.5 l7 2", "body", stroke=fdark, sw=1.3, when=["worried"]),
     p("M88 22 q-2.5 4.5 0 5.5 q2.5 -1 0 -5.5z", "body", fill="#7DD3FC", when=["worried"]),
     p("M62 46 q-2 8 -8 10 q2 -6 2 -10z", "body", fill="#FB923C", stroke=fdark, sw=1, pivot=[62, 46], rot=[20, 0.5, 0.3]),
@@ -301,8 +302,8 @@ PETS["shark"] = {
     p("M30 48 Q70 60 108 44 Q100 54 70 56 Q40 56 30 48Z", "body", fill="#F1F5F9"),
     p("M84 35 q-2 5 0 10 M88 35 q-2 5 0 10 M92 36 q-2 4 0 8", "body", stroke=sdark, sw=1.2),
     *eye_set(99, 36, 2.4, "body", seye),
-    p("M96 46 q6 4 12 0", "body", stroke=seye, sw=1.4),
-    p("M99 47.2 l1.5 2.2 l1.5 -2 M103 47.8 l1.5 2.2 l1.5 -2", "body", fill="#FFFFFF"),
+    p("M96 46 q6 4 12 0", "body", stroke=seye, sw=1.4, mouth=True),
+    p("M99 47.2 l1.5 2.2 l1.5 -2 M103 47.8 l1.5 2.2 l1.5 -2", "body", fill="#FFFFFF", mouth=True),
     p("M95 30.5 l8 2", "body", stroke=seye, sw=1.4, when=["worried"]),
     p("M106 22 q-2.5 4.5 0 5.5 q2.5 -1 0 -5.5z", "body", fill="#7DD3FC", when=["worried"]),
     p("M62 50 q-6 10 -16 12 q6 -6 8 -12z", "fins", fill=sdark, pivot=[60, 50], rot=[12, 1.0, 0.3]),
@@ -331,7 +332,7 @@ PETS["dolphin"] = {
     p("M10 44 Q20 30 50 28 Q80 26 98 36 Q106 40 117 43 Q107 46 98 47 Q80 58 48 56 Q24 54 10 44Z", "body", fill=dgray),
     p("M30 50 Q62 60 100 46 Q84 56 50 56 Q36 55 30 50Z", "body", fill="#E2E8F0"),
     *eye_set(92, 38, 2.4, "body", deye),
-    p("M101 45 q6 2.5 12 -0.5", "body", stroke=deye, sw=1.3),
+    p("M101 45 q6 2.5 12 -0.5", "body", stroke=deye, sw=1.3, mouth=True),
     c(96, 43, 1.8, "body", fill="#F9A8D4", opacity=0.7),
     p("M87 32 l8 2", "body", stroke=deye, sw=1.4, when=["worried"]),
     p("M104 24 q-2.5 4.5 0 5.5 q2.5 -1 0 -5.5z", "body", fill="#7DD3FC", when=["worried"]),
@@ -361,7 +362,7 @@ PETS["angelfish"] = {
     p("M54 20 Q58 40 54 62 M64 12 Q68 40 64 70", "body", stroke=astripe, sw=3.2, opacity=0.85),
     p("M74 28 Q76 40 74 52", "body", stroke=astripe, sw=2.2, opacity=0.7),
     *eye_set(78, 36, 2.6, "body", aeye, sclera="#FFFFFF"),
-    p("M84 40.5 q2 1.4 3.4 0", "body", stroke=aeye, sw=1.2),
+    p("M84 40.5 q2 1.4 3.4 0", "body", stroke=aeye, sw=1.2, mouth=True),
     p("M73 29.5 l7 2", "body", stroke=aeye, sw=1.3, when=["worried"]),
     p("M88 22 q-2.5 4.5 0 5.5 q2.5 -1 0 -5.5z", "body", fill="#7DD3FC", when=["worried"]),
     p("M66 46 q-3 7 -8 9 q2 -5 2 -9z", "body", fill="#FDE68A", pivot=[66, 46], rot=[20, 0.6, 0.3]),
@@ -387,7 +388,7 @@ PETS["tang"] = {
     p("M43 26 Q60 18 78 26", "body", stroke="#1E3A8A", sw=2),
     p("M42 34 Q56 24 74 30 Q66 36 54 36 Q60 44 74 45 Q60 51 44 44 Q38 40 42 34Z", "body", fill="#0F172A"),
     *eye_set(79, 36, 2.4, "body", teye, sclera="#FFFFFF"),
-    p("M85 42 q2 1.5 3.5 0", "body", stroke=teye, sw=1.2),
+    p("M85 42 q2 1.5 3.5 0", "body", stroke=teye, sw=1.2, mouth=True),
     p("M74 29.5 l7 2", "body", stroke=teye, sw=1.3, when=["worried"]),
     p("M90 22 q-2.5 4.5 0 5.5 q2.5 -1 0 -5.5z", "body", fill="#7DD3FC", when=["worried"]),
     p("M65 46 q-2 7 -7 9 q2 -5 1 -9z", "body", fill="#93C5FD", pivot=[65, 46], rot=[20, 0.55, 0.3]),
@@ -434,7 +435,7 @@ PETS["retriever"] = {
     c(112, 33, 2.6, "face", fill=deye),
     p("M86 20 q-9 2 -9 15 q5 5 9 -1 q2 -7 0 -14z", "face", fill=gold_dark, pivot=[86, 21], rot=[8, 1.2, 0]),
     *eye_set(96, 27, 2.3, "face", deye),
-    p("M104 39.5 q3.5 2.5 7 -0.5", "face", stroke=deye, sw=1.3),
+    p("M104 39.5 q3.5 2.5 7 -0.5", "face", stroke=deye, sw=1.3, mouth=True),
     p("M106 40.5 q1 6 4 5 q2 -2 0 -5.5z", "face", fill="#F472B6", when=["eyesHappy"]),
     p("M92 22 l7 1.5", "face", stroke=deye, sw=1.4, when=["worried"]),
     sweat(84, 15),
@@ -488,7 +489,7 @@ PETS["spitz"] = {
     p("M95 33 q8 1 10 5 q-3 4 -11 3z", "face", fill=snow, stroke=snow_line, sw=1.2),
     c(104.5, 37.5, 2.3, "face", fill=nose),
     *eye_set(86, 30, 2.4, "face", seye), *eye_set(95, 30, 2.2, "face", seye),
-    p("M99 41 q2 2 4 0", "face", stroke=nose, sw=1.1),
+    p("M99 41 q2 2 4 0", "face", stroke=nose, sw=1.1, mouth=True),
     p("M100 43 q1 5 3 4 q1.5 -2 0 -4.5z", "face", fill="#F472B6", when=["eyesHappy"]),
     c(82, 37, 2.4, "face", fill="#FBCFE8", opacity=0.8),
     p("M81 25.5 l6 1.5 M97 25.5 l-5 1.5", "face", stroke=seye, sw=1.3, when=["worried"]),
@@ -528,7 +529,7 @@ PETS["cat"] = {
     p("M86 22 l1.5 4 M91 21 l0 4.5 M96 22 l-1.5 4", "face", stroke=grey_dark, sw=1.5),
     *eye_set(87, 31, 2.2, "face", keye, sclera="#BEF264"), *eye_set(96, 31, 2.2, "face", keye, sclera="#BEF264"),
     p("M90.5 35.5 h3.5 l-1.75 2z", "face", fill="#F472B6"),
-    p("M92.25 37.5 q-1.5 2 -3 1 M92.25 37.5 q1.5 2 3 1", "face", stroke=keye, sw=1),
+    p("M92.25 37.5 q-1.5 2 -3 1 M92.25 37.5 q1.5 2 3 1", "face", stroke=keye, sw=1, mouth=True),
     p("M84 36 l-9 -1.5 M84 38.5 l-9 2 M100 36 l9 -1.5 M100 38.5 l9 2", "face", stroke="#E5E7EB", sw=0.8),
     p("M83 26 l6 2 M100 26 l-6 2", "face", stroke=keye, sw=1.3, when=["worried"]),
     sweat(104, 22),
@@ -564,7 +565,7 @@ PETS["bunny"] = {
     c(78, 40, 11, "face", fill=fur, stroke=fur_line, sw=1),
     *eye_set(82, 38, 2.2, "face", beye),
     c(88.5, 42, 1.5, "face", fill="#F472B6"),
-    p("M86 45 q1.5 1.5 3 0", "face", stroke=beye, sw=1),
+    p("M86 45 q1.5 1.5 3 0", "face", stroke=beye, sw=1, mouth=True),
     c(83, 44, 2, "face", fill=pink, opacity=0.7),
     p("M79 33.5 l5 1.5", "face", stroke=beye, sw=1.3, when=["worried"]),
     sweat(70, 30),
@@ -597,7 +598,7 @@ PETS["hamster"] = {
     *eye_set(75, 46, 2.3, "face", heye),
     e(78, 53, 6.5, 5, "face", fill="#F7B98B", when=["eyesHappy"]),
     c(81.5, 49.5, 1.4, "face", fill="#F472B6"),
-    p("M79.5 52.5 q2 1.5 4 0", "face", stroke=heye, sw=1),
+    p("M79.5 52.5 q2 1.5 4 0", "face", stroke=heye, sw=1, mouth=True),
     p("M84 50 l7 -1.5 M84 52 l7 1.5", "face", stroke="#FFF7ED", sw=0.8),
     p("M72 41.5 l5 1.5", "face", stroke=heye, sw=1.3, when=["worried"]),
     sweat(68, 36),
@@ -634,7 +635,7 @@ PETS["burger"] = {
     e(42, 22, 1.8, 1, "top", fill=seed), e(50, 16, 1.8, 1, "top", fill=seed), e(76, 18, 1.8, 1, "top", fill=seed),
     e(84, 26, 1.8, 1, "top", fill=seed), e(38, 30, 1.8, 1, "top", fill=seed),
     *eye_set(57, 27, 2.6, "top", ink, sclera="#FFFFFF"), *eye_set(70, 27, 2.6, "top", ink, sclera="#FFFFFF"),
-    p("M63 34 q4 3.5 8 0", "top", stroke=ink, sw=1.5),
+    p("M63 34 q4 3.5 8 0", "top", stroke=ink, sw=1.5, mouth=True),
     p("M53 21 l6 1.5 M74 21 l-6 1.5", "top", stroke=ink, sw=1.4, when=["worried"]),
     sweat(86, 18),
     # A thumbs-up arm, and one hugging its middle.
@@ -666,7 +667,7 @@ def snack_face(x1, x2, y, group, mouth_dy=7):
     """Two big eyes, a smile and worried brows, the way every snack wears them."""
     mx = (x1 + x2) / 2
     return [*eye_set(x1, y, 2.5, group, ink, sclera="#FFFFFF"), *eye_set(x2, y, 2.5, group, ink, sclera="#FFFFFF"),
-            p(f"M{mx-4} {y+mouth_dy} q4 3.5 8 0", group, stroke=ink, sw=1.5),
+            p(f"M{mx-4} {y+mouth_dy} q4 3.5 8 0", group, stroke=ink, sw=1.5, mouth=True),
             p(f"M{x1-4} {y-6} l6 1.5 M{x2+4} {y-6} l-6 1.5", group, stroke=ink, sw=1.4, when=["worried"])]
 
 def circle_path(cx, cy, r, reverse=False):
@@ -829,8 +830,8 @@ GAMES_LINES = {
   "longSession": ["You've been playing a while. Stretch?", "Save and take a break?"],
 }
 
-def pixels(rows, x0, y0, s, palette, group, **kw):
-    """One part per color: runs of same-colored pixels in a row become one rectangle each."""
+def pixels(rows, x0, y0, s, palette, group, mouth=None, **kw):
+    """One part per color: runs of same-colored pixels in a row become one rectangle each. The `mouth` key's color is the mouth."""
     out = []
     for key, color in palette.items():
         d = []
@@ -845,7 +846,7 @@ def pixels(rows, x0, y0, s, palette, group, **kw):
                     c += 1
                 d.append(f"M{x0 + start * s} {y0 + r * s}h{(c - start) * s}v{s}h{-(c - start) * s}z")
         if d:
-            out.append(p(" ".join(d), group, fill=color, **kw))
+            out.append(p(" ".join(d), group, fill=color, **kw, **({"mouth": True} if key == mouth else {})))
     return out
 
 def pixel_eyes(cols, row, x0, y0, s, group, white="#FFFFFF", pupil="#0E1012"):
@@ -853,7 +854,7 @@ def pixel_eyes(cols, row, x0, y0, s, group, white="#FFFFFF", pupil="#0E1012"):
     parts = []
     for c in cols:
         x, y = x0 + c * s, y0 + row * s
-        parts += [p(f"M{x} {y}h{2*s}v{2*s}h{-2*s}z", group, fill=white, when=["eyesOpen"]),
+        parts += [p(f"M{x} {y}h{2*s}v{2*s}h{-2*s}z", group, fill=white, when=["eyesOpen"], eyes=[[x+s, y+s, s]]),
                   p(f"M{x+s} {y}h{s}v{2*s}h{-s}z", group, fill=pupil, when=["eyesOpen"]),
                   p(f"M{x} {y+s}h{2*s}v{s}h{-2*s}z", group, fill=pupil, when=["eyesClosed"]),
                   p(f"M{x} {y+s}h{s}v{s}h{-s}z M{x+s} {y}h{s}v{s}h{-s}z", group, fill=pupil, when=["eyesHappy"])]
@@ -881,7 +882,7 @@ PETS["slime"] = {
   "label": "Slime", "name": "Squish", "set": "games", "flip": False, "floor": True, "speed": 0.7,
   "bob": [3, 0.55], "glow": "rgba(74,222,128,0.45)", "mouth": [60, 62], "head": [60, 28],
   "parts": [
-    *pixels(slime_rows, 28, 28, S4, {"D": "#166534", "G": "#4ADE80", "L": "#BBF7D0", "K": "#14532D"}, "body"),
+    *pixels(slime_rows, 28, 28, S4, {"D": "#166534", "G": "#4ADE80", "L": "#BBF7D0", "K": "#14532D"}, "body", mouth="K"),
     *pixel_eyes([4, 10], 5, 28, 28, S4, "face"),
     pixel_sweat(84, 34),
     *lens(98, 58),
@@ -918,7 +919,7 @@ PETS["ghost"] = {
   "label": "Ghost", "name": "Boo", "set": "games", "flip": False, "floor": False, "speed": 0.7,
   "bob": [6, 2.6], "glow": "rgba(226,232,240,0.5)", "mouth": [60, 50], "head": [60, 14],
   "parts": [
-    *pixels(ghost_rows, 32, 14, S4, {"O": "#64748B", "W": "#F1F5F9", "P": "#F9A8D4", "K": "#334155"}, "body", pivot=[60, 66], rot=[3, 2.6, 0]),
+    *pixels(ghost_rows, 32, 14, S4, {"O": "#64748B", "W": "#F1F5F9", "P": "#F9A8D4", "K": "#334155"}, "body", mouth="K", pivot=[60, 66], rot=[3, 2.6, 0]),
     *pixel_eyes([3, 9], 4, 32, 14, S4, "face", white="#334155", pupil="#0E1012"),
     pixel_sweat(90, 18),
     *lens(96, 50),
@@ -956,7 +957,7 @@ PETS["knight"] = {
     p("M64 56h8v16h-8z", "legs", fill="#475569", pivot=[68, 56], rot=[14, 0.7, 0.5]),
     p("M82 20h4v24h-4z M78 40h12v4h-12z M82 44h4v8h-4z", "arms", fill="#CBD5E1", pivot=[84, 48], rot=[10, 1.4, 0]),
     *pixels(knight_rows, 36, 12, S4, {"R": "#EF4444", "S": "#94A3B8", "K": "#1E293B", "B": "#3B82F6", "Y": "#FACC15"}, "body"),
-    p("M48 28h4v4h-4z M64 28h4v4h-4z", "face", fill="#FDE047", when=["eyesOpen", "eyesHappy"]),
+    p("M48 28h4v4h-4z M64 28h4v4h-4z", "face", fill="#FDE047", when=["eyesOpen", "eyesHappy"], eyes=[[50, 30, 2], [66, 30, 2]]),
     pixel_sweat(84, 12),
     *lens(100, 56),
   ],
@@ -991,7 +992,7 @@ PETS["robot"] = {
   "parts": [
     p("M48 58h8v14h-8z", "legs", fill="#64748B", pivot=[52, 58], rot=[12, 0.8, 0]),
     p("M64 58h8v14h-8z", "legs", fill="#64748B", pivot=[68, 58], rot=[12, 0.8, 0.5]),
-    *pixels(robot_rows, 34, 18, S4, {"A": "#94A3B8", "G": "#CBD5E1", "C": "#0E7490", "B": "#94A3B8", "R": "#EF4444"}, "body"),
+    *pixels(robot_rows, 34, 18, S4, {"A": "#94A3B8", "G": "#CBD5E1", "C": "#0E7490", "B": "#94A3B8", "R": "#EF4444"}, "body", mouth="R"),
     p("M58 10h4v4h-4z", "body", fill="#FDE047"),
     *pixel_eyes([4, 8], 3, 34, 18, S4, "face", white="#67E8F9", pupil="#083344"),
     p("M54 38h12v4h-12z", "face", fill="#67E8F9", when=["eyesOpen", "eyesHappy"]),
@@ -1084,8 +1085,8 @@ PETS["mug"] = {
     *outlined("M78 32 q12 0 12 11 q0 11 -12 11", "body", "#F87171", 5),
     p("M36 24 H78 V54 Q78 62 70 62 H44 Q36 62 36 54 Z", "body", fill="#F87171", stroke=ink, sw=1.6),
     e(57, 24, 21, 4, "body", fill="#6F4E37", stroke=ink, sw=1.3),
-    p("M50 18 q-4 -5 0 -9 q4 -4 0 -9", "steam", stroke="#CBD5E1", sw=2.2, opacity=0.75, pivot=[50, 18], rot=[8, 1.6, 0]),
-    p("M60 18 q-4 -5 0 -9 q4 -4 0 -9", "steam", stroke="#CBD5E1", sw=2.2, opacity=0.75, pivot=[60, 18], rot=[8, 1.6, 0.4]),
+    p("M50 18 q-4 -5 0 -9 q4 -4 0 -9", "steam", stroke="#CBD5E1", sw=2.2, opacity=0.75, pivot=[50, 18], rot=[8, 1.6, 0], calm=True),
+    p("M60 18 q-4 -5 0 -9 q4 -4 0 -9", "steam", stroke="#CBD5E1", sw=2.2, opacity=0.75, pivot=[60, 18], rot=[8, 1.6, 0.4], calm=True),
     p("M70 18 q-4 -5 0 -9", "steam", stroke="#CBD5E1", sw=2.2, opacity=0.6, pivot=[70, 18], rot=[8, 1.6, 0.8], when=["happy"]),
     *snack_face(51, 63, 40, "face"),
     c(45, 47, 2.4, "face", fill="#FECACA", opacity=0.8), c(69, 47, 2.4, "face", fill="#FECACA", opacity=0.8),
@@ -1525,5 +1526,261 @@ SET_ANTIC_LINES = {
 for pet in PETS.values():
     pet["lines"] = {**SET_ANTIC_LINES.get(pet["set"], {}), **pet["lines"]}
 
+# Shared by the web, Java2D and Dock renderers. Only eaten snacks count toward a meal.
+CARE = {"safeFeeds": 3, "burstAt": 8, "mealGapMs": 60000, "pokeGapMs": 2000,
+        "angryAt": 5, "angerMs": 6000, "angerLineMs": 3000, "hopMs": 2400, "hopMoveMs": 520,
+        "windupMs": 350, "burstMs": 4600}
+SPLAT_PATH = "M48 13 C56 -6 66 3 64 21 C64 29 76 23 85 16 C99 7 105 22 89 33 C79 40 88 43 97 43 C114 44 109 59 92 57 C81 55 82 65 90 74 C101 89 85 99 76 81 C70 69 64 77 64 91 C64 109 48 108 49 89 C49 77 40 77 33 89 C23 105 10 92 23 78 C33 66 23 65 12 68 C-6 73 -9 56 11 53 C26 51 21 42 9 36 C-7 27 4 12 20 25 C34 36 37 28 31 17 C23 0 40 -6 44 14 C45 20 47 18 48 13 Z"
+PIXEL_SPLAT_PATH = "M40 0 H60 V20 H70 V10 H90 V30 H80 V40 H100 V60 H80 V70 H90 V90 H70 V80 H60 V100 H40 V80 H30 V90 H10 V70 H20 V60 H0 V40 H20 V30 H10 V10 H30 V20 H40 Z"
+PALETTES = {"tide": ["#8AD6A2", "#4AA77C", "#CEF2AD"], "home": ["#B7D76B", "#7AA544", "#E4F3A3"],
+            "snacks": ["#EAC66B", "#BF8B43", "#FFF0AC"], "games": ["#A3D94D", "#5C982E", "#E0F6A0"],
+            "gadgets": ["#9DD18B", "#5A9A72", "#DDF0AD"]}
+LINES.update({
+    "overfed": ["Oof. Getting a little round...", "My belly says stop.", "I may have over-snacked."],
+    "burstWarning": ["One more bite was a mistake...", "Uh-oh. Snack overflow!"],
+    "burstRecovered": ["I'm okay! Let's pace the snacks.", "Cleanup complete. Smaller portions?"],
+    "pokeWarning": ["Easy with the pokes!", "Hey! Personal space!", "I'm a pet, not a button."],
+    "angry": ["Poke me ONE more time. I dare you.", "I'm shedding on your hoodie.", "Back off, finger gremlin!",
+              "Do I look like a snooze button?!", "I bite. Allegedly. Want to find out?", "Grr. Grrr. GRRRRR.",
+              "*$%&! I just groomed this fur!"],
+})
+SET_CARE_LINES = {
+    "tide": {"angry": ["Back off, barnacle brain!", "I'll ink your whole keyboard.", "You soggy sea cucumber!",
+                      "Holy mackerel, #@$%! ENOUGH!", "Go poke a jellyfish instead!", "Shiver me fins, hands OFF!",
+                      "Kelp! Get this human off me!"],
+             "overfed": ["I'm turning into a beach ball...", "Too many bytes in my belly!"]},
+    "games": {"angry": ["Reported for griefing!", "Touch me again: instant ban.", "Skill issue. YOURS.",
+                       "#@!$ Rage quit loading... 99%", "I will camp your spawn. Forever.", "That's not lag. That's my FURY.",
+                       "Git gud at NOT poking me!"],
+              "burstWarning": ["CRITICAL SNACK OVERFLOW!", "Belly capacity exceeded!"],
+              "burstRecovered": ["Respawned! Fewer snacks this time?"], "overfed": ["Belly level up!", "Inventory: too many snacks."]},
+    "snacks": {"angry": ["You half-baked crouton!", "I'm not a free sample, pal!", "I'll go stale out of spite.",
+                        "#@$%! Crumbs EVERYWHERE now!", "Manners of a soggy fry!", "Rude. Supersize rude.",
+                        "Go poke a vending machine!"],
+               "overfed": ["Stuffed. And I'm already food!", "Extra filling was a mistake..."]},
+    "gadgets": {"angry": ["Error 403: poking forbidden.", "sudo leave me alone", "I'll delete your node_modules.",
+                         "Kernel panic! #@$%&!", "Force-pushing to main. Watch me.", "Reticulating my rage... done.",
+                         "Your next merge conflict? Me."],
+                "burstWarning": ["Snack buffer overflow!", "Capacity exceeded. Uh-oh..."],
+                "overfed": ["Storage almost full...", "Too many bytes!"]},
+}
+for pet in PETS.values():
+    fill, shade, shine = PALETTES[pet["set"]]
+    outline = next((p["stroke"] for p in pet["parts"] if p.get("stroke", "").startswith("#")), shade)
+    pet["splatter"] = {"path": PIXEL_SPLAT_PATH if pet["set"] == "games" else SPLAT_PATH,
+                       "fill": fill, "shade": shade, "shine": shine, "outline": outline, "pixel": pet["set"] == "games"}
+    pet["lines"] = {**SET_CARE_LINES.get(pet["set"], {}), **pet["lines"]}
+
+# Long, sideways pets fill out vertically; upright pets fill out sideways.
+SIDEWAYS = {"turtle", "whale", "clownfish", "shark", "dolphin", "angelfish", "tang", "retriever", "spitz", "cat", "hamster"}
+for id, pet in PETS.items():
+    pet["growth"] = [0.09, 0.15] if id in SIDEWAYS else [0.15, 0.09]
+
+# ---- The angry face ------------------------------------------------------
+# Built from each pet's own calm face, so anger reads as the same character: its own eyes under a brow that
+# presses into them, its own mouth turned upside down, and steam and a vein drawn against the top of its head.
+# A calm mouth shows whenever the eyes do (open, closed or happy), which is every mood except anger; so does
+# anything else tagged calm=True, like the coffee steam the angry steam replaces.
+CALM_FACE = ["eyesOpen", "eyesClosed", "eyesHappy"]
+PATH_ARGS = {"M": 2, "L": 2, "H": 1, "V": 1, "Q": 4, "T": 2, "C": 6, "S": 4, "A": 7, "Z": 0}
+
+
+def path_commands(d):
+    """(command, numbers) pairs, with implicit repeats split out."""
+    tokens = re.findall(r"[A-Za-z]|-?\d*\.?\d+(?:e-?\d+)?", d)
+    out, i, cmd = [], 0, None
+    while i < len(tokens):
+        if tokens[i].isalpha():
+            cmd = tokens[i]; i += 1
+            if cmd in "zZ": out.append((cmd, [])); continue
+        n = PATH_ARGS[cmd.upper()]
+        out.append((cmd, [float(t) for t in tokens[i:i + n]])); i += n
+        if cmd in "mM": cmd = "l" if cmd == "m" else "L"
+    return out
+
+
+def bbox(part):
+    """The part's box from its end and control points (a little generous on curves, which is fine for placing)."""
+    if "circle" in part:
+        x, y, r = part["circle"]; return [x - r, y - r, x + r, y + r]
+    if "ellipse" in part:
+        x, y, rx, ry = part["ellipse"]; return [x - rx, y - ry, x + rx, y + ry]
+    xs, ys, x, y, sx, sy = [], [], 0.0, 0.0, 0.0, 0.0
+    for cmd, a in path_commands(part["path"]):
+        U, rel = cmd.upper(), cmd.islower()
+        bx, by = (x, y) if rel else (0.0, 0.0)
+        if U == "Z": x, y = sx, sy
+        elif U == "H": x = bx + a[0]
+        elif U == "V": y = by + a[0]
+        elif U == "A": x, y = bx + a[5], by + a[6]
+        else:
+            for k in range(0, len(a), 2): xs.append(bx + a[k]); ys.append(by + a[k + 1])
+            x, y = bx + a[-2], by + a[-1]
+        if U == "M": sx, sy = x, y
+        xs.append(x); ys.append(y)
+    return [min(xs), min(ys), max(xs), max(ys)]
+
+
+def flip_path(d, cy):
+    """The path mirrored top to bottom about y = cy: a smile becomes a frown in the same hand."""
+    out = []
+    for cmd, a in path_commands(d):
+        U, rel = cmd.upper(), cmd.islower()
+        if U == "V": a = [-a[0]] if rel else [2 * cy - a[0]]
+        elif U == "A": a = a[:4] + [1 - a[4]] + [a[5], -a[6] if rel else 2 * cy - a[6]]
+        elif U != "H": a = [v if k % 2 == 0 else (-v if rel else 2 * cy - v) for k, v in enumerate(a)]
+        out.append(cmd + " ".join(f"{v:g}" for v in a))
+    return " ".join(out)
+
+
+def luminance(color):
+    r, g, b = (int(color[i:i + 2], 16) / 255 for i in (1, 3, 5))
+    return 0.2126 * r + 0.7152 * g + 0.0722 * b
+
+
+def covers(part, x, y):
+    """Whether the part's shape covers the point: exactly for circles, ellipses and pixel rectangles, else its box."""
+    if "circle" in part:
+        cx, cy, r = part["circle"]; return (x - cx) ** 2 + (y - cy) ** 2 <= r * r
+    if "ellipse" in part:
+        cx, cy, rx, ry = part["ellipse"]; return ((x - cx) / rx) ** 2 + ((y - cy) / ry) ** 2 <= 1
+    rects = re.findall(r"M(-?[\d.]+) (-?[\d.]+)h(-?[\d.]+)v(-?[\d.]+)h-?[\d.]+z", part["path"])
+    if rects and len(rects) == part["path"].count("M"):
+        return any(float(a) <= x <= float(a) + float(w) and float(b) <= y <= float(b) + float(h) for a, b, w, h in map(lambda r: r, rects))
+    x0, y0, x1, y1 = bbox(part)
+    return x0 <= x <= x1 and y0 <= y <= y1
+
+
+def union(boxes):
+    return [min(b[0] for b in boxes), min(b[1] for b in boxes), max(b[2] for b in boxes), max(b[3] for b in boxes)]
+
+
+STEAM, VEIN = "#FFF7E2", "#E44954"
+for pet in PETS.values():
+    pixel = pet["set"] == "games"
+    anchors = [(part["group"], eye) for part in pet["parts"] for eye in part.pop("eyes", [])]
+    assert anchors, pet["name"] + " needs eyes to frown with"
+    mouths = [part for part in pet["parts"] if part.pop("mouth", False)]
+    open_eyes = [part for part in pet["parts"] if "eyesOpen" in part.get("when", [])]
+    for part in pet["parts"]:
+        if part.pop("calm", False): part["when"] = list(CALM_FACE)
+    # The silhouette, for finding the top of the head: everything always drawn, minus props.
+    body = [(part, bbox(part)) for part in pet["parts"] if not part.get("when") and part not in mouths
+            and part["group"] not in ("tool", "lens")]
+    face = []
+
+    # Eyes: the calm ones, kept open through the tantrum.
+    for part in open_eyes:
+        part["when"] = part["when"] + ["angry"]
+    spacing = min((abs(a[1][0] - b[1][0]) for a in anchors for b in anchors if a is not b), default=99)
+    eyes = []
+    for group, (x, y, r) in anchors:
+        near = [bbox(part) for part in open_eyes if part["group"] == group]
+        near = [b for b in near if b[2] - b[0] < spacing * 0.9 and abs((b[0] + b[2]) / 2 - x) <= r + 4 and abs((b[1] + b[3]) / 2 - y) <= r + 4]
+        eyes.append((group, union(near) if near else [x - r, y - r, x + r, y + r]))
+    # Brows contrast with what they're drawn on: the pupils' ink on light skin, the eyes' own light on a dark
+    # visor or a dark body.
+    fills = [part["fill"] for part in open_eyes if part.get("fill", "").startswith("#")]
+    darkest, lightest = min(fills, key=luminance, default="#2B1D12"), max(fills, key=luminance, default="#FFF7E2")
+    if luminance(darkest) > 0.3: darkest = "#2B1D12"
+    first_eye = min(pet["parts"].index(part) for part in open_eyes)
+    def surface_at(x, y):
+        under = [part for part in pet["parts"][:first_eye] if not part.get("when") and part.get("fill", "").startswith("#")
+                 and part["group"] not in ("tool", "lens") and covers(part, x, y)]
+        return under[-1]["fill"] if under else "#808080"
+    # A lone eye frowns toward the snout; a pair frowns toward each other.
+    middle = sum((b[0] + b[2]) / 2 for _, b in eyes) / len(eyes) if len(eyes) > 1 else pet["mouth"][0]
+
+    # Brows: one per eye, pressing into its top edge on the inner side.
+    for group, (x0, y0, x1, y1) in eyes:
+        w, cx = x1 - x0, (x0 + x1) / 2
+        inner = 1 if middle > cx else -1
+        ink = darkest if luminance(surface_at(cx, y0 - max(2, w * 0.15))) > 0.18 else lightest
+        if pixel:
+            u = round(max(2, w / 4))
+            left, half = x0 - (u if inner > 0 else 0), (w + u) / 2
+            hi, lo = (left, left + half) if inner > 0 else (left + half, left)
+            face += [p(f"M{hi:g} {y0 - u * 1.5:g}h{half:g}v{u:g}h{-half:g}z M{lo:g} {y0 - u * 0.5:g}h{half:g}v{u:g}h{-half:g}z",
+                       group, fill=ink)]
+        else:
+            sw = min(3.2, max(1.8, w * 0.28))
+            out_x, in_x = cx - inner * w * 0.62, cx + inner * w * 0.5
+            face += [p(f"M{out_x:.2f} {y0 - w * 0.16:.2f} L{in_x:.2f} {y0 + w * 0.2:.2f}", group, stroke=ink, sw=round(sw, 2))]
+
+    # Mouth: the calm one, upside down, in its own place, color and weight.
+    if mouths:
+        mx0, my0, mx1, my1 = union([bbox(part) for part in mouths])
+        cy = (my0 + my1) / 2
+        for part in mouths:
+            part["when"] = list(CALM_FACE)
+            if pixel:
+                w, h = mx1 - mx0, my1 - my0
+                u = h / 2
+                frown = (f"M{mx0 + u:g} {my0:g}h{w - 2 * u:g}v{u:g}h{u:g}v{u:g}h{-u:g}v{-u:g}h{-(w - 2 * u):g}v{u:g}h{-u:g}v{-u:g}h{u:g}z")
+                motion = {k: part[k] for k in ("pivot", "rot") if k in part}
+                # The calm mouth covered a gap in the pixels: fill it with the skin around it before frowning.
+                face += [p(f"M{mx0:g} {my0:g}h{w:g}v{h:g}h{-w:g}z", part["group"], fill=surface_at((mx0 + mx1) / 2, my0 - 1), **motion),
+                         p(frown, part["group"], fill=part["fill"], **motion)]
+            elif "path" in part:
+                angry = {k: v for k, v in part.items() if k != "when"}
+                angry["path"] = flip_path(part["path"], cy)
+                face += [angry]
+            else:
+                # A round "o" mouth pouts into a short frown of the same width and weight.
+                face += [p(f"M{mx0:g} {my1 - 0.5:g} q{(mx1 - mx0) / 2:g} {-(my1 - my0) * 0.9:g} {mx1 - mx0:g} 0", part["group"],
+                           stroke=part.get("stroke", ink), sw=part.get("sw", 1.4))]
+
+    # Steam and a vein, sized to the face and placed against the top of the head.
+    ew = sum(b[2] - b[0] for _, b in eyes) / len(eyes)
+    k = min(1.0, max(0.55, ew / 10))
+    def top_at(x):
+        tops = [b[1] for part, b in body if b[0] <= x <= b[2] and part.get("fill")]
+        return min(tops) if tops else min(b[1] for _, b in eyes) - 8
+    if len(eyes) > 1 and spacing > 30:
+        puffs = [(b[0] + b[2]) / 2 for _, b in eyes]  # far-apart eyes (headphones): a puff above each
+    elif len(eyes) > 1:
+        cx, gap = middle, min(13, max(7, spacing * 0.75))
+        puffs = [cx - gap, cx + gap]
+    else:
+        (_, (x0, y0, x1, y1)), = eyes
+        back = -1 if middle > x0 else 1
+        puffs = [(x0 + x1) / 2 + back * 7 * k, (x0 + x1) / 2 - back * 3 * k]
+    group = eyes[0][0]
+    for i, x in enumerate(puffs):
+        y = top_at(x) - 1.5
+        if pixel:
+            s = 2 * round(max(1, 2 * k))
+            face += [p(f"M{x - s / 2:g} {y:g}h{s:g}v{-s:g}h{-s:g}z M{x + s / 2:g} {y - s:g}h{s:g}v{-s:g}h{-s:g}z M{x - s / 2:g} {y - 2 * s:g}h{s:g}v{-s:g}h{-s:g}z",
+                       group, fill=STEAM)]
+        else:
+            face += [p(f"M{x:.2f} {y:.2f} q{-5 * k:.2f} {-3 * k:.2f} 0 {-7 * k:.2f} q{5 * k:.2f} {-3 * k:.2f} 0 {-7 * k:.2f}", group,
+                       stroke=STEAM, sw=round(2.7 * k, 2), pivot=[round(x, 2), round(y, 2)], rot=[9, 0.45, 0.5 * i])]
+    # The anger mark (the cartoon "popping vein"): four crescents, each bowing in toward the middle with its tips
+    # flaring out, around a cross-shaped gap; at the temple past the outer end of the outer brow, always on the head.
+    _, (x0, y0, x1, y1) = max(eyes, key=lambda e: e[1][2]) if len(eyes) > 1 else eyes[0]
+    w = x1 - x0
+    R = 5 * k
+    if len(eyes) > 1: vx = x1 + w * 0.12 + R * 0.8
+    else: vx = (x0 - w * 0.12 - R * 0.8) if middle > x0 else (x1 + w * 0.12 + R * 0.8)
+    vy = max(top_at(vx) + R + 0.5, y0 - w * 0.16 - R)
+    if pixel:
+        # In a 5x5 grid: an L of three blocks in each corner, its bend pointing in at the middle.
+        u = 2
+        vx, vy = round(vx / u) * u, round(vy / u) * u
+        cells = [(1, 0), (1, 1), (0, 1), (3, 0), (3, 1), (4, 1), (0, 3), (1, 3), (1, 4), (4, 3), (3, 3), (3, 4)]
+        mark = " ".join(f"M{vx + (cx - 2.5) * u:g} {vy + (cy - 2.5) * u:g}h{u}v{u}h-{u}z" for cx, cy in cells)
+        face += [p(mark, group, fill=VEIN)]
+    else:
+        def corner(sx, sy):
+            pt = lambda x, y: f"{vx + sx * x * R:.2f} {vy + sy * y * R:.2f}"
+            # From one tip, bowing in toward the middle to the other tip, then back along the shallower outer edge.
+            return (f"M{pt(0.2, 1)} Q{pt(0.04, 0.04)} {pt(1, 0.2)} L{pt(1, 0.42)} Q{pt(0.5, 0.5)} {pt(0.42, 1)}Z")
+        mark = " ".join(corner(sx, sy) for sx in (-1, 1) for sy in (-1, 1))
+        face += [p(mark, group, fill=VEIN, stroke=darkest, sw=round(max(0.5, 0.6 * k), 2))]
+
+    for part in face:
+        part["when"] = ["angry"]
+        pet["parts"].append(part)
+
 print(json.dumps({"version": 1, "box": [120, 80], "lines": LINES, "reactions": REACTIONS, "snacks": SNACKS,
-                  "antics": list(ANTICS), "anticEvery": ANTIC_EVERY, "order": list(PETS), "pets": PETS}, indent=1))
+                  "care": CARE, "antics": list(ANTICS), "anticEvery": ANTIC_EVERY, "order": list(PETS), "pets": PETS}, indent=1))

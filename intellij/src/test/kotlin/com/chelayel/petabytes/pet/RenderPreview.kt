@@ -14,14 +14,16 @@ import kotlin.random.Random
 fun main(args: Array<String>) {
     val catalog = PetCatalog.parse(File(args[0]).readText())
     val out = File(args[1]).apply { mkdirs() }
-    val moods = listOf("calm", "happy", "worried", "hiding", "debugging", "sleeping")
-    val cellW = 220; val cellH = 120; val scale = 1.2
+    val angerPreview = args.getOrNull(2) == "angry"
+    val moods = if (angerPreview) listOf("calm", "angry") else listOf("calm", "happy", "worried", "hiding", "debugging", "sleeping")
+    val pets = catalog.pets.values.filter { !angerPreview || it.id in setOf("turtle", "cat", "burger", "jellyfish", "robot") }
+    val cellW = if (angerPreview) 320 else 220; val cellH = if (angerPreview) 300 else 120; val scale = 1.2
     val style = BubbleStyle(Color(0xE4E4E7), Color(0x1F2226), Color(0x2A2E33), Font("SansSerif", Font.PLAIN, 12))
-    val sheet = BufferedImage(cellW * moods.size * 2, cellH * catalog.pets.size * 2, BufferedImage.TYPE_INT_ARGB)
+    val sheet = BufferedImage(cellW * moods.size * 2, cellH * pets.size * 2, BufferedImage.TYPE_INT_ARGB)
     val sg = sheet.createGraphics()
     sg.scale(2.0, 2.0)
-    sg.color = Color(0x151719); sg.fillRect(0, 0, cellW * moods.size, cellH * catalog.pets.size)
-    catalog.pets.values.forEachIndexed { row, pet ->
+    sg.color = Color(0x151719); sg.fillRect(0, 0, cellW * moods.size, cellH * pets.size)
+    pets.forEachIndexed { row, pet ->
         moods.forEachIndexed { col, mood ->
             var t = 10_000_000L
             val brain = PetBrain(catalog, pet, pet.name, clock = { t }, random = Random(7))
@@ -32,12 +34,15 @@ fun main(args: Array<String>) {
                 "hiding" -> brain.taskFinished(false, "npm test")
                 "debugging" -> brain.debug(true)
                 "sleeping" -> { t += 4 * 60_000 }
+                "angry" -> repeat(5) { brain.clicked() }
             }
             // Let poses settle, but stop mid-reaction for the happy loop.
             val frames = if (mood == "happy") 25 else 60
             repeat(frames) { t += 17; brain.update(16.7, cellW.toDouble(), 120 * scale, 0.0) }
             val g = sg.create(col * cellW, row * cellH, cellW, cellH) as java.awt.Graphics2D
-            PetPainter(scale, bottomInset = 6.0).paint(g, brain, cellW.toDouble(), cellH.toDouble(), style)
+            val painter = PetPainter(scale, bottomInset = 6.0)
+            if (mood == "angry") painter.paintTantrum(g, brain, cellW.toDouble(), cellH.toDouble(), style, 40.0, cellH - painter.spriteHeight - 20)
+            else painter.paint(g, brain, cellW.toDouble(), cellH.toDouble(), style)
             g.color = Color(0x71717A); g.font = Font("SansSerif", Font.PLAIN, 10)
             g.drawString("${pet.name} · $mood", 6, cellH - 4)
             g.dispose()

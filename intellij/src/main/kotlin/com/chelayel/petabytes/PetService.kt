@@ -2,6 +2,8 @@ package com.chelayel.petabytes
 
 import com.chelayel.petabytes.pet.PetBrain
 import com.chelayel.petabytes.pet.PetCatalog
+import com.chelayel.petabytes.pet.PetFrameRate
+import com.chelayel.petabytes.pet.EditorLayoutTracker
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer
 import com.intellij.codeInsight.daemon.impl.HighlightInfo
 import com.intellij.execution.ExecutionListener
@@ -55,6 +57,8 @@ class PetService(private val project: Project) : Disposable {
     private var layer: JLayeredPane? = null
     private val timer = Timer(33) { tick() }
     private var lastTick = System.nanoTime()
+    private val frameRate = PetFrameRate()
+    private val editorLayout = EditorLayoutTracker(::requestSmoothFrames)
 
     private var lastTyping = 0L
     private var braces = 0
@@ -74,7 +78,7 @@ class PetService(private val project: Project) : Disposable {
         if (current != null && current.painter.scale != JBUI.scale(1) * scale) { hide(); current = null }
         if (current == null) {
             val brain = PetBrain(catalog, pet, name)
-            overlay = FloatingPet(brain, scale) { home ->
+            overlay = FloatingPet(brain, scale, onMotion = ::requestSmoothFrames) { home ->
                 // Remember where it was dropped, for every project window.
                 PetSettings.get().state.apply { roam = false; this.home = home.toFloat() }
                 PetService.refreshAll()
@@ -89,13 +93,15 @@ class PetService(private val project: Project) : Disposable {
         current.brain.vertical = settings.position != "bottom"
         current.brain.home = settings.home.toDouble()
         listen()
+        requestSmoothFrames()
         if (!timer.isRunning) { lastTick = System.nanoTime(); timer.start() }
     }
 
     private fun hide() {
         timer.stop()
+        editorLayout.watch(null)
         lastFileEditor = null
-        overlay?.let { o -> layer?.remove(o); layer?.repaint() }
+        overlay?.let { o -> layer?.remove(o); layer?.remove(o.mess); layer?.repaint() }
         overlay = null
         layer = null
     }
@@ -110,28 +116,30 @@ class PetService(private val project: Project) : Disposable {
         val window = WindowManager.getInstance().getFrame(project)
         val frame = window as? RootPaneContainer
         val target = frame?.layeredPane
-        // As few frames as look right: fewer with the IDE in the background or saving power, fewer still asleep.
         val powerSave = PowerSaveMode.isEnabled()
         o.brain.quiet = powerSave
-        val hidden = editor == null || target == null || !editor.component.isShowing
-        timer.delay = when {
-            hidden -> 250
-            o.brain.sleeping -> 166
-            powerSave || window?.isActive != true -> 66
-            else -> 33
+        if (editor == null || target == null || !editor.component.isShowing) {
+            timer.delay = frameRate.delayMillis(sleeping = o.brain.sleeping, hidden = true)
+            // A maximized tool window can hide this editor entirely. Keep listening for its return.
+            editorLayout.watch(lastFileEditor?.takeUnless { it.isDisposed }?.component)
+            o.isVisible = false; o.mess.isVisible = false
+            return
         }
-        if (hidden || editor == null || target == null) { o.isVisible = false; return }
+        editorLayout.watch(editor.component)
         if (layer !== target) {
             layer?.remove(o)
+            layer?.remove(o.mess)
             // As Any: from Kotlin the Integer unboxes to the add(Component, int) overload, which
             // takes it as a list index, not a layer, and the pet can end up under the editor.
             target.add(o, JLayeredPane.PALETTE_LAYER as Any)
+            target.add(o.mess, JLayeredPane.POPUP_LAYER as Any)
             layer = target
         }
         // A strip along the editor's right edge or its bottom edge, clear of the scrollbars.
         val r = SwingUtilities.convertRectangle(editor.component.parent, editor.component.bounds, target)
         val gap = JBUI.scale(14)
         val vertical = o.brain.vertical
+        o.painter.sync(o.brain)
         val bounds = if (vertical) {
             val w = o.preferredWidth.coerceAtMost(r.width)
             Rectangle(r.x + r.width - w - gap, r.y + gap, w, (r.height - 2 * gap).coerceAtLeast(0))
@@ -139,17 +147,34 @@ class PetService(private val project: Project) : Disposable {
             val h = o.preferredHeight
             Rectangle(r.x, r.y + r.height - h - gap, (r.width - gap).coerceAtLeast(0), h)
         }
-        if (o.bounds != bounds) o.bounds = bounds
+        if (o.bounds != bounds) { o.bounds = bounds; frameRate.requestSmoothFrames() }
         o.isVisible = true
         o.brain.avoid(caretOverPet(editor, o, target))
         watchToolWindows()
         watchClaudeCode()
         if (vertical) o.brain.update(dtMs, bounds.height.toDouble(), o.painter.spriteHeight, room = JBUI.scale(6).toDouble())
         else o.brain.update(dtMs, bounds.width.toDouble(), o.painter.spriteWidth, room = JBUI.scale(10).toDouble())
+        timer.delay = frameRate.delayMillis(sleeping = o.brain.sleeping, settling = o.brain.settling,
+            quiet = powerSave || window?.isActive != true)
         o.repaint()
+        o.mess.setBounds(0, 0, target.width, target.height)
+        o.mess.isVisible = o.brain.splashed || o.brain.tantrum
+        if (o.mess.isVisible) o.mess.repaint()
     }
 
     private var lastFileEditor: com.intellij.openapi.editor.Editor? = null
+
+    /** A resize must not wait for a sleeper's pending 166 ms tick. Further resize events keep this timer running. */
+    private fun requestSmoothFrames() {
+        frameRate.requestSmoothFrames()
+        val quiet = PowerSaveMode.isEnabled() || WindowManager.getInstance().getFrame(project)?.isActive != true
+        val delay = frameRate.delayMillis(sleeping = false, quiet = quiet)
+        if (timer.isRunning && timer.delay > delay) {
+            timer.delay = delay
+            timer.initialDelay = delay
+            timer.restart()
+        }
+    }
 
     /**
      * The file editor the pet swims beside. Not just the "selected" one: with focus in a tool window, that can be the
@@ -194,7 +219,10 @@ class PetService(private val project: Project) : Disposable {
     }
 
     private fun send(action: PetBrain.() -> Unit) {
-        ApplicationManager.getApplication().invokeLater({ overlay?.brain?.action() }, project.disposed)
+        ApplicationManager.getApplication().invokeLater({
+            overlay?.brain?.action()
+            requestSmoothFrames()
+        }, project.disposed)
     }
 
     private fun listen() {
@@ -280,6 +308,8 @@ class PetService(private val project: Project) : Disposable {
     }
 
     /** Drop a snack; [key] is the reaction to show with it ("feed" from the menu, "crumb" from typing). */
+    fun poke() = send { clicked() }
+
     fun feed(snack: String? = null, key: String = "feed") {
         send {
             val width = overlay?.width?.toDouble() ?: 400.0

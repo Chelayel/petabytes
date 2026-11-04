@@ -127,7 +127,8 @@ final class PetWindow: NSPanel {
       const host = window.webkit.messageHandlers.host, pet = document.getElementById("pet");
       setInterval(() => {
         const r = pet.getBoundingClientRect();
-        host.postMessage({ type: "rect", x: r.left, y: r.top, w: r.width, h: r.height });
+        const visible = getComputedStyle(pet).visibility !== "hidden";
+        host.postMessage({ type: "rect", x: r.left, y: r.top, w: visible ? r.width : 0, h: visible ? r.height : 0 });
       }, 100);
       host.postMessage({ type: "ready" });
     })();
@@ -154,7 +155,8 @@ final class PetWindow: NSPanel {
         // In Low Power Mode: fewer frames, and no antics.
         let lowPower = ProcessInfo.processInfo.isLowPowerModeEnabled
         send(["type": "config", "pet": Settings.pet, "name": Settings.name, "ground": Settings.place == .dock,
-              "fps": dragging ? 0 : lowPower ? min(fps, 20) : fps, "quiet": lowPower])
+              "fps": dragging ? 0 : lowPower ? min(fps, 20) : fps, "quiet": lowPower,
+              "externalSplatter": true, "externalTantrum": true])
     }
 
     fileprivate func received(_ body: Any) {
@@ -168,6 +170,19 @@ final class PetWindow: NSPanel {
         case "rect":
             func number(_ key: String) -> CGFloat { CGFloat((message[key] as? NSNumber)?.doubleValue ?? 0) }
             petRect = CGRect(x: number("x"), y: number("y"), width: number("w"), height: number("h"))
+        case "burst":
+            guard wanted, alphaValue > 0 else { return }
+            PetEffectWindow.show(pet: Settings.pet, on: screen)
+        case "tantrum":
+            guard wanted, alphaValue > 0, let display = screen else { return }
+            let origin = CGPoint(x: (frame.minX - display.frame.minX) / zoom + petRect.minX,
+                                 y: (display.frame.maxY - frame.maxY) / zoom + petRect.minY)
+            PetEffectWindow.tantrum(pet: Settings.pet, name: Settings.name,
+                durationMs: (message["durationMs"] as? NSNumber)?.doubleValue ?? 6000,
+                fullness: (message["fullness"] as? NSNumber)?.doubleValue ?? 0,
+                on: display, zoom: zoom, origin: origin)
+        case "tantrumEnd":
+            PetEffectWindow.dismissTantrum()
         default:
             break
         }
@@ -223,6 +238,7 @@ final class PetWindow: NSPanel {
 
     /** Lets clicks through everywhere except on the pet. */
     private func updateClickThrough() {
+        guard petRect.width > 0, petRect.height > 0 else { ignoresMouseEvents = true; return }
         let mouse = NSEvent.mouseLocation
         guard isVisible, alphaValue > 0, !dragging, frame.insetBy(dx: -10, dy: -10).contains(mouse) || !ignoresMouseEvents else { return }
         let onPage = CGPoint(x: (mouse.x - frame.minX) / zoom, y: (frame.maxY - mouse.y) / zoom)
@@ -255,6 +271,8 @@ final class PetWindow: NSPanel {
                 dragging = false
                 Settings.floatOrigin = frame.origin
                 configure()
+                dragStart = nil
+                return nil // A drag must not also count as a poke.
             }
             dragStart = nil
             return event

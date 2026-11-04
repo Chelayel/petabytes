@@ -18,6 +18,7 @@ repositories {
 
 dependencies {
     testImplementation(kotlin("stdlib"))
+    testImplementation(kotlin("test-junit"))
     intellijPlatform {
         // IntelliJ IDEA Community; works in every JetBrains IDE built on the platform.
         create("IC", "2024.2.5")

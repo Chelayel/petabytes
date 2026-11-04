@@ -50,6 +50,10 @@ There are three, and they don't depend on each other:
 
 **Feed it.** Use **Feed Pet** (the ♥ on the VS Code panel, or right-click the pet in IntelliJ) and a snack sinks down: `{ }`, `[ ]`, `( )`, `< >` or `;`. Your pet swims over and eats it. Every 20th `{` you type drops a crumb too, and a pet that hasn't eaten in an hour asks for one.
 
+**Don't overdo the snacks.** The first three are fine. Each extra snack in the same meal makes your pet rounder; snack eight ends in a cartoon explosion of puke. The splashes match its set, including pixel splats for Games pets. They fade away automatically and your pet comes back. A minute between snacks starts a fresh meal. On Mac and Windows the mess covers the pet's display; in IntelliJ it covers the IDE window, and in VS Code it stays inside the pet panel.
+
+**Poke it.** Click the pet, use **Poke** in the desktop app's menu, or **Tools → Petabytes → Poke Pet** in IntelliJ. Three quick pokes earn a warning; five trigger a six-second tantrum: furious eyes, clenched teeth, red cheeks, steam, and cartoon swears like “@#$%! FINS OFF!” The pet grows up to twice its usual size where space allows and makes short stomps near its original spot, pausing between them. A fixed caption holds each shout for three seconds, above the pet or beside it in a short panel. Mac and Windows use the desktop, IntelliJ uses the IDE window, and VS Code uses its panel. More pokes extend the tantrum without interrupting the current caption; feeding interrupts it. Reduced Motion on Mac and the web, and Power Save Mode in IntelliJ, keep the scowl and shouts without the stomping. A double-click still shows hearts until you've annoyed it.
+
 ![Pets reacting to typing, fixed errors, a new error, failed tests, debugging and being left alone](docs/moods.png)
 
 In IntelliJ IDEA, the pet swims up and down a strip at the editor's right edge, beside the scrollbar and out of the way of your code (or along the bottom edge, if you prefer):

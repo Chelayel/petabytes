@@ -13,7 +13,7 @@ use serde_json::{json, Value};
 use settings::{now, Settings};
 use std::path::PathBuf;
 use std::sync::{Mutex, MutexGuard, OnceLock};
-use std::time::Duration;
+use std::time::{Duration, Instant};
 use tauri::menu::{CheckMenuItem, IsMenuItem, Menu, MenuItem, PredefinedMenuItem, Submenu};
 use tauri::tray::TrayIconBuilder;
 use tauri::{AppHandle, Manager, PhysicalPosition, PhysicalSize, WebviewUrl, WebviewWindowBuilder, Wry};
@@ -45,11 +45,19 @@ const PET_SHIM: &str = r#"
     const pet = document.getElementById("pet");
     setInterval(() => {
       const r = pet.getBoundingClientRect();
-      invoke("rect", { x: r.left, y: r.top, w: r.width, h: r.height });
+      const visible = getComputedStyle(pet).visibility !== "hidden";
+      invoke("rect", { x: r.left, y: r.top, w: visible ? r.width : 0, h: visible ? r.height : 0 });
     }, 100);
     pet.addEventListener("contextmenu", (e) => { e.preventDefault(); invoke("menu"); });
   });
 })();
+"#;
+
+const EFFECT_SHIM: &str = r#"
+window.acquireVsCodeApi = () => ({
+  postMessage: (msg) => window.__TAURI_INTERNALS__.invoke("from_page", { msg }),
+  getState: () => undefined, setState: () => {},
+});
 "#;
 
 /// The same for Choose a Pet (web/picker.html), which only tells the app which pet was picked.
@@ -76,6 +84,9 @@ struct Inner {
     quiet: bool,
     hidden_for_full_screen: bool,
     update: Option<updates::Release>,
+    effect: Option<Value>,
+    effect_generation: u64,
+    effect_deadline: Option<Instant>,
 }
 
 struct AppState(Mutex<Inner>);
@@ -124,7 +135,7 @@ fn configure(app: &AppHandle) {
         (s.settings.pet.clone(), s.settings.name.clone(), s.quiet)
     };
     // 30 frames a second is plenty for a pet; 20 on battery saver, which also stops its antics.
-    send(app, json!({ "type": "config", "pet": pet, "name": name, "ground": true, "fps": if quiet { 20 } else { 30 }, "quiet": quiet }));
+    send(app, json!({ "type": "config", "pet": pet, "name": name, "ground": true, "fps": if quiet { 20 } else { 30 }, "quiet": quiet, "externalSplatter": true, "externalTantrum": true }));
 }
 
 #[tauri::command]
@@ -148,8 +159,112 @@ fn from_page(app: AppHandle, window: tauri::Window, msg: Value) {
                 choose(&app, id);
             }
         }
+        ("pet", Some("burst")) => {
+            let app = app.clone();
+            // WebView2 must create a window outside the synchronous IPC handler.
+            std::thread::spawn(move || {
+                let pet = state(&app).settings.pet.clone();
+                show_effect(&app, json!({ "type": "splatter", "pet": pet }));
+            });
+        }
+        ("pet", Some("tantrum")) => {
+            let (pet, name) = { let s = state(&app); (s.settings.pet.clone(), s.settings.name.clone()) };
+            let message = json!({ "type": "tantrum", "pet": pet, "name": name,
+                "durationMs": msg["durationMs"].as_f64().unwrap_or(6000.0).clamp(1.0, 6000.0),
+                "fullness": msg["fullness"].as_f64().unwrap_or(0.0).clamp(0.0, 5.0) });
+            let app = app.clone();
+            std::thread::spawn(move || show_effect(&app, message));
+        }
+        ("pet", Some("tantrumEnd")) => close_effect(&app, Some("tantrum")),
+        ("effect", Some("ready")) => play_effect(&app),
         _ => {}
     }
+}
+
+/// Temporary full-display animation. It never takes focus or captures mouse input.
+fn show_effect(app: &AppHandle, mut message: Value) {
+    let (zoom, rect) = {
+        let s = state(app);
+        if !s.settings.visible || s.hidden_for_full_screen { return; }
+        (if message["type"] == "tantrum" { s.settings.zoom } else { 1.0 }, s.rect)
+    };
+    let Some(pet) = app.get_webview_window("pet") else { return };
+    let Ok(Some(monitor)) = pet.current_monitor() else { return };
+    if message["type"] == "tantrum" {
+        if let Ok(origin) = pet.outer_position() {
+            let factor = pet.scale_factor().unwrap_or(1.0) * zoom;
+            message["x"] = json!((origin.x - monitor.position().x) as f64 / factor + rect[0]);
+            message["y"] = json!((origin.y - monitor.position().y) as f64 / factor + rect[1]);
+        }
+    }
+    let duration = if message["type"] == "tantrum" { message["durationMs"].as_f64().unwrap_or(6000.0) as u64 }
+        else { catalog()["care"]["burstMs"].as_u64().unwrap_or(4600) - catalog()["care"]["windupMs"].as_u64().unwrap_or(350) };
+    let generation = {
+        let mut s = state(app);
+        s.effect_generation += 1;
+        s.effect = Some(message);
+        s.effect_deadline = Some(Instant::now() + Duration::from_millis(duration));
+        s.effect_generation
+    };
+    let existing = app.get_webview_window("effect");
+    let overlay = if let Some(overlay) = existing {
+        let _ = overlay.set_zoom(zoom);
+        play_effect(app);
+        overlay
+    } else {
+        let Ok(overlay) = WebviewWindowBuilder::new(app, "effect", WebviewUrl::App("index.html".into()))
+        .title("Petabytes")
+        .transparent(true).decorations(false).shadow(false)
+        .always_on_top(true).skip_taskbar(true).resizable(false)
+        .focused(false).focusable(false).visible(false)
+        .initialization_script(EFFECT_SHIM)
+        .build() else { return };
+        let _ = overlay.set_size(*monitor.size());
+        let _ = overlay.set_position(*monitor.position());
+        let _ = overlay.set_zoom(zoom);
+        let _ = overlay.set_ignore_cursor_events(true);
+        overlay
+    };
+    // Generations keep an earlier timer from closing a refreshed tantrum or a later splash.
+    let app = app.clone();
+    std::thread::spawn(move || {
+        std::thread::sleep(Duration::from_millis(duration));
+        {
+            let mut s = state(&app);
+            if s.effect_generation != generation { return; }
+            s.effect = None; s.effect_deadline = None;
+        }
+        let _ = overlay.close();
+    });
+}
+
+fn play_effect(app: &AppHandle) {
+    let message = {
+        let s = state(app);
+        let Some(mut message) = s.effect.clone() else { return };
+        if message["type"] == "tantrum" {
+            let remaining = s.effect_deadline.map(|end| end.saturating_duration_since(Instant::now()).as_millis()).unwrap_or(0);
+            if remaining == 0 { return; }
+            message["durationMs"] = json!(remaining as u64);
+        }
+        message
+    };
+    if let Some(overlay) = app.get_webview_window("effect") {
+        let _ = overlay.eval(&format!("window.petabytes && window.petabytes.receive({message})"));
+        let _ = overlay.show();
+    }
+}
+
+fn close_effect(app: &AppHandle, kind: Option<&str>) {
+    {
+        let mut s = state(app);
+        if let Some(kind) = kind {
+            if s.effect.as_ref().and_then(|effect| effect["type"].as_str()) != Some(kind) { return; }
+        }
+        s.effect_generation += 1;
+        s.effect = None; s.effect_deadline = None;
+    }
+    if let Some(overlay) = app.get_webview_window("effect") { let _ = overlay.close(); }
 }
 
 #[tauri::command]
@@ -185,6 +300,9 @@ fn place(app: &AppHandle) {
 }
 
 fn set_visible(app: &AppHandle, visible: bool) {
+    if !visible {
+        close_effect(app, None);
+    }
     mutate(app, |s| s.visible = visible);
     let hidden_for_full_screen = state(app).hidden_for_full_screen;
     if let Some(window) = app.get_webview_window("pet") {
@@ -212,7 +330,7 @@ fn click_through(app: AppHandle) {
                 let f = scale * zoom;
                 let (x, y) = (cursor.x - origin.x as f64, cursor.y - origin.y as f64);
                 let near = y >= -60.0 && y <= size.height as f64 + 60.0;
-                let on_pet = x >= r[0] * f && x <= (r[0] + r[2]) * f && y >= r[1] * f && y <= (r[1] + r[3]) * f;
+                let on_pet = r[2] > 0.0 && r[3] > 0.0 && x >= r[0] * f && x <= (r[0] + r[2]) * f && y >= r[1] * f && y <= (r[1] + r[3]) * f;
                 Some((window, near, on_pet))
             })();
             if let Some((window, near, on_pet)) = found {
@@ -250,6 +368,8 @@ fn choose(app: &AppHandle, id: &str) {
     if catalog()["pets"].get(id).is_none() {
         return;
     }
+    let changed = state(app).settings.pet != id;
+    if changed { close_effect(app, None); }
     mutate(app, |s| {
         s.pet = id.to_string();
         s.name.clear();
@@ -285,6 +405,7 @@ fn build_menu(app: &AppHandle) -> tauri::Result<Menu<Wry>> {
         app,
         &[
             &MenuItem::with_id(app, "feed", format!("Feed {}", pet_name(&s)), true, None::<&str>)?,
+            &MenuItem::with_id(app, "poke", format!("Poke {}", pet_name(&s)), true, None::<&str>)?,
             &MenuItem::with_id(app, "choose", "Choose Pet…", true, None::<&str>)?,
             &PredefinedMenuItem::separator(app)?,
             &size,
@@ -318,6 +439,7 @@ fn handle_menu(app: &AppHandle, id: &str) {
             }
             send(app, json!({ "type": "feed", "key": "feed" }));
         }
+        "poke" => send(app, json!({ "type": "poke" })),
         // On Windows, a window built inside a menu handler can deadlock: build it on another thread.
         "choose" => {
             let app = app.clone();
@@ -508,6 +630,7 @@ fn check_full_screen(app: &AppHandle) {
         return;
     }
     state(app).hidden_for_full_screen = full;
+    if full { close_effect(app, None); }
     if let Some(window) = app.get_webview_window("pet") {
         let _ = if full { window.hide() } else if visible { window.show() } else { Ok(()) };
     }
@@ -539,6 +662,9 @@ fn main() {
                 quiet: false,
                 hidden_for_full_screen: false,
                 update: None,
+                effect: None,
+                effect_generation: 0,
+                effect_deadline: None,
             })));
 
             let window = WebviewWindowBuilder::new(app, "pet", WebviewUrl::App("index.html".into()))

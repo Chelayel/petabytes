@@ -71,6 +71,12 @@
         "icon": "$(heart)"
       },
       {
+        "command": "petabytes.poke",
+        "title": "Poke Pet",
+        "category": "Petabytes",
+        "icon": "$(zap)"
+      },
+      {
         "command": "petabytes.toggle",
         "title": "Toggle Pet",
         "category": "Petabytes"
@@ -91,6 +97,11 @@
       "view/title": [
         {
           "command": "petabytes.feed",
+          "when": "view == petabytes.pet",
+          "group": "navigation"
+        },
+        {
+          "command": "petabytes.poke",
           "when": "view == petabytes.pet",
           "group": "navigation"
         },
@@ -202,6 +213,8 @@
     }
   },
   "scripts": {
+    "pretest": "npm run sync-page",
+    "test": "node --test test/extension.test.js",
     "sync-page": "node -e \"for (const f of ['pet.html','pets.json','picker.html']) require('fs').copyFileSync('../web/'+f,'media/'+f)\"",
     "vscode:prepublish": "npm run sync-page"
   }
