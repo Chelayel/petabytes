@@ -84,6 +84,13 @@ jobs:
           echo "release=$release" >> "$GITHUB_OUTPUT"
           echo "Version $version; release: $release"
 
+      # The plugin verifier downloads each IDE build JetBrains recommends for the plugin's range, which outgrew
+      # the runner's free space. Toolchains this job never uses make room: about 25 GB.
+      - name: Free disk space
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /usr/local/.ghcup /opt/hostedtoolcache/CodeQL
+          df -h / | tail -1
+
       - name: JetBrains plugin
         working-directory: intellij
         run: |
