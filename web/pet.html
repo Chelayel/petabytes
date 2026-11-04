@@ -18,6 +18,7 @@
     --border: var(--vscode-widget-border, #2A2E33);
     --glow: rgba(94, 234, 212, 0.45);
     --bubble: #5EEAD4;
+    --anger: #E44954;
   }
   html, body { height: 100%; margin: 0; overflow: hidden; }
   body {
@@ -29,6 +30,13 @@
   #sea { position: relative; height: 100%; min-height: 110px; }
   #pet { position: absolute; left: 0; bottom: 24px; width: 96px; height: 64px; cursor: pointer; overflow: visible; }
   #pet svg { width: 100%; height: 100%; overflow: visible; filter: drop-shadow(0 0 6px var(--glow)); }
+  #pet:focus-visible { outline: 2px solid var(--bubble); outline-offset: 4px; border-radius: 8px; }
+  #mess { position: fixed; inset: 0; z-index: 10; pointer-events: none; }
+  #mess svg { display: block; width: 100%; height: 100%; }
+  #mess.on { animation: cleanup var(--mess-ms) linear forwards; }
+  #mess .splat { transform-box: fill-box; transform-origin: center; animation: splat-in 220ms cubic-bezier(0.16, 1, 0.3, 1) both; }
+  @keyframes splat-in { from { transform: scale(0.1); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+  @keyframes cleanup { 0%, 78% { opacity: 1; } 100% { opacity: 0; } }
 
   .zzz { position: absolute; font-weight: 700; color: var(--bubble); opacity: 0; pointer-events: none; }
   .zzz.on { animation: zzz 2.6s ease-in-out infinite; }
@@ -54,21 +62,34 @@
     pointer-events: none; opacity: 0; transition: opacity 0.25s ease;
   }
   .say.on { opacity: 1; }
+  /* Same bubble as every other line; the anger lives in the vein red and the weight, not a new surface. */
+  .say.angry {
+    box-sizing: border-box; max-width: min(320px, calc(100vw - 24px)); padding: 6px 10px;
+    background: var(--widget); background: color-mix(in srgb, var(--anger) 14%, var(--widget)); border-color: var(--anger);
+    font-weight: 700; font-size: 13px; line-height: 1.35;
+    white-space: normal; overflow-wrap: anywhere; text-overflow: clip; text-align: center; transition: none;
+  }
+  .tantrum-stage .name { display: none; }
   .name { position: absolute; left: 8px; bottom: 4px; font-size: 11px; color: var(--muted); }
-  @media (prefers-reduced-motion: reduce) { .bubble, .zzz.on { animation: none !important; } }
+  @media (prefers-reduced-motion: reduce) {
+    .bubble, .zzz.on, #mess .splat { animation: none !important; }
+    #pet, .say { transition: none !important; }
+  }
 </style>
 </head>
 <body>
 <div id="sea">
-  <div id="pet" role="img" aria-label="Pet" title="Click me"><svg viewBox="0 0 120 80" aria-hidden="true"></svg></div>
+  <div id="pet" role="button" tabindex="0" aria-label="Poke pet" title="Click to poke; double-click to pet"><svg viewBox="0 0 120 80" preserveAspectRatio="none" aria-hidden="true"></svg></div>
   <div class="zzz" id="zzz">z</div>
-  <div class="say" id="say"></div>
+  <div class="say" id="say" role="status" aria-live="polite"></div>
   <div class="name" id="name"></div>
 </div>
+<div id="mess" aria-hidden="true"></div>
 
 <script nonce="{{nonce}}">
 (() => {
   const DATA = {{pets}};
+  const CARE = DATA.care;
   const vscode = typeof acquireVsCodeApi === "function" ? acquireVsCodeApi() : null;
   const $ = (id) => document.getElementById(id);
   const sea = $("sea"), petEl = $("pet"), svg = petEl.querySelector("svg"), sayEl = $("say"), zzz = $("zzz"), nameEl = $("name");
@@ -78,6 +99,10 @@
   const NS = "http://www.w3.org/2000/svg";
   const pick = (list) => list[Math.floor(Math.random() * list.length)];
   const now = () => Date.now();
+  const postHost = (message) => {
+    if (vscode) vscode.postMessage(message);
+    else window.webkit?.messageHandlers?.host?.postMessage(message);
+  };
 
   let pet, name, parts = [], groups = {};
   const state = {
@@ -86,6 +111,22 @@
     lastActivity: now(), lastTypingLine: 0, sayTimer: 0, poses: {},
     lastReact: {}, sessionMark: now(), lastFed: now(), eaten: 0, food: null, foodEl: null, goal: null, restUntil: 0,
     nextAntic: 0, lowBattery: false, quiet: false,
+    meal: 0, fullness: 0, pokes: 0, lastPoke: 0, burstAt: null, splashed: false,
+    externalSplatter: false, effectOnly: false, messTimer: 0,
+    angryAt: 0, angryLineAt: 0, tantrumHomeBottom: null, tantrumHomeX: null, tantrumOrigin: null, tantrumDir: 1,
+    externalTantrum: false, externalTantrumActive: false, tantrumScene: false,
+    framePaused: false,
+  };
+  const sizeX = () => 1 + state.fullness * pet.growth[0];
+  const sizeY = () => 1 + state.fullness * pet.growth[1];
+  const petWidth = () => W * sizeX();
+  const petHeight = () => H * sizeY();
+  const bursting = () => state.burstAt != null;
+  const staging = () => active("angry") && !state.food && !bursting() && !state.externalTantrumActive;
+  const jumping = () => staging() && !reduced;
+  const stompPhase = () => {
+    const age = Math.max(0, now() - state.angryAt) % CARE.hopMs;
+    return jumping() && age < CARE.hopMoveMs ? age / CARE.hopMoveMs : 0;
   };
 
   // ---- Building the pet from pets.json ---------------------------------
@@ -101,6 +142,7 @@
   }
 
   function build(id) {
+    resetCare();
     pet = DATA.pets[id] || DATA.pets.turtle;
     svg.textContent = "";
     parts = []; groups = {}; state.poses = {};
@@ -133,20 +175,20 @@
   function pivotT(px, py, inner) { return `translate(${px} ${py}) ${inner} translate(${-px} ${-py})`; }
 
   function flags() {
-    const hiding = active("hiding"), happy = active("happy");
+    const angry = active("angry"), hiding = active("hiding") && !angry, happy = active("happy") && !angry && !bursting();
     const closed = state.sleeping || hiding;
-    const worried = state.errors > 0 && !happy && !state.sleeping;
+    const worried = (state.errors > 0 || bursting()) && !angry && !happy && !state.sleeping;
     return {
-      hiding, happy, worried, sleeping: state.sleeping, curious: active("curious") && !state.sleeping,
+      hiding, happy, worried, angry, sleeping: state.sleeping, curious: active("curious") && !angry && !state.sleeping,
       debugging: state.debugging, puffed: worried || hiding,
-      eyesClosed: closed, eyesHappy: happy && !closed, eyesOpen: !closed && !happy,
+      eyesClosed: closed, eyesHappy: happy && !closed, eyesOpen: !closed && !happy && !angry,
     };
   }
 
   function render(f) {
     const t = state.clock;
     // Poses ease toward the current mood's target.
-    const moods = ["hiding", "sleeping", "worried", "curious"].filter((m) => f[m]);
+    const moods = ["angry", "hiding", "sleeping", "worried", "curious"].filter((m) => f[m]);
     for (const g of Object.keys(groups)) {
       let target = { tx: 0, ty: 0, s: 1, r: 0, p: [60, 40] };
       for (const m of moods) { const pose = pet.poses?.[m]?.[g]; if (pose) { target = { ...target, ...pose }; break; } }
@@ -169,11 +211,187 @@
       if (part.rot) el.setAttribute("transform", `rotate(${wave(part.rot, t)} ${part.pivot[0]} ${part.pivot[1]})`);
     }
     // Whole pet: facing, bob, happy loop, spin.
-    let rot = 0, ty = state.ground ? 0 : wave([pet.bob[0], pet.bob[1] * (f.sleeping ? 2 : 1), 0], now() / 1000);
-    if (f.happy) { const p = Math.min(1, (now() - state.happyAt) / 1100); ty -= 18 * Math.sin(Math.PI * p); rot += -12 * Math.sin(2 * Math.PI * p); }
-    if (active("spin")) rot += 360 * Math.min(1, (now() - state.spinAt) / 800);
+    let rot = 0, ty = state.ground || reduced || f.angry ? 0 : wave([pet.bob[0], pet.bob[1] * (f.sleeping ? 2 : 1), 0], now() / 1000);
+    if (f.happy && !reduced) { const p = Math.min(1, (now() - state.happyAt) / 1100); ty -= 18 * Math.sin(Math.PI * p); rot += -12 * Math.sin(2 * Math.PI * p); }
+    if (active("spin") && !f.angry && !bursting() && !reduced) rot += 360 * Math.min(1, (now() - state.spinAt) / 800);
+    if (bursting() && !reduced) rot += 4 * Math.sin((now() - state.burstAt) / 24);
+    const phase = stompPhase();
+    rot += 2 * Math.sin(phase * Math.PI * 2);
+    const squash = Math.sin(Math.PI * phase) * 0.025;
     const flip = pet.flip && state.dir < 0 ? "translate(120 0) scale(-1 1)" : "";
-    $("root").setAttribute("transform", `translate(0 ${ty}) ${pivotT(60, 40, `rotate(${rot})`)} ${flip}`);
+    $("root").setAttribute("transform", `translate(0 ${ty}) ${pivotT(60, 40, `rotate(${rot}) scale(${1 - squash} ${1 + squash})`)} ${flip}`);
+    petEl.style.visibility = state.splashed || state.externalTantrumActive ? "hidden" : "visible";
+    sayEl.classList.toggle("angry", f.angry);
+    sayEl.style.visibility = state.externalTantrumActive ? "hidden" : "visible";
+  }
+
+  // ---- Overfeeding and poking --------------------------------------------
+  function clearMess() {
+    clearTimeout(state.messTimer);
+    $("mess").classList.remove("on");
+    $("mess").textContent = "";
+  }
+
+  function resetCare() {
+    endTantrum();
+    state.food?.el.remove();
+    state.food = null;
+    state.meal = state.fullness = state.pokes = state.lastPoke = 0;
+    state.burstAt = null;
+    state.splashed = false;
+    state.until.angry = 0;
+    state.tantrumScene = false;
+    sayEl.classList.remove("angry");
+    clearTimeout(state.sayTimer);
+    sayEl.classList.remove("on");
+    document.querySelectorAll(".bubble, .heart").forEach((el) => el.remove());
+    petEl.style.width = W + "px";
+    petEl.style.height = H + "px";
+    petEl.style.visibility = "visible";
+    clearMess();
+  }
+
+  /** A bounded, click-through film of cartoon slime, also used by the desktop overlay windows. */
+  function splatter(art = pet.splatter) {
+    clearMess();
+    const layer = $("mess"), canvas = document.createElementNS(NS, "svg");
+    const width = Math.max(1, window.innerWidth), height = Math.max(1, window.innerHeight);
+    canvas.setAttribute("viewBox", `0 0 ${width} ${height}`);
+    if (art.pixel) canvas.setAttribute("shape-rendering", "crispEdges");
+    const film = document.createElementNS(NS, "rect");
+    film.setAttribute("width", width); film.setAttribute("height", height);
+    film.setAttribute("fill", art.fill); film.setAttribute("opacity", 0.82);
+    canvas.appendChild(film);
+    // A fixed upper bound on geometry, even on ultrawide screens.
+    const cols = Math.min(9, Math.max(3, Math.ceil(width / height * 4))), rows = 4;
+    for (let row = 0; row <= rows; row++) for (let col = 0; col <= cols; col++) {
+      const group = document.createElementNS(NS, "g"), blob = document.createElementNS(NS, "g");
+      const cellW = width / cols, cellH = height / rows;
+      const x = (col + (Math.random() - 0.5) * 0.35) * cellW, y = (row + (Math.random() - 0.5) * 0.35) * cellH;
+      const scale = Math.max(cellW, cellH) / 76;
+      group.setAttribute("transform", `translate(${x} ${y}) scale(${scale}) rotate(${art.pixel ? 0 : Math.random() * 80 - 40}) translate(-50 -50)`);
+      blob.classList.add("splat");
+      blob.style.animationDelay = reduced ? "0ms" : (row + col) * 12 + "ms";
+      const p = document.createElementNS(NS, "path");
+      p.setAttribute("d", art.path); p.setAttribute("fill", (row + col) % 3 ? art.fill : art.shade);
+      p.setAttribute("stroke", art.outline); p.setAttribute("stroke-width", 1.5); p.setAttribute("stroke-opacity", 0.45);
+      blob.appendChild(p);
+      for (const [cx, cy, r] of [[36, 35, 8], [60, 48, 4], [31, 58, 3]]) {
+        const dot = document.createElementNS(NS, art.pixel ? "rect" : "ellipse");
+        if (art.pixel) { dot.setAttribute("x", cx); dot.setAttribute("y", cy); dot.setAttribute("width", r); dot.setAttribute("height", r); }
+        else { dot.setAttribute("cx", cx); dot.setAttribute("cy", cy); dot.setAttribute("rx", r); dot.setAttribute("ry", r * 0.65); }
+        dot.setAttribute("fill", art.shine); dot.setAttribute("opacity", 0.8); blob.appendChild(dot);
+      }
+      group.appendChild(blob); canvas.appendChild(group);
+    }
+    layer.appendChild(canvas);
+    layer.style.setProperty("--mess-ms", CARE.burstMs - CARE.windupMs + "ms");
+    layer.classList.add("on");
+    state.messTimer = setTimeout(clearMess, CARE.burstMs - CARE.windupMs);
+  }
+
+  function updateCare(dt) {
+    if (active("angry")) {
+      if (!state.food && now() - state.angryLineAt >= CARE.angerLineMs) shout();
+    } else if (state.tantrumHomeBottom != null || state.externalTantrumActive) endTantrum();
+    if (state.meal && now() - state.lastFed > CARE.mealGapMs) state.meal = 0;
+    const target = Math.max(0, state.meal - CARE.safeFeeds);
+    state.fullness += (target - state.fullness) * Math.min(1, 0.12 * dt);
+    if (pet) { petEl.style.width = petWidth() + "px"; petEl.style.height = petHeight() + "px"; }
+    if (state.ground && !staging()) petEl.style.bottom = -(80 - state.artBottom) * SCALE * sizeY() + "px";
+    else if (!staging()) {
+      const bottom = parseFloat(getComputedStyle(petEl).bottom);
+      const maxBottom = Math.max(0, sea.clientHeight - petHeight() - 4);
+      if (bottom > maxBottom) { petEl.style.transition = "none"; petEl.style.bottom = maxBottom + "px"; }
+    }
+    if (!bursting()) return;
+    const age = now() - state.burstAt;
+    if (age >= CARE.burstMs) {
+      state.meal = state.fullness = 0;
+      state.burstAt = null; state.splashed = false;
+      clearMess();
+      sayLine("burstRecovered", 2600);
+      newDepth();
+    } else if (age >= CARE.windupMs && !state.splashed) {
+      state.splashed = true;
+      sayEl.classList.remove("on");
+      if (state.externalSplatter) postHost({ type: "burst" }); else splatter();
+    }
+  }
+
+  function shout() {
+    const choices = lines("angry").filter((line) => fill(line) !== sayEl.textContent);
+    say(fill(pick(choices.length ? choices : lines("angry"))), CARE.angerLineMs + 350);
+    state.angryLineAt = now();
+  }
+
+  function endTantrum() {
+    if (state.externalTantrumActive) postHost({ type: "tantrumEnd" });
+    state.externalTantrumActive = false;
+    if (state.tantrumHomeBottom != null) {
+      petEl.style.transition = "none";
+      petEl.style.bottom = state.tantrumHomeBottom + "px";
+    }
+    if (state.tantrumHomeX != null) state.x = state.tantrumHomeX;
+    state.tantrumHomeBottom = null;
+    state.tantrumHomeX = null;
+    state.tantrumOrigin = null;
+    sayEl.style.width = "";
+    if (pet) { petEl.style.width = petWidth() + "px"; petEl.style.height = petHeight() + "px"; }
+  }
+
+  /** A larger pet stomps near home, then holds still while a fixed caption can be read. */
+  function tantrumPosition() {
+    const width = sea.clientWidth, height = sea.clientHeight;
+    const side = height < 240 && width >= 220, pad = 12, bottom = state.tantrumScene ? 16 : 24;
+    const hopHeight = Math.min(side ? 8 : 18, height * 0.04);
+    const captionMin = Math.min(160, Math.max(104, width * 0.43));
+    // In a narrow panel the caption may wrap to three lines: reserve its real height before sizing the pet.
+    sayEl.classList.add("angry");
+    if (!side) sayEl.style.width = Math.min(320, width - 24) + "px";
+    const top = Math.max(Math.min(104, height * 0.4), side ? 0 : sayEl.offsetHeight + hopHeight + 36);
+    const availableW = side ? width - captionMin - 12 - pad * 2 : width - pad * 2;
+    const availableH = side ? height - 28 - bottom : height - top - bottom;
+    const scale = Math.max(0.25, Math.min(2, availableW / petWidth(), availableH / petHeight()));
+    const w = petWidth() * scale, h = petHeight() * scale;
+    const clamp = (value, lo, hi) => Math.max(lo, Math.min(Math.max(lo, hi), value));
+    const origin = state.tantrumOrigin || { x: state.x, y: height - petHeight() - bottom };
+    const anchorX = side ? pad : clamp(origin.x + petWidth() / 2 - w / 2, pad, width - w - pad);
+    const anchorY = side ? height - h - bottom : clamp(origin.y + petHeight() - h, top, height - h - bottom);
+    const phase = stompPhase();
+    return { x: anchorX + (side ? 2 : 4) * Math.sin(Math.PI * phase),
+      y: anchorY - hopHeight * 4 * phase * (1 - phase), dir: state.tantrumDir,
+      scale, w, h, anchorX, anchorY, side, hopHeight,
+      captionWidth: side ? width - anchorX - w - 24 : Math.min(320, width - 24) };
+  }
+
+  function poke() {
+    if (bursting() || state.effectOnly) return;
+    const woke = wake();
+    state.pokes = now() - state.lastPoke > CARE.pokeGapMs ? 1 : state.pokes + 1;
+    state.lastPoke = now();
+    if (state.pokes >= CARE.angryAt || active("angry")) {
+      const fresh = !active("angry");
+      if (fresh) { state.angryAt = now(); state.tantrumDir = state.dir; }
+      if (state.tantrumHomeBottom == null) {
+        state.tantrumHomeBottom = parseFloat(getComputedStyle(petEl).bottom);
+        state.tantrumHomeX = state.x;
+        state.tantrumOrigin = { x: state.x, y: sea.clientHeight - state.tantrumHomeBottom - petHeight() };
+      }
+      flash("angry", CARE.angerMs);
+      state.until.spin = state.until.happy = 0;
+      document.querySelectorAll(".bubble, .heart").forEach((el) => el.remove());
+      if (fresh || now() - state.angryLineAt >= CARE.angerLineMs) shout();
+      if (state.externalTantrum && !reduced && !state.food) {
+        state.externalTantrumActive = true;
+        postHost({ type: "tantrum", durationMs: state.until.angry - now(), fullness: state.fullness });
+      }
+    } else if (state.pokes >= 3) {
+      sayLine("pokeWarning", 1800);
+    } else {
+      flash("spin", 800); bubbles(5);
+      if (!woke) sayLine("click", 1600);
+    }
   }
 
   // ---- Talking -----------------------------------------------------------
@@ -203,8 +421,8 @@
       const size = 4 + Math.random() * 6;
       b.className = "bubble";
       b.style.width = b.style.height = size + "px";
-      b.style.left = box.left - seaBox.left + localX * SCALE + (Math.random() * 10 - 5) + "px";
-      b.style.top = box.top - seaBox.top + my * SCALE - 6 + "px";
+      b.style.left = box.left - seaBox.left + localX * SCALE * sizeX() + (Math.random() * 10 - 5) + "px";
+      b.style.top = box.top - seaBox.top + my * SCALE * sizeY() - 6 + "px";
       b.style.setProperty("--dx", (Math.random() * 24 - 12) + "px");
       b.style.animationDelay = i * 0.18 + "s";
       sea.appendChild(b);
@@ -221,8 +439,8 @@
       const h = document.createElement("div");
       h.className = "heart";
       h.textContent = "\u2665";
-      h.style.left = box.left - seaBox.left + localX * SCALE - 10 + Math.random() * 20 + "px";
-      h.style.top = box.top - seaBox.top + hy * SCALE + "px";
+      h.style.left = box.left - seaBox.left + localX * SCALE * sizeX() - 10 + Math.random() * 20 + "px";
+      h.style.top = box.top - seaBox.top + hy * SCALE * sizeY() + "px";
       h.style.setProperty("--dx", (Math.random() * 30 - 15) + "px");
       h.style.animationDelay = i * 0.2 + "s";
       sea.appendChild(h);
@@ -234,6 +452,7 @@
 
   /** An event the IDE reports by key; pets.json's reactions say what the pet does. */
   function react(key, vars = {}) {
+    if (bursting() || active("angry")) return;
     const r = DATA.reactions?.[key];
     if (!r) return;
     if (now() - (state.lastReact[key] || 0) < (r.cooldown || 0) * 1000) return;
@@ -283,8 +502,18 @@
   }).catch(() => {});
 
   /** Drop a snack from above; the pet swims over and eats it. */
+  function reachableFoodX(x) {
+    const scale = SCALE * sizeX();
+    const [mx] = pet.mouth;
+    const left = (pet.flip ? Math.min(mx, 120 - mx) : mx) * scale;
+    const right = (pet.flip ? Math.max(mx, 120 - mx) : mx) * scale;
+    const min = 4 + left - 8, max = Math.max(4, sea.clientWidth - petWidth() - 4) + right - 8;
+    return Math.max(min, Math.min(max, x));
+  }
+
   function feed(text) {
-    if (state.food) return;
+    if (state.food || bursting() || state.effectOnly) return;
+    if (active("angry")) endTantrum();
     const snacks = DATA.snacks || [{ text: "{ }", key: "eatCurly" }];
     const snack = (text && snacks.find((s) => s.text === text)) || pick(snacks);
     const width = sea.clientWidth;
@@ -292,7 +521,9 @@
     el.className = "food";
     el.textContent = snack.text;
     sea.appendChild(el);
-    state.food = { ...snack, x: 20 + Math.random() * Math.max(0, width - 60), y: -16, el };
+    const x = reduced ? state.x + (pet.flip && state.dir < 0 ? 120 - pet.mouth[0] : pet.mouth[0]) * SCALE * sizeX() - 8
+      : reachableFoodX(20 + Math.random() * Math.max(0, width - 60));
+    state.food = { ...snack, x, y: -16, el };
     wake();
   }
 
@@ -302,9 +533,21 @@
     state.food = null;
     state.lastFed = now();
     state.eaten++;
+    state.meal++;
+    state.pokes = 0;
+    state.until.angry = 0;
+    endTantrum();
+    document.querySelectorAll(".bubble, .heart").forEach((el) => el.remove());
+    if (state.meal >= CARE.burstAt) {
+      state.burstAt = now();
+      state.until.happy = state.until.spin = 0;
+      sayLine("burstWarning", CARE.windupMs);
+      return;
+    }
     flash("happy", 1100);
     bubbles(3);
-    if (state.eaten % 5 === 0) react("full"); else sayLine(food.key, 2200);
+    if (state.meal > CARE.safeFeeds) sayLine("overfed", 2200);
+    else sayLine(food.key, 2200);
   }
   function active(mood) { return state.until[mood] > now(); }
   function flash(mood, ms) {
@@ -327,18 +570,51 @@
       if (msg.pet && (!pet || DATA.pets[msg.pet] !== pet)) { build(msg.pet); newDepth(); }
       name = msg.name || pet.name;
       nameEl.textContent = name;
+      petEl.setAttribute("aria-label", `Poke ${name}`);
       if (msg.background) document.body.style.background = msg.background;
       // The Mac app caps the frame rate (0: the display's) and sets ground while the pet walks along the Dock.
       if (msg.fps != null) state.fps = msg.fps;
       // The Mac app in Low Power Mode: no antics.
       if (msg.quiet != null) state.quiet = !!msg.quiet;
+      if (msg.externalSplatter != null) state.externalSplatter = !!msg.externalSplatter;
+      if (msg.externalTantrum != null) state.externalTantrum = !!msg.externalTantrum;
       if (msg.ground != null && msg.ground !== state.ground) { state.ground = msg.ground; newDepth(); }
       for (const [k, v] of Object.entries(msg.vars || {})) document.documentElement.style.setProperty(k, v);
       return;
     }
+    if (msg.type === "tantrum") {
+      clearMess();
+      const alreadyAngry = active("angry") && (!msg.pet || DATA.pets[msg.pet] === pet);
+      if (msg.pet && DATA.pets[msg.pet] !== pet) build(msg.pet);
+      state.tantrumScene = true; state.effectOnly = false; state.ground = false; state.fps = 30;
+      document.body.classList.add("tantrum-stage"); sea.style.display = ""; sea.style.visibility = "visible";
+      name = msg.name || pet.name;
+      state.fullness = Math.max(0, Math.min(CARE.burstAt - CARE.safeFeeds, msg.fullness || 0));
+      state.meal = CARE.safeFeeds + state.fullness; state.lastFed = now();
+      if (!alreadyAngry) {
+        state.angryAt = now(); state.tantrumDir = state.dir;
+        state.tantrumOrigin = { x: msg.x ?? sea.clientWidth / 2, y: msg.y ?? sea.clientHeight - petHeight() - 16 };
+        shout();
+      }
+      state.until.angry = now() + Math.max(1, Math.min(CARE.angerMs, msg.durationMs || CARE.angerMs));
+      if (state.framePaused) { state.framePaused = false; last = performance.now(); requestAnimationFrame(frame); }
+      return;
+    }
+    if (msg.type === "splatter") {
+      state.effectOnly = true;
+      sea.style.display = "none";
+      splatter((DATA.pets[msg.pet] || pet).splatter);
+      return;
+    }
+    if (msg.type === "poke") { poke(); return; }
     if (msg.type === "react") { react(msg.key, msg.vars || {}); return; }
     if (msg.type === "feed") { feed(msg.snack); if (msg.key) react(msg.key); return; }
     const woke = wake();
+    if (bursting() || active("angry")) {
+      if (msg.type === "errors" || msg.type === "file") state.errors = msg.errors ?? state.errors;
+      if (msg.type === "debug") state.debugging = !!msg.active;
+      return;
+    }
     switch (msg.type) {
       case "typing":
         flash("excited", 2500);
@@ -373,11 +649,11 @@
   }
 
   petEl.addEventListener("dblclick", () => react("pet"));
-  petEl.addEventListener("click", () => {
-    const woke = wake();
-    flash("spin", 800);
-    bubbles(5);
-    if (!woke) sayLine("click", 1600);
+  petEl.addEventListener("click", poke);
+  petEl.addEventListener("keydown", (event) => {
+    if (event.key !== "Enter" && event.key !== " ") return;
+    event.preventDefault();
+    if (!event.repeat) poke();
   });
 
   setInterval(() => {
@@ -390,42 +666,47 @@
 
   // Drift up and down every few seconds; floor pets, sleepers and pets on the ground stay at the bottom.
   function newDepth() {
-    const room = Math.max(0, sea.clientHeight - H - 40);
-    petEl.style.transition = "bottom 2.5s ease-in-out";
-    petEl.style.bottom = state.ground ? -(80 - state.artBottom) * SCALE + "px"
-      : (state.sleeping || pet.floor ? 18 : 24 + Math.random() * room) + "px";
+    if (active("angry") || state.tantrumScene) return;
+    const room = Math.max(0, sea.clientHeight - petHeight() - 40);
+    petEl.style.transition = reduced ? "none" : "bottom 2.5s ease-in-out";
+    petEl.style.bottom = state.ground ? -(80 - state.artBottom) * SCALE * sizeY() + "px"
+      : Math.min(Math.max(0, sea.clientHeight - petHeight() - 4), state.sleeping || pet.floor ? 18 : 24 + Math.random() * room) + "px";
   }
   setInterval(newDepth, 4000);
 
   let last = performance.now();
   function frame(t) {
+    if (state.effectOnly) { state.framePaused = true; return; }
+    if (state.tantrumScene && !active("angry")) { state.framePaused = true; sea.style.visibility = "hidden"; return; }
     const dt = Math.min(64, t - last) / 16.7;
     last = t;
+    updateCare(dt);
     const f = flags();
     const width = sea.clientWidth;
     const excited = active("excited") && !state.sleeping;
     let target = 0.4 * pet.speed;
     const food = state.food;
     if (food) {
+      food.x = reachableFoodX(food.x);
       // The snack sinks to the pet's swimming line; the pet swims over to it.
-      const petTop = sea.clientHeight - parseFloat(getComputedStyle(petEl).bottom) - H;
-      const mouthY = petTop + pet.mouth[1] * SCALE;
+      const petTop = sea.clientHeight - parseFloat(getComputedStyle(petEl).bottom) - petHeight();
+      const mouthY = petTop + pet.mouth[1] * SCALE * sizeY();
       food.y = Math.min(food.y + 0.9 * dt, mouthY - 8);
-      const mouthX = state.x + (pet.flip && state.dir < 0 ? 120 - pet.mouth[0] : pet.mouth[0]) * SCALE;
+      const mouthX = state.x + (pet.flip && state.dir < 0 ? 120 - pet.mouth[0] : pet.mouth[0]) * SCALE * sizeX();
       food.el.style.left = food.x + "px";
       food.el.style.top = food.y + "px";
       const gap = food.x + 8 - mouthX;
-      if (Math.abs(gap) < 14 && food.y >= mouthY - 20) eat();
+      if ((Math.abs(gap) < 14 || reduced) && food.y >= mouthY - 20) eat();
       else if (Math.abs(gap) > 6) state.dir = gap > 0 ? 1 : -1;
     }
     if (food) target = 2.0 * pet.speed;
-    else if (state.sleeping || f.hiding || f.curious || active("spin")) target = 0;
+    else if (bursting() || f.angry || state.sleeping || f.hiding || f.curious || active("spin")) target = 0;
     else if (excited) target = 1.7 * pet.speed;
     else if (state.debugging) target = 0.8 * pet.speed;
     else if (f.worried) target = 0.22 * pet.speed;
     // With nothing else to do it heads for a spot anywhere along the width, rests there a moment, then picks
     // another: it gets around a wide strip (the Mac's Dock) instead of pacing near where it started.
-    const maxX = Math.max(0, width - W - 4);
+    const maxX = Math.max(0, width - petWidth() - 4);
     if (!food) {
       if (state.goal == null || Math.abs(state.goal - state.x) < 8) {
         if (state.goal != null) state.restUntil = now() + 800 + Math.random() * 2500;
@@ -437,22 +718,42 @@
     if (reduced) target = 0;
     state.speed += (target - state.speed) * 0.06 * dt;
     state.x += state.speed * state.dir * dt;
-    if (state.x > maxX) { state.x = maxX; state.dir = -1; }
-    if (state.x < 4) { state.x = 4; state.dir = 1; }
+    if (state.x > maxX) { state.x = maxX; if (!food) state.dir = -1; }
+    if (state.x < 4) { state.x = 4; if (!food) state.dir = 1; }
 
     // Limbs move faster when excited, slower when worried or asleep, not at all when hiding.
-    const tempo = f.hiding || reduced ? 0 : excited ? 3.5 : state.sleeping ? 0.25 : f.worried ? 0.65 : 1;
+    const tempo = f.hiding || reduced ? 0 : f.angry ? 0.8 : excited ? 3.5 : state.sleeping ? 0.25 : f.worried ? 0.65 : 1;
     state.clock += (dt * 16.7 / 1000) * tempo;
+    const position = staging() ? tantrumPosition() : null;
+    if (position) {
+      state.dir = position.dir;
+      petEl.style.transition = "none";
+      petEl.style.width = position.w + "px"; petEl.style.height = position.h + "px";
+      petEl.style.bottom = sea.clientHeight - position.y - position.h + "px";
+    }
     render(f);
+    // The spread-out angry limbs and steam can extend beyond a grounded pet's normal art box.
+    if (f.angry && reduced && !position) {
+      const art = $("root").getBoundingClientRect(), area = sea.getBoundingClientRect();
+      let bottom = parseFloat(getComputedStyle(petEl).bottom);
+      if (art.bottom > area.bottom - 4) bottom += art.bottom - area.bottom + 4;
+      if (art.top < area.top + 4) bottom -= area.top + 4 - art.top;
+      petEl.style.bottom = bottom + "px";
+    }
 
-    petEl.style.left = state.x + "px";
-    const top = sea.clientHeight - parseFloat(getComputedStyle(petEl).bottom) - H;
-    sayEl.style.left = Math.max(4, Math.min(state.x, width - sayEl.offsetWidth - 4)) + "px";
-    // Above the pet, or below it when it swims too close to the top.
-    sayEl.style.top = (top - 26 >= 2 ? top - 26 : top + H + 4) + "px";
+    const displayX = position ? position.x : state.x;
+    petEl.style.left = displayX + "px";
+    const top = sea.clientHeight - parseFloat(getComputedStyle(petEl).bottom) - (position?.h || petHeight());
+    sayEl.style.width = position ? position.captionWidth + "px" : "";
+    const speechHeight = sayEl.offsetHeight;
+    const captionX = position ? (position.side ? position.anchorX + position.w + 12 : position.anchorX + position.w / 2 - sayEl.offsetWidth / 2) : displayX;
+    const captionY = position ? (position.side ? position.anchorY + (position.h - speechHeight) / 2 : position.anchorY - speechHeight - position.hopHeight - 28)
+      : top - speechHeight - 8 >= 4 ? top - speechHeight - 8 : top + petHeight() + 4;
+    sayEl.style.left = Math.max(4, Math.min(captionX, width - sayEl.offsetWidth - 4)) + "px";
+    sayEl.style.top = Math.max(4, Math.min(sea.clientHeight - speechHeight - 4, captionY)) + "px";
     const [hx, hy] = pet.head;
-    zzz.style.left = state.x + (pet.flip && state.dir < 0 ? 120 - hx : hx) * SCALE + "px";
-    zzz.style.top = top + hy * SCALE + "px";
+    zzz.style.left = state.x + (pet.flip && state.dir < 0 ? 120 - hx : hx) * SCALE * sizeX() + "px";
+    zzz.style.top = top + hy * SCALE * sizeY() + "px";
     zzz.classList.toggle("on", state.sleeping);
     nextFrame();
   }

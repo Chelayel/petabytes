@@ -18,19 +18,29 @@ import java.awt.event.MouseEvent
 import javax.swing.JComponent
 import javax.swing.SwingUtilities
 import kotlin.math.abs
-
 /**
  * The pet, drawn over the bottom edge of the editor. It only claims the mouse over the
  * pet itself ([contains]), and not at all while it's out of the way of the caret, so
  * clicks and scrolling anywhere else reach the editor. Drag it to where it should stay;
  * right-click it for its menu.
  */
-class FloatingPet(val brain: PetBrain, scale: Double, private val onDropped: (Double) -> Unit) : JComponent() {
+class FloatingPet(val brain: PetBrain, scale: Double, private val onMotion: () -> Unit = {}, private val onDropped: (Double) -> Unit) : JComponent() {
     /** Mouse position along the pet's axis: down the right edge, or across the bottom. */
     private fun along(e: MouseEvent) = if (brain.vertical) e.y else e.x
     private val axisLength get() = if (brain.vertical) height.toDouble() else width.toDouble()
     private val spriteLength get() = if (brain.vertical) painter.spriteHeight else painter.spriteWidth
     val painter = PetPainter(scale = JBUI.scale(1) * scale)
+    val mess = object : JComponent() {
+        override fun contains(x: Int, y: Int) = false
+        override fun paintComponent(g: Graphics) {
+            if (brain.splashed) painter.paintMess(g as Graphics2D, brain, width.toDouble(), height.toDouble())
+            else if (brain.tantrum) {
+                val pet = this@FloatingPet.petBounds()
+                painter.paintTantrum(g as Graphics2D, brain, width.toDouble(), height.toDouble(), bubbleStyle(),
+                    this@FloatingPet.x + pet.x, this@FloatingPet.y + pet.y)
+            }
+        }
+    }.apply { isOpaque = false; isVisible = false }
     private var pressX = 0
     private var grabOffset = 0.0
     private var moved = false
@@ -54,6 +64,7 @@ class FloatingPet(val brain: PetBrain, scale: Double, private val onDropped: (Do
                 brain.dragging = true
                 cursor = Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR)
                 brain.dragTo(along(e) - grabOffset, axisLength, spriteLength)
+                onMotion()
                 repaint()
             }
 
@@ -64,12 +75,12 @@ class FloatingPet(val brain: PetBrain, scale: Double, private val onDropped: (Do
                 if (moved) {
                     brain.dropped(axisLength, spriteLength)
                     onDropped(brain.home)
-                } else if (e.clickCount == 2) {
-                    brain.react("pet")
                 } else {
                     brain.clicked()
+                    if (e.clickCount == 2) brain.react("pet")
                 }
                 moved = false
+                onMotion()
                 repaint()
             }
         }
@@ -95,16 +106,17 @@ class FloatingPet(val brain: PetBrain, scale: Double, private val onDropped: (Do
     }
 
     override fun contains(x: Int, y: Int): Boolean =
-        (brain.dragging || !brain.dodging) && petBounds().contains(x.toDouble(), y.toDouble())
+        !brain.splashed && !brain.tantrum && (brain.dragging || !brain.dodging) && petBounds().contains(x.toDouble(), y.toDouble())
 
-    override fun paintComponent(g: Graphics) {
-        val style = BubbleStyle(
+    private fun bubbleStyle() = BubbleStyle(
             text = UIUtil.getLabelForeground(),
             background = JBColor.namedColor("ToolTip.background", UIUtil.getPanelBackground()),
             border = JBColor.border(),
             font = JBFont.small(),
         )
+
+    override fun paintComponent(g: Graphics) {
         val fade = if (brain.dodging && !brain.dragging) 0.22f else 1f
-        painter.paint(g as Graphics2D, brain, width.toDouble(), height.toDouble(), style, fade)
+        painter.paint(g as Graphics2D, brain, width.toDouble(), height.toDouble(), bubbleStyle(), fade)
     }
 }

@@ -13,6 +13,10 @@ final class DockPet {
     private let view = NSImageView()
     private var timer: Timer?
     private var art = PetArt.load(Settings.pet)
+    private let care = PetCare(rules: PetArt.careRules)
+    private var splashShown = false
+    private var tantrumShown = false
+    private var nextAngryLine = Date.distantPast
 
     private var until: [String: Date] = [:]
     private var happyAt = Date.distantPast, spinAt = Date.distantPast
@@ -83,6 +87,8 @@ final class DockPet {
     }
 
     func stop() {
+        PetEffectWindow.dismiss()
+        tantrumShown = false
         timer?.invalidate()
         timer = nil
         NSApp.dockTile.contentView = nil
@@ -90,6 +96,7 @@ final class DockPet {
     }
 
     func choose(_ id: String) {
+        if art.id != id { care.reset(); splashShown = false; tantrumShown = false; bubble = nil; PetEffectWindow.dismiss() }
         art = PetArt.load(id)
         poses = [:]
     }
@@ -122,6 +129,7 @@ final class DockPet {
     func receive(_ message: [String: Any]) {
         switch message["type"] as? String {
         case "react":
+            guard !care.bursting, !care.angry else { return }
             guard let key = message["key"] as? String, let r = PetArt.reactions[key] else { return }
             let cooldown = (r["cooldown"] as? Double) ?? 0
             if let last = lastReact[key], Date().timeIntervalSince(last) < cooldown { return }
@@ -134,10 +142,40 @@ final class DockPet {
                     glyph: mood == "hiding" ? "!" : (r["hearts"] != nil || mood == "happy") ? "♥" : mood == "curious" ? "?" : "…")
             }
         case "feed":
+            let meal = care.feed()
+            guard meal != .ignored else { return }
+            if tantrumShown { PetEffectWindow.dismissTantrum(); tantrumShown = false }
             wake()
-            flash("happy", 1.1)
-            say(PetArt.snacks.randomElement()?["key"] ?? "eatCurly", glyph: "♥", seconds: 2.2)
+            if meal == .burst {
+                until["happy"] = .distantPast; until["spin"] = .distantPast
+                say("burstWarning", glyph: "!", seconds: 0.35)
+            } else {
+                flash("happy", 1.1)
+                say(meal == .overfed ? "overfed" : PetArt.snacks.randomElement()?["key"] ?? "eatCurly", glyph: "♥", seconds: 2.2)
+            }
+        case "poke":
+            let wasAngry = care.angry
+            let reaction = care.poke()
+            guard reaction != .ignored else { return }
+            wake()
+            switch reaction {
+            case .angry:
+                until["happy"] = .distantPast; until["spin"] = .distantPast
+                if !wasAngry || Date() >= nextAngryLine {
+                    let duration = care.rule("angerLineMs") / 1000
+                    say("angry", glyph: "!", seconds: duration + 0.35)
+                    nextAngryLine = Date().addingTimeInterval(duration)
+                }
+                if !NSWorkspace.shared.accessibilityDisplayShouldReduceMotion {
+                    tantrumShown = true
+                    PetEffectWindow.tantrum(pet: art.id, name: Settings.name, durationMs: care.angryRemainingMs, fullness: care.fullness)
+                }
+            case .warning: say("pokeWarning", glyph: "!", seconds: 1.8)
+            case .playful: flash("spin", 0.8); say("click", glyph: "♥", seconds: 1.6)
+            case .ignored: break
+            }
         case "typing":
+            guard !care.bursting, !care.angry else { wake(); return }
             // Now and then, as pet.html does: not every burst of typing gets a line.
             if !wake() && Date().timeIntervalSince(lastTypingLine) > 90 && Double.random(in: 0..<1) < 0.3 {
                 lastTypingLine = Date()
@@ -150,13 +188,14 @@ final class DockPet {
     }
 
     private func flags() -> Set<String> {
-        let hiding = active("hiding"), happy = active("happy"), closed = sleeping || hiding
+        let hiding = active("hiding") && !care.angry, happy = active("happy") && !care.angry && !care.bursting, closed = sleeping || hiding
         var f: Set<String> = []
         if hiding { f.insert("hiding"); f.insert("puffed") }
         if happy { f.insert("happy") }
         if sleeping { f.insert("sleeping") }
-        if active("curious") && !sleeping { f.insert("curious") }
-        f.insert(closed ? "eyesClosed" : happy ? "eyesHappy" : "eyesOpen")
+        if care.angry { f.insert("angry") }
+        if active("curious") && !care.angry && !sleeping { f.insert("curious") }
+        if closed { f.insert("eyesClosed") } else if happy { f.insert("eyesHappy") } else if !care.angry { f.insert("eyesOpen") }
         return f
     }
 
@@ -166,6 +205,23 @@ final class DockPet {
         let now = Date()
         let dt = min(0.1, now.timeIntervalSince(lastFrame))
         lastFrame = now
+        if care.update(dt * 1000) {
+            splashShown = false
+            say("burstRecovered", glyph: "♥")
+        }
+        if care.splashed && !splashShown {
+            splashShown = true
+            bubble = nil
+            PetEffectWindow.show(pet: art.id)
+        }
+        if tantrumShown && (!care.angry || NSWorkspace.shared.accessibilityDisplayShouldReduceMotion) {
+            PetEffectWindow.dismissTantrum(); tantrumShown = false
+        }
+        if care.angry && !tantrumShown && now >= nextAngryLine {
+            let duration = care.rule("angerLineMs") / 1000
+            say("angry", glyph: "!", seconds: duration + 0.35)
+            nextAngryLine = now.addingTimeInterval(duration)
+        }
         if !sleeping && now.timeIntervalSince(lastActivity) > Self.sleepAfter {
             sleeping = true
             schedule()
@@ -173,7 +229,7 @@ final class DockPet {
             say("sleep")
         }
         if !sleeping, bubble?.glyph == "z" { bubble = nil }
-        maybeAntic(now)
+        if !care.bursting && !care.angry { maybeAntic(now) }
         schedule()
         // Walking in place, it turns around now and then, as it would at the end of the Dock.
         if art.flip && !sleeping && now > nextTurn {
@@ -184,12 +240,12 @@ final class DockPet {
         let f = flags()
         let excited = active("excited") && !sleeping
         let tempo = f.contains("hiding") ? 0 : excited ? 3.0 : sleeping ? 0.25 : 1
-        clock += dt * tempo
+        if !NSWorkspace.shared.accessibilityDisplayShouldReduceMotion { clock += dt * tempo }
 
         let size = NSSize(width: 256, height: 256)
         view.image = NSImage(size: size, flipped: false) { [self] rect in
             guard let g = NSGraphicsContext.current?.cgContext else { return false }
-            draw(g, in: rect, flags: f, now: now)
+            if !care.splashed && !tantrumShown { draw(g, in: rect, flags: f, now: now) }
             if let bubble, bubble.until > now { drawBubble(g, bubble.glyph) }
             return true
         }
@@ -200,26 +256,28 @@ final class DockPet {
     private func draw(_ g: CGContext, in rect: CGRect, flags f: Set<String>, now: Date) {
         let box = art.bounds
         let hop = 14.0
-        let scale = min(rect.width * 0.9 / box.width, rect.height * 0.86 / (box.height + hop))
+        let sizeX = 1 + care.fullness * art.growth.x, sizeY = 1 + care.fullness * art.growth.y
+        let scale = min(rect.width * 0.9 / (box.width * sizeX), rect.height * 0.86 / ((box.height + hop) * sizeY))
         g.saveGState()
         // Into the art's coordinates: y down, the art box's centre on the icon's centre.
         g.translateBy(x: rect.midX, y: rect.midY)
-        g.scaleBy(x: scale, y: -scale)
+        g.scaleBy(x: scale * sizeX, y: -scale * sizeY)
         g.translateBy(x: -box.midX, y: -box.midY)
 
         var ty = 0.0, rot = 0.0
-        if !sleeping { ty = art.bob.amount * 0.4 * sin(2 * .pi * now.timeIntervalSince1970 / art.bob.period) }
-        if f.contains("happy") {
+        let reduced = NSWorkspace.shared.accessibilityDisplayShouldReduceMotion
+        if !sleeping && !reduced { ty = art.bob.amount * 0.4 * sin(2 * .pi * now.timeIntervalSince1970 / art.bob.period) }
+        if f.contains("happy") && !reduced {
             let p = min(1, now.timeIntervalSince(happyAt) / 1.1)
             ty -= hop * sin(.pi * p); rot -= 12 * sin(2 * .pi * p)
         }
-        if active("spin") { rot += 360 * min(1, now.timeIntervalSince(spinAt) / 0.8) }
+        if active("spin") && !care.angry && !care.bursting && !reduced { rot += 360 * min(1, now.timeIntervalSince(spinAt) / 0.8) }
         g.translateBy(x: 0, y: ty)
         rotate(g, rot, about: CGPoint(x: 60, y: 40))
         if art.flip && facingLeft { g.translateBy(x: 120, y: 0); g.scaleBy(x: -1, y: 1) }
 
         // Each group's pose eases toward the current mood's.
-        let moods = ["hiding", "sleeping", "worried", "curious"].filter(f.contains)
+        let moods = ["angry", "hiding", "sleeping", "worried", "curious"].filter(f.contains)
         for group in Set(art.parts.map(\.group)) {
             let target = moods.lazy.compactMap { self.art.poses[$0]?[group] }.first ?? Pose()
             var pose = poses[group] ?? Pose(pivot: target.pivot)

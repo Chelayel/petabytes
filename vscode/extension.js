@@ -12,20 +12,49 @@ class PetView {
   constructor(extensionPath) {
     this.extensionPath = extensionPath;
     this.view = undefined;
+    this.ready = false;
+    this.interactions = [];
   }
 
   resolveWebviewView(view) {
     this.view = view;
+    this.ready = false;
     view.webview.options = { enableScripts: true, localResourceRoots: [] };
-    view.webview.html = this.html();
     view.webview.onDidReceiveMessage((msg) => {
-      if (msg && msg.type === "ready") this.post(config());
+      if (this.view !== view || !msg || msg.type !== "ready") return;
+      this.ready = true;
+      this.post(config());
+      this.flushInteractions();
     });
-    view.onDidDispose(() => { this.view = undefined; });
+    view.onDidChangeVisibility(() => {
+      if (this.view !== view) return;
+      // VS Code recreates the page after hiding it, so wait for that page's ready message.
+      if (!view.visible) { this.ready = false; return; }
+      if (this.ready) {
+        this.post(config());
+        this.flushInteractions();
+      }
+    });
+    view.onDidDispose(() => {
+      if (this.view === view) { this.view = undefined; this.ready = false; }
+    });
+    view.webview.html = this.html();
   }
 
   post(msg) {
-    if (this.view && this.view.visible) this.view.webview.postMessage(msg);
+    if (this.view && this.view.visible && this.ready) this.view.webview.postMessage(msg);
+  }
+
+  /** Manual actions wait for a newly opened panel; background IDE events still skip hidden panels. */
+  async interact(msg) {
+    this.interactions.push(msg);
+    if (!this.view || !this.view.visible) await vscode.commands.executeCommand(`${VIEW_ID}.focus`);
+    this.flushInteractions();
+  }
+
+  flushInteractions() {
+    if (!this.view || !this.view.visible || !this.ready) return;
+    for (const msg of this.interactions.splice(0)) this.post(msg);
   }
 
   html() {
@@ -66,7 +95,8 @@ function config() {
   const settings = vscode.workspace.getConfiguration(SECTION);
   // An empty name means the pet's own (Shelly, Bloop, ...). 30 frames a second is plenty for a pet, and on a
   // 120 Hz screen a quarter of the work; asleep, pet.html drops to 6.
-  return { type: "config", pet: settings.get("pet") || "turtle", name: settings.get("name") || "", fps: 30 };
+  return { type: "config", pet: settings.get("pet") || "turtle", name: settings.get("name") || "", fps: 30,
+    externalTantrum: false, externalSplatter: false };
 }
 
 function errorCount(uri) {
@@ -148,7 +178,11 @@ function activate(context) {
 
   sub(vscode.commands.registerCommand("petabytes.feed", async () => {
     if (!vscode.workspace.getConfiguration(SECTION).get("enabled")) await setEnabled(true);
-    pet.post({ type: "feed", key: "feed" });
+    await pet.interact({ type: "feed", key: "feed" });
+  }));
+  sub(vscode.commands.registerCommand("petabytes.poke", async () => {
+    if (!vscode.workspace.getConfiguration(SECTION).get("enabled")) await setEnabled(true);
+    await pet.interact({ type: "poke" });
   }));
 
   sub(vscode.workspace.onDidChangeConfiguration((e) => {

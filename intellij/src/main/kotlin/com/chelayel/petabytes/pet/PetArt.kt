@@ -33,6 +33,13 @@ class Part(
     val whenFlags: List<String>?,
 )
 
+class SplatterArt(val shape: Shape, val fill: Color, val shade: Color, val shine: Color, val outline: Color, val pixel: Boolean)
+
+data class CareRules(val safeFeeds: Int = 3, val burstAt: Int = 8, val mealGapMs: Long = 60_000,
+                     val pokeGapMs: Long = 2000, val angryAt: Int = 5, val angerMs: Long = 6000,
+                     val windupMs: Long = 350, val burstMs: Long = 4600, val angerLineMs: Long = 3000,
+                     val hopMs: Long = 2400, val hopMoveMs: Long = 520)
+
 class Pet(
     val id: String,
     val label: String,
@@ -52,6 +59,9 @@ class Pet(
     val poses: Map<String, Map<String, Pose>>,
     val groupMotion: Map<String, GroupMotion>,
     val lines: Map<String, List<String>>,
+    val splatter: SplatterArt,
+    val growthX: Double,
+    val growthY: Double,
     /** tide, home, snacks, games or gadgets: the tab it's under in Choose a Pet. */
     val set: String = "tide",
 )
@@ -69,6 +79,7 @@ class PetCatalog(
     /** Reaction keys the pet picks from to do something on its own now and then, and how often (seconds). */
     val antics: List<String> = emptyList(),
     val anticEvery: Pair<Double, Double> = 70.0 to 160.0,
+    val care: CareRules = CareRules(),
 ) {
     fun pet(id: String?): Pet = pets[id] ?: pets.getValue("turtle")
     fun lines(pet: Pet, key: String): List<String> = pet.lines[key] ?: lines[key] ?: listOf("")
@@ -94,7 +105,12 @@ class PetCatalog(
             val snacks = (root["snacks"] as List<Map<String, Any?>>? ?: emptyList()).map { Snack(it["text"] as String, it["key"] as String) }
             val antics = (root["antics"] as List<String>?) ?: emptyList()
             val every = (root["anticEvery"] as List<Double>?)?.takeIf { it.size == 2 }?.let { it[0] to it[1] } ?: (70.0 to 160.0)
-            return PetCatalog(pets, stringLists(root["lines"]), reactions, snacks.ifEmpty { listOf(Snack("{ }", "eatCurly")) }, antics, every)
+            val care = root["care"] as Map<String, Double>
+            return PetCatalog(pets, stringLists(root["lines"]), reactions, snacks.ifEmpty { listOf(Snack("{ }", "eatCurly")) }, antics, every,
+                CareRules(care.getValue("safeFeeds").toInt(), care.getValue("burstAt").toInt(), care.getValue("mealGapMs").toLong(),
+                    care.getValue("pokeGapMs").toLong(), care.getValue("angryAt").toInt(), care.getValue("angerMs").toLong(),
+                    care.getValue("windupMs").toLong(), care.getValue("burstMs").toLong(),
+                    care.getValue("angerLineMs").toLong(), care.getValue("hopMs").toLong(), care.getValue("hopMoveMs").toLong()))
         }
 
         @Suppress("UNCHECKED_CAST")
@@ -113,10 +129,14 @@ class PetCatalog(
             val head = nums(m["head"]) ?: listOf(100.0, 20.0)
             // Bubbles and the sleep "z" take the pet's first outline color, as on the web page.
             val accent = parts.firstNotNullOfOrNull { it.stroke } ?: Color(0x5EEAD4)
+            val splat = m["splatter"] as Map<String, Any?>
+            val splatter = SplatterArt(SvgPath.parse(splat["path"] as String), color(splat["fill"] as String),
+                color(splat["shade"] as String), color(splat["shine"] as String), color(splat["outline"] as String), splat["pixel"] as Boolean)
+            val growth = nums(m["growth"])!!
             return Pet(
                 id, m["label"] as String, m["name"] as String, m["flip"] as Boolean, m["floor"] as Boolean,
                 (m["speed"] as Double), bob[0], bob[1], accent, mouth[0], mouth[1], head[0], head[1],
-                parts, poses, motion, stringLists(m["lines"]), (m["set"] as String?) ?: "tide",
+                parts, poses, motion, stringLists(m["lines"]), splatter, growth[0], growth[1], (m["set"] as String?) ?: "tide",
             )
         }
 

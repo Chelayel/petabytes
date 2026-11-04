@@ -27,11 +27,15 @@ Small companions with a big appetite. A pet lives in a **Petabytes** panel in yo
 
 **Feed it:** click the ♥ on the panel (or **Petabytes: Feed Pet**) and a `{ }`, `[ ]`, `( )`, `< >` or `;` sinks down for your pet to eat. Every 20th `{` you type drops a crumb too.
 
+The first three snacks are fine. Snacks four through seven make your pet rounder; snack eight triggers a cartoon puke explosion across the panel. The mess clears automatically and your pet returns. Leave a minute between snacks to start a fresh meal.
+
+**Poke it:** click the pet, use the ⚡ on the panel, or run **Petabytes: Poke Pet**. Three quick pokes earn a warning; five trigger a six-second tantrum, with scowling eyes, clenched teeth, steam, and cartoon swears. The pet grows where space allows, stomps near its original spot, then pauses. Captions stay fixed for three seconds; extra pokes extend the tantrum without replacing the current shout. Games pets keep their pixel expressions. Feeding interrupts the tantrum, and Reduced Motion keeps the face and shouts without the stomping. All effects stay inside the Petabytes panel.
+
 ![Pets reacting to typing, fixed errors, a new error, failed tests, debugging and being left alone](https://raw.githubusercontent.com/Chelayel/petabytes/main/docs/moods.png)
 
 ## Choose, show or hide
 
-- Command Palette → **Petabytes: Choose Pet** (a picker with a tab per set), **Feed Pet**, **Toggle Pet**, **Show Pet** or **Hide Pet**
+- Command Palette → **Petabytes: Choose Pet** (a picker with a tab per set), **Feed Pet**, **Poke Pet**, **Toggle Pet**, **Show Pet** or **Hide Pet**
 - The buttons on the panel's title bar
 - The settings below
 
@@ -46,6 +50,12 @@ Small companions with a big appetite. A pet lives in a **Petabytes** panel in yo
 Works with any theme. In [JetBrains IDEs](https://plugins.jetbrains.com/plugin/35446-petabytes) the pet swims along the editor's right edge.
 
 There's also [a Mac app](https://github.com/Chelayel/petabytes#on-your-mac) whose pet walks along your Dock and reacts to your Mac (the app in front, battery, Wi-Fi, screenshots). It's separate: it can't see your code, so keep this extension for that.
+
+## Run locally
+
+Run `npm test` from `vscode/` for the extension integration checks. From the repository root, `python3 tools/check_interactions.py --vscode` exercises the synced page under the extension's script policy and message bridge, with normal and reduced motion.
+
+To make an installable extension, use Node.js 22 or newer and run `npx --yes @vscode/vsce package` from `vscode/`, then use **Extensions: Install from VSIX…** in VS Code. Packaging also syncs the shared assets.
 
 ## Support
 

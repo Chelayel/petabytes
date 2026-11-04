@@ -453,6 +453,33 @@
    "Blub blub.",
    "Bubble time!",
    "*blows bubbles*"
+  ],
+  "overfed": [
+   "Oof. Getting a little round...",
+   "My belly says stop.",
+   "I may have over-snacked."
+  ],
+  "burstWarning": [
+   "One more bite was a mistake...",
+   "Uh-oh. Snack overflow!"
+  ],
+  "burstRecovered": [
+   "I'm okay! Let's pace the snacks.",
+   "Cleanup complete. Smaller portions?"
+  ],
+  "pokeWarning": [
+   "Easy with the pokes!",
+   "Hey! Personal space!",
+   "I'm a pet, not a button."
+  ],
+  "angry": [
+   "Poke me ONE more time. I dare you.",
+   "I'm shedding on your hoodie.",
+   "Back off, finger gremlin!",
+   "Do I look like a snooze button?!",
+   "I bite. Allegedly. Want to find out?",
+   "Grr. Grrr. GRRRRR.",
+   "*$%&! I just groomed this fur!"
   ]
  },
  "reactions": {
@@ -833,6 +860,19 @@
    "key": "eatSemicolon"
   }
  ],
+ "care": {
+  "safeFeeds": 3,
+  "burstAt": 8,
+  "mealGapMs": 60000,
+  "pokeGapMs": 2000,
+  "angryAt": 5,
+  "angerMs": 6000,
+  "angerLineMs": 3000,
+  "hopMs": 2400,
+  "hopMoveMs": 520,
+  "windupMs": 350,
+  "burstMs": 4600
+ },
  "antics": [
   "anticSpin",
   "anticHop",
@@ -981,7 +1021,8 @@
      "group": "face",
      "fill": "#0E1012",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -993,7 +1034,8 @@
      "group": "face",
      "fill": "#FFFFFF",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -1027,7 +1069,12 @@
      "path": "M111 45 q3 1.5 5.5 -1",
      "group": "face",
      "stroke": "#0E1012",
-     "sw": 1.2
+     "sw": 1.2,
+     "when": [
+      "eyesOpen",
+      "eyesClosed",
+      "eyesHappy"
+     ]
     },
     {
      "path": "M100 29 q-2.5 4.5 0 5.5 q2.5 -1 0 -5.5z",
@@ -1058,6 +1105,70 @@
      "sw": 2.2,
      "when": [
       "debugging"
+     ]
+    },
+    {
+     "path": "M105.90 34.70 L111.50 36.50",
+     "group": "face",
+     "stroke": "#0E1012",
+     "sw": 1.8,
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M111 45.5 q3 -1.5 5.5 1",
+     "group": "face",
+     "stroke": "#0E1012",
+     "sw": 1.2,
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M105.15 29.50 q-2.75 -1.65 0 -3.85 q2.75 -1.65 0 -3.85",
+     "group": "face",
+     "stroke": "#FFF7E2",
+     "sw": 1.49,
+     "pivot": [
+      105.15,
+      29.5
+     ],
+     "rot": [
+      9,
+      0.45,
+      0.0
+     ],
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M110.65 29.50 q-2.75 -1.65 0 -3.85 q2.75 -1.65 0 -3.85",
+     "group": "face",
+     "stroke": "#FFF7E2",
+     "sw": 1.49,
+     "pivot": [
+      110.65,
+      29.5
+     ],
+     "rot": [
+      9,
+      0.45,
+      0.5
+     ],
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M103.15 31.50 Q103.59 34.14 100.95 33.70 L100.95 33.09 Q102.33 32.88 102.55 31.50Z M103.15 37.00 Q103.59 34.36 100.95 34.80 L100.95 35.41 Q102.33 35.62 102.55 37.00Z M104.25 31.50 Q103.81 34.14 106.45 33.70 L106.45 33.09 Q105.08 32.88 104.86 31.50Z M104.25 37.00 Q103.81 34.36 106.45 34.80 L106.45 35.41 Q105.08 35.62 104.86 37.00Z",
+     "group": "face",
+     "fill": "#E44954",
+     "stroke": "#0E1012",
+     "sw": 0.5,
+     "when": [
+      "angry"
      ]
     }
    ],
@@ -1104,6 +1215,19 @@
     }
    },
    "lines": {
+    "angry": [
+     "Back off, barnacle brain!",
+     "I'll ink your whole keyboard.",
+     "You soggy sea cucumber!",
+     "Holy mackerel, #@$%! ENOUGH!",
+     "Go poke a jellyfish instead!",
+     "Shiver me fins, hands OFF!",
+     "Kelp! Get this human off me!"
+    ],
+    "overfed": [
+     "I'm turning into a beach ball...",
+     "Too many bytes in my belly!"
+    ],
     "anticZoomies": [
      "Full speed ahead!",
      "Riding the current!",
@@ -1134,7 +1258,19 @@
      "Even turtles take breaks. Stretch?"
     ]
    },
-   "set": "tide"
+   "set": "tide",
+   "splatter": {
+    "path": "M48 13 C56 -6 66 3 64 21 C64 29 76 23 85 16 C99 7 105 22 89 33 C79 40 88 43 97 43 C114 44 109 59 92 57 C81 55 82 65 90 74 C101 89 85 99 76 81 C70 69 64 77 64 91 C64 109 48 108 49 89 C49 77 40 77 33 89 C23 105 10 92 23 78 C33 66 23 65 12 68 C-6 73 -9 56 11 53 C26 51 21 42 9 36 C-7 27 4 12 20 25 C34 36 37 28 31 17 C23 0 40 -6 44 14 C45 20 47 18 48 13 Z",
+    "fill": "#8AD6A2",
+    "shade": "#4AA77C",
+    "shine": "#CEF2AD",
+    "outline": "#5EEAD4",
+    "pixel": false
+   },
+   "growth": [
+    0.09,
+    0.15
+   ]
   },
   "jellyfish": {
    "label": "Jellyfish",
@@ -1292,7 +1428,8 @@
      "group": "bell",
      "fill": "#3B0764",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -1304,7 +1441,8 @@
      "group": "bell",
      "fill": "#FFFFFF",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -1334,7 +1472,8 @@
      "group": "bell",
      "fill": "#3B0764",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -1346,7 +1485,8 @@
      "group": "bell",
      "fill": "#FFFFFF",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -1371,7 +1511,12 @@
      "path": "M57 35 q3 2 6 0",
      "group": "bell",
      "stroke": "#3B0764",
-     "sw": 1.2
+     "sw": 1.2,
+     "when": [
+      "eyesOpen",
+      "eyesClosed",
+      "eyesHappy"
+     ]
     },
     {
      "path": "M50 24.5 l5 1.5",
@@ -1420,6 +1565,79 @@
      "sw": 2.2,
      "when": [
       "debugging"
+     ]
+    },
+    {
+     "path": "M50.02 25.83 L55.40 27.56",
+     "group": "bell",
+     "stroke": "#3B0764",
+     "sw": 1.8,
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M69.98 25.83 L64.60 27.56",
+     "group": "bell",
+     "stroke": "#3B0764",
+     "sw": 1.8,
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M57 37 q3 -2 6 -0",
+     "group": "bell",
+     "stroke": "#3B0764",
+     "sw": 1.2,
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M49.50 10.50 q-2.75 -1.65 0 -3.85 q2.75 -1.65 0 -3.85",
+     "group": "bell",
+     "stroke": "#FFF7E2",
+     "sw": 1.49,
+     "pivot": [
+      49.5,
+      10.5
+     ],
+     "rot": [
+      9,
+      0.45,
+      0.0
+     ],
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M70.50 10.50 q-2.75 -1.65 0 -3.85 q2.75 -1.65 0 -3.85",
+     "group": "bell",
+     "stroke": "#FFF7E2",
+     "sw": 1.49,
+     "pivot": [
+      70.5,
+      10.5
+     ],
+     "rot": [
+      9,
+      0.45,
+      0.5
+     ],
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M71.63 20.33 Q72.07 22.97 69.43 22.53 L69.43 21.93 Q70.80 21.71 71.02 20.33Z M71.63 25.83 Q72.07 23.19 69.43 23.63 L69.43 24.24 Q70.80 24.46 71.02 25.83Z M72.73 20.33 Q72.29 22.97 74.93 22.53 L74.93 21.93 Q73.55 21.71 73.33 20.33Z M72.73 25.83 Q72.29 23.19 74.93 23.63 L74.93 24.24 Q73.55 24.46 73.33 25.83Z",
+     "group": "bell",
+     "fill": "#E44954",
+     "stroke": "#3B0764",
+     "sw": 0.5,
+     "when": [
+      "angry"
      ]
     }
    ],
@@ -1481,6 +1699,19 @@
     }
    },
    "lines": {
+    "angry": [
+     "Back off, barnacle brain!",
+     "I'll ink your whole keyboard.",
+     "You soggy sea cucumber!",
+     "Holy mackerel, #@$%! ENOUGH!",
+     "Go poke a jellyfish instead!",
+     "Shiver me fins, hands OFF!",
+     "Kelp! Get this human off me!"
+    ],
+    "overfed": [
+     "I'm turning into a beach ball...",
+     "Too many bytes in my belly!"
+    ],
     "anticZoomies": [
      "Full speed ahead!",
      "Riding the current!",
@@ -1514,7 +1745,19 @@
      "It's late. Good thing I glow."
     ]
    },
-   "set": "tide"
+   "set": "tide",
+   "splatter": {
+    "path": "M48 13 C56 -6 66 3 64 21 C64 29 76 23 85 16 C99 7 105 22 89 33 C79 40 88 43 97 43 C114 44 109 59 92 57 C81 55 82 65 90 74 C101 89 85 99 76 81 C70 69 64 77 64 91 C64 109 48 108 49 89 C49 77 40 77 33 89 C23 105 10 92 23 78 C33 66 23 65 12 68 C-6 73 -9 56 11 53 C26 51 21 42 9 36 C-7 27 4 12 20 25 C34 36 37 28 31 17 C23 0 40 -6 44 14 C45 20 47 18 48 13 Z",
+    "fill": "#8AD6A2",
+    "shade": "#4AA77C",
+    "shine": "#CEF2AD",
+    "outline": "#E879F9",
+    "pixel": false
+   },
+   "growth": [
+    0.15,
+    0.09
+   ]
   },
   "octopus": {
    "label": "Octopus",
@@ -1655,7 +1898,8 @@
      "group": "head",
      "fill": "#F5F3FF",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -1667,7 +1911,8 @@
      "group": "head",
      "fill": "#1E1B4B",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -1679,7 +1924,8 @@
      "group": "head",
      "fill": "#FFFFFF",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -1709,7 +1955,8 @@
      "group": "head",
      "fill": "#F5F3FF",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -1721,7 +1968,8 @@
      "group": "head",
      "fill": "#1E1B4B",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -1733,7 +1981,8 @@
      "group": "head",
      "fill": "#FFFFFF",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -1758,7 +2007,12 @@
      "path": "M73 40 q3 2 6 0",
      "group": "head",
      "stroke": "#1E1B4B",
-     "sw": 1.4
+     "sw": 1.4,
+     "when": [
+      "eyesOpen",
+      "eyesClosed",
+      "eyesHappy"
+     ]
     },
     {
      "path": "M64 22.5 l8 2.5",
@@ -1860,6 +2114,79 @@
      "when": [
       "debugging"
      ]
+    },
+    {
+     "path": "M61.30 23.40 L72.50 27.00",
+     "group": "head",
+     "stroke": "#1E1B4B",
+     "sw": 2.8,
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M86.70 23.40 L75.50 27.00",
+     "group": "head",
+     "stroke": "#1E1B4B",
+     "sw": 2.8,
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M73 42 q3 -2 6 -0",
+     "group": "head",
+     "stroke": "#1E1B4B",
+     "sw": 1.4,
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M64.25 4.50 q-5.00 -3.00 0 -7.00 q5.00 -3.00 0 -7.00",
+     "group": "head",
+     "stroke": "#FFF7E2",
+     "sw": 2.7,
+     "pivot": [
+      64.25,
+      4.5
+     ],
+     "rot": [
+      9,
+      0.45,
+      0.0
+     ],
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M83.75 4.50 q-5.00 -3.00 0 -7.00 q5.00 -3.00 0 -7.00",
+     "group": "head",
+     "stroke": "#FFF7E2",
+     "sw": 2.7,
+     "pivot": [
+      83.75,
+      4.5
+     ],
+     "rot": [
+      9,
+      0.45,
+      0.5
+     ],
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M89.70 13.40 Q90.50 18.20 85.70 17.40 L85.70 16.30 Q88.20 15.90 88.60 13.40Z M89.70 23.40 Q90.50 18.60 85.70 19.40 L85.70 20.50 Q88.20 20.90 88.60 23.40Z M91.70 13.40 Q90.90 18.20 95.70 17.40 L95.70 16.30 Q93.20 15.90 92.80 13.40Z M91.70 23.40 Q90.90 18.60 95.70 19.40 L95.70 20.50 Q93.20 20.90 92.80 23.40Z",
+     "group": "head",
+     "fill": "#E44954",
+     "stroke": "#1E1B4B",
+     "sw": 0.6,
+     "when": [
+      "angry"
+     ]
     }
    ],
    "groupMotion": {
@@ -1917,6 +2244,19 @@
     }
    },
    "lines": {
+    "angry": [
+     "Back off, barnacle brain!",
+     "I'll ink your whole keyboard.",
+     "You soggy sea cucumber!",
+     "Holy mackerel, #@$%! ENOUGH!",
+     "Go poke a jellyfish instead!",
+     "Shiver me fins, hands OFF!",
+     "Kelp! Get this human off me!"
+    ],
+    "overfed": [
+     "I'm turning into a beach ball...",
+     "Too many bytes in my belly!"
+    ],
     "anticZoomies": [
      "Full speed ahead!",
      "Riding the current!",
@@ -1949,7 +2289,19 @@
      "An AI? I have eight arms, it has a million parameters."
     ]
    },
-   "set": "tide"
+   "set": "tide",
+   "splatter": {
+    "path": "M48 13 C56 -6 66 3 64 21 C64 29 76 23 85 16 C99 7 105 22 89 33 C79 40 88 43 97 43 C114 44 109 59 92 57 C81 55 82 65 90 74 C101 89 85 99 76 81 C70 69 64 77 64 91 C64 109 48 108 49 89 C49 77 40 77 33 89 C23 105 10 92 23 78 C33 66 23 65 12 68 C-6 73 -9 56 11 53 C26 51 21 42 9 36 C-7 27 4 12 20 25 C34 36 37 28 31 17 C23 0 40 -6 44 14 C45 20 47 18 48 13 Z",
+    "fill": "#8AD6A2",
+    "shade": "#4AA77C",
+    "shine": "#CEF2AD",
+    "outline": "#A78BFA",
+    "pixel": false
+   },
+   "growth": [
+    0.15,
+    0.09
+   ]
   },
   "crab": {
    "label": "Crab",
@@ -2176,7 +2528,12 @@
      "path": "M56 50 q4 3 8 0",
      "group": "body",
      "stroke": "#1C1917",
-     "sw": 1.4
+     "sw": 1.4,
+     "when": [
+      "eyesOpen",
+      "eyesClosed",
+      "eyesHappy"
+     ]
     },
     {
      "path": "M54 37 l-2 -10",
@@ -2217,7 +2574,8 @@
      "group": "eyes",
      "fill": "#1C1917",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -2247,7 +2605,8 @@
      "group": "eyes",
      "fill": "#1C1917",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -2316,6 +2675,79 @@
      "when": [
       "debugging"
      ]
+    },
+    {
+     "path": "M50.52 22.36 L55.00 23.80",
+     "group": "eyes",
+     "stroke": "#1C1917",
+     "sw": 1.8,
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M71.48 22.36 L67.00 23.80",
+     "group": "eyes",
+     "stroke": "#1C1917",
+     "sw": 1.8,
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M56 53 q4 -3 8 -0",
+     "group": "body",
+     "stroke": "#1C1917",
+     "sw": 1.4,
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M49.00 19.30 q-2.75 -1.65 0 -3.85 q2.75 -1.65 0 -3.85",
+     "group": "eyes",
+     "stroke": "#FFF7E2",
+     "sw": 1.49,
+     "pivot": [
+      49.0,
+      19.3
+     ],
+     "rot": [
+      9,
+      0.45,
+      0.0
+     ],
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M73.00 33.50 q-2.75 -1.65 0 -3.85 q2.75 -1.65 0 -3.85",
+     "group": "eyes",
+     "stroke": "#FFF7E2",
+     "sw": 1.49,
+     "pivot": [
+      73.0,
+      33.5
+     ],
+     "rot": [
+      9,
+      0.45,
+      0.5
+     ],
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M73.13 35.50 Q73.57 38.14 70.93 37.70 L70.93 37.09 Q72.31 36.88 72.53 35.50Z M73.13 41.00 Q73.57 38.36 70.93 38.80 L70.93 39.41 Q72.31 39.62 72.53 41.00Z M74.23 35.50 Q73.79 38.14 76.43 37.70 L76.43 37.09 Q75.06 36.88 74.84 35.50Z M74.23 41.00 Q73.79 38.36 76.43 38.80 L76.43 39.41 Q75.06 39.62 74.84 41.00Z",
+     "group": "eyes",
+     "fill": "#E44954",
+     "stroke": "#1C1917",
+     "sw": 0.5,
+     "when": [
+      "angry"
+     ]
     }
    ],
    "poses": {
@@ -2360,6 +2792,19 @@
     }
    },
    "lines": {
+    "angry": [
+     "Back off, barnacle brain!",
+     "I'll ink your whole keyboard.",
+     "You soggy sea cucumber!",
+     "Holy mackerel, #@$%! ENOUGH!",
+     "Go poke a jellyfish instead!",
+     "Shiver me fins, hands OFF!",
+     "Kelp! Get this human off me!"
+    ],
+    "overfed": [
+     "I'm turning into a beach ball...",
+     "Too many bytes in my belly!"
+    ],
     "anticZoomies": [
      "Full speed ahead!",
      "Riding the current!",
@@ -2394,7 +2839,19 @@
      "It's alive! *clack clack*"
     ]
    },
-   "set": "tide"
+   "set": "tide",
+   "splatter": {
+    "path": "M48 13 C56 -6 66 3 64 21 C64 29 76 23 85 16 C99 7 105 22 89 33 C79 40 88 43 97 43 C114 44 109 59 92 57 C81 55 82 65 90 74 C101 89 85 99 76 81 C70 69 64 77 64 91 C64 109 48 108 49 89 C49 77 40 77 33 89 C23 105 10 92 23 78 C33 66 23 65 12 68 C-6 73 -9 56 11 53 C26 51 21 42 9 36 C-7 27 4 12 20 25 C34 36 37 28 31 17 C23 0 40 -6 44 14 C45 20 47 18 48 13 Z",
+    "fill": "#8AD6A2",
+    "shade": "#4AA77C",
+    "shine": "#CEF2AD",
+    "outline": "#C2410C",
+    "pixel": false
+   },
+   "growth": [
+    0.15,
+    0.09
+   ]
   },
   "pufferfish": {
    "label": "Pufferfish",
@@ -2579,7 +3036,8 @@
      "group": "body",
      "fill": "#FFFFFF",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -2591,7 +3049,8 @@
      "group": "body",
      "fill": "#1C1917",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -2603,7 +3062,8 @@
      "group": "body",
      "fill": "#FFFFFF",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -2641,7 +3101,12 @@
      ],
      "group": "body",
      "stroke": "#1C1917",
-     "sw": 1.4
+     "sw": 1.4,
+     "when": [
+      "eyesOpen",
+      "eyesClosed",
+      "eyesHappy"
+     ]
     },
     {
      "path": "M50 44 q-9 2 -11 9 q7 0 11 -5z",
@@ -2688,6 +3153,70 @@
      "when": [
       "debugging"
      ]
+    },
+    {
+     "path": "M61.56 28.61 L74.10 32.64",
+     "group": "body",
+     "stroke": "#1C1917",
+     "sw": 3.14,
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M77.8 45.7 q2.2 -3.96 4.4 0",
+     "group": "body",
+     "stroke": "#1C1917",
+     "sw": 1.4,
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M61.50 20.50 q-5.00 -3.00 0 -7.00 q5.00 -3.00 0 -7.00",
+     "group": "body",
+     "stroke": "#FFF7E2",
+     "sw": 2.7,
+     "pivot": [
+      61.5,
+      20.5
+     ],
+     "rot": [
+      9,
+      0.45,
+      0.0
+     ],
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M71.50 20.50 q-5.00 -3.00 0 -7.00 q5.00 -3.00 0 -7.00",
+     "group": "body",
+     "stroke": "#FFF7E2",
+     "sw": 2.7,
+     "pivot": [
+      71.5,
+      20.5
+     ],
+     "rot": [
+      9,
+      0.45,
+      0.5
+     ],
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M56.56 22.50 Q57.36 27.30 52.56 26.50 L52.56 25.40 Q55.06 25.00 55.46 22.50Z M56.56 32.50 Q57.36 27.70 52.56 28.50 L52.56 29.60 Q55.06 30.00 55.46 32.50Z M58.56 22.50 Q57.76 27.30 62.56 26.50 L62.56 25.40 Q60.06 25.00 59.66 22.50Z M58.56 32.50 Q57.76 27.70 62.56 28.50 L62.56 29.60 Q60.06 30.00 59.66 32.50Z",
+     "group": "body",
+     "fill": "#E44954",
+     "stroke": "#1C1917",
+     "sw": 0.6,
+     "when": [
+      "angry"
+     ]
     }
    ],
    "poses": {
@@ -2725,6 +3254,19 @@
     }
    },
    "lines": {
+    "angry": [
+     "Back off, barnacle brain!",
+     "I'll ink your whole keyboard.",
+     "You soggy sea cucumber!",
+     "Holy mackerel, #@$%! ENOUGH!",
+     "Go poke a jellyfish instead!",
+     "Shiver me fins, hands OFF!",
+     "Kelp! Get this human off me!"
+    ],
+    "overfed": [
+     "I'm turning into a beach ball...",
+     "Too many bytes in my belly!"
+    ],
     "anticZoomies": [
      "Full speed ahead!",
      "Riding the current!",
@@ -2763,7 +3305,19 @@
      "*maximum puff*"
     ]
    },
-   "set": "tide"
+   "set": "tide",
+   "splatter": {
+    "path": "M48 13 C56 -6 66 3 64 21 C64 29 76 23 85 16 C99 7 105 22 89 33 C79 40 88 43 97 43 C114 44 109 59 92 57 C81 55 82 65 90 74 C101 89 85 99 76 81 C70 69 64 77 64 91 C64 109 48 108 49 89 C49 77 40 77 33 89 C23 105 10 92 23 78 C33 66 23 65 12 68 C-6 73 -9 56 11 53 C26 51 21 42 9 36 C-7 27 4 12 20 25 C34 36 37 28 31 17 C23 0 40 -6 44 14 C45 20 47 18 48 13 Z",
+    "fill": "#8AD6A2",
+    "shade": "#4AA77C",
+    "shine": "#CEF2AD",
+    "outline": "#1C1917",
+    "pixel": false
+   },
+   "growth": [
+    0.15,
+    0.09
+   ]
   },
   "whale": {
    "label": "Whale",
@@ -2834,7 +3388,8 @@
      "group": "body",
      "fill": "#1E3A8A",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -2846,7 +3401,8 @@
      "group": "body",
      "fill": "#FFFFFF",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -2871,7 +3427,12 @@
      "path": "M92 49 q5 3 10 -1",
      "group": "body",
      "stroke": "#1E3A8A",
-     "sw": 1.4
+     "sw": 1.4,
+     "when": [
+      "eyesOpen",
+      "eyesClosed",
+      "eyesHappy"
+     ]
     },
     {
      "path": "M84 33 l8 2",
@@ -2935,6 +3496,70 @@
      "when": [
       "debugging"
      ]
+    },
+    {
+     "path": "M84.78 36.57 L90.60 38.44",
+     "group": "body",
+     "stroke": "#1E3A8A",
+     "sw": 1.8,
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M92 51 q5 -3 10 1",
+     "group": "body",
+     "stroke": "#1E3A8A",
+     "sw": 1.4,
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M84.15 12.50 q-2.75 -1.65 0 -3.85 q2.75 -1.65 0 -3.85",
+     "group": "body",
+     "stroke": "#FFF7E2",
+     "sw": 1.49,
+     "pivot": [
+      84.15,
+      12.5
+     ],
+     "rot": [
+      9,
+      0.45,
+      0.0
+     ],
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M89.65 12.50 q-2.75 -1.65 0 -3.85 q2.75 -1.65 0 -3.85",
+     "group": "body",
+     "stroke": "#FFF7E2",
+     "sw": 1.49,
+     "pivot": [
+      89.65,
+      12.5
+     ],
+     "rot": [
+      9,
+      0.45,
+      0.5
+     ],
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M82.03 31.07 Q82.47 33.71 79.83 33.27 L79.83 32.66 Q81.20 32.44 81.42 31.07Z M82.03 36.57 Q82.47 33.93 79.83 34.37 L79.83 34.97 Q81.20 35.19 81.42 36.57Z M83.13 31.07 Q82.69 33.71 85.33 33.27 L85.33 32.66 Q83.95 32.44 83.73 31.07Z M83.13 36.57 Q82.69 33.93 85.33 34.37 L85.33 34.97 Q83.95 35.19 83.73 36.57Z",
+     "group": "body",
+     "fill": "#E44954",
+     "stroke": "#1E3A8A",
+     "sw": 0.5,
+     "when": [
+      "angry"
+     ]
     }
    ],
    "poses": {
@@ -2981,6 +3606,19 @@
     }
    },
    "lines": {
+    "angry": [
+     "Back off, barnacle brain!",
+     "I'll ink your whole keyboard.",
+     "You soggy sea cucumber!",
+     "Holy mackerel, #@$%! ENOUGH!",
+     "Go poke a jellyfish instead!",
+     "Shiver me fins, hands OFF!",
+     "Kelp! Get this human off me!"
+    ],
+    "overfed": [
+     "I'm turning into a beach ball...",
+     "Too many bytes in my belly!"
+    ],
     "anticZoomies": [
      "Full speed ahead!",
      "Riding the current!",
@@ -3006,7 +3644,19 @@
      "Fixed it! Whale done."
     ]
    },
-   "set": "tide"
+   "set": "tide",
+   "splatter": {
+    "path": "M48 13 C56 -6 66 3 64 21 C64 29 76 23 85 16 C99 7 105 22 89 33 C79 40 88 43 97 43 C114 44 109 59 92 57 C81 55 82 65 90 74 C101 89 85 99 76 81 C70 69 64 77 64 91 C64 109 48 108 49 89 C49 77 40 77 33 89 C23 105 10 92 23 78 C33 66 23 65 12 68 C-6 73 -9 56 11 53 C26 51 21 42 9 36 C-7 27 4 12 20 25 C34 36 37 28 31 17 C23 0 40 -6 44 14 C45 20 47 18 48 13 Z",
+    "fill": "#8AD6A2",
+    "shade": "#4AA77C",
+    "shine": "#CEF2AD",
+    "outline": "#93C5FD",
+    "pixel": false
+   },
+   "growth": [
+    0.09,
+    0.15
+   ]
   },
   "clownfish": {
    "label": "Clownfish",
@@ -3093,7 +3743,8 @@
      "group": "body",
      "fill": "#FFFFFF",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -3105,7 +3756,8 @@
      "group": "body",
      "fill": "#1C1917",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -3117,7 +3769,8 @@
      "group": "body",
      "fill": "#FFFFFF",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -3142,7 +3795,12 @@
      "path": "M83 44 q2 1.6 3.6 0",
      "group": "body",
      "stroke": "#1C1917",
-     "sw": 1.2
+     "sw": 1.2,
+     "when": [
+      "eyesOpen",
+      "eyesClosed",
+      "eyesHappy"
+     ]
     },
     {
      "path": "M74 29.5 l7 2",
@@ -3199,6 +3857,70 @@
      "when": [
       "debugging"
      ]
+    },
+    {
+     "path": "M71.55 29.66 L82.30 33.12",
+     "group": "body",
+     "stroke": "#1C1917",
+     "sw": 2.69,
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M83 45.6 q2 -1.6 3.6 -0",
+     "group": "body",
+     "stroke": "#1C1917",
+     "sw": 1.2,
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M70.78 23.50 q-4.80 -2.88 0 -6.72 q4.80 -2.88 0 -6.72",
+     "group": "body",
+     "stroke": "#FFF7E2",
+     "sw": 2.59,
+     "pivot": [
+      70.78,
+      23.5
+     ],
+     "rot": [
+      9,
+      0.45,
+      0.0
+     ],
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M80.38 23.50 q-4.80 -2.88 0 -6.72 q4.80 -2.88 0 -6.72",
+     "group": "body",
+     "stroke": "#FFF7E2",
+     "sw": 2.59,
+     "pivot": [
+      80.38,
+      23.5
+     ],
+     "rot": [
+      9,
+      0.45,
+      0.5
+     ],
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M66.75 20.06 Q67.52 24.67 62.91 23.90 L62.91 22.85 Q65.31 22.46 65.69 20.06Z M66.75 29.66 Q67.52 25.06 62.91 25.82 L62.91 26.88 Q65.31 27.26 65.69 29.66Z M68.67 20.06 Q67.90 24.67 72.51 23.90 L72.51 22.85 Q70.11 22.46 69.72 20.06Z M68.67 29.66 Q67.90 25.06 72.51 25.82 L72.51 26.88 Q70.11 27.26 69.72 29.66Z",
+     "group": "body",
+     "fill": "#E44954",
+     "stroke": "#1C1917",
+     "sw": 0.58,
+     "when": [
+      "angry"
+     ]
     }
    ],
    "poses": {
@@ -3239,6 +3961,19 @@
     }
    },
    "lines": {
+    "angry": [
+     "Back off, barnacle brain!",
+     "I'll ink your whole keyboard.",
+     "You soggy sea cucumber!",
+     "Holy mackerel, #@$%! ENOUGH!",
+     "Go poke a jellyfish instead!",
+     "Shiver me fins, hands OFF!",
+     "Kelp! Get this human off me!"
+    ],
+    "overfed": [
+     "I'm turning into a beach ball...",
+     "Too many bytes in my belly!"
+    ],
     "anticZoomies": [
      "Full speed ahead!",
      "Riding the current!",
@@ -3264,7 +3999,19 @@
      "Faster, faster!"
     ]
    },
-   "set": "tide"
+   "set": "tide",
+   "splatter": {
+    "path": "M48 13 C56 -6 66 3 64 21 C64 29 76 23 85 16 C99 7 105 22 89 33 C79 40 88 43 97 43 C114 44 109 59 92 57 C81 55 82 65 90 74 C101 89 85 99 76 81 C70 69 64 77 64 91 C64 109 48 108 49 89 C49 77 40 77 33 89 C23 105 10 92 23 78 C33 66 23 65 12 68 C-6 73 -9 56 11 53 C26 51 21 42 9 36 C-7 27 4 12 20 25 C34 36 37 28 31 17 C23 0 40 -6 44 14 C45 20 47 18 48 13 Z",
+    "fill": "#8AD6A2",
+    "shade": "#4AA77C",
+    "shine": "#CEF2AD",
+    "outline": "#1C1917",
+    "pixel": false
+   },
+   "growth": [
+    0.09,
+    0.15
+   ]
   },
   "seahorse": {
    "label": "Seahorse",
@@ -3354,7 +4101,8 @@
      "group": "body",
      "fill": "#500724",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -3366,7 +4114,8 @@
      "group": "body",
      "fill": "#FFFFFF",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -3436,6 +4185,61 @@
      "when": [
       "debugging"
      ]
+    },
+    {
+     "path": "M62.27 17.10 L67.20 18.68",
+     "group": "body",
+     "stroke": "#500724",
+     "sw": 1.8,
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M61.15 8.50 q-2.75 -1.65 0 -3.85 q2.75 -1.65 0 -3.85",
+     "group": "body",
+     "stroke": "#FFF7E2",
+     "sw": 1.49,
+     "pivot": [
+      61.15,
+      8.5
+     ],
+     "rot": [
+      9,
+      0.45,
+      0.0
+     ],
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M66.65 12.00 q-2.75 -1.65 0 -3.85 q2.75 -1.65 0 -3.85",
+     "group": "body",
+     "stroke": "#FFF7E2",
+     "sw": 1.49,
+     "pivot": [
+      66.65,
+      12.0
+     ],
+     "rot": [
+      9,
+      0.45,
+      0.5
+     ],
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M59.52 11.60 Q59.96 14.24 57.32 13.80 L57.32 13.19 Q58.70 12.97 58.92 11.60Z M59.52 17.10 Q59.96 14.46 57.32 14.90 L57.32 15.50 Q58.70 15.72 58.92 17.10Z M60.62 11.60 Q60.18 14.24 62.82 13.80 L62.82 13.19 Q61.45 12.97 61.23 11.60Z M60.62 17.10 Q60.18 14.46 62.82 14.90 L62.82 15.50 Q61.45 15.72 61.23 17.10Z",
+     "group": "body",
+     "fill": "#E44954",
+     "stroke": "#500724",
+     "sw": 0.5,
+     "when": [
+      "angry"
+     ]
     }
    ],
    "poses": {
@@ -3476,6 +4280,19 @@
     }
    },
    "lines": {
+    "angry": [
+     "Back off, barnacle brain!",
+     "I'll ink your whole keyboard.",
+     "You soggy sea cucumber!",
+     "Holy mackerel, #@$%! ENOUGH!",
+     "Go poke a jellyfish instead!",
+     "Shiver me fins, hands OFF!",
+     "Kelp! Get this human off me!"
+    ],
+    "overfed": [
+     "I'm turning into a beach ball...",
+     "Too many bytes in my belly!"
+    ],
     "anticZoomies": [
      "Full speed ahead!",
      "Riding the current!",
@@ -3496,7 +4313,19 @@
      "Aww, thank you!"
     ]
    },
-   "set": "tide"
+   "set": "tide",
+   "splatter": {
+    "path": "M48 13 C56 -6 66 3 64 21 C64 29 76 23 85 16 C99 7 105 22 89 33 C79 40 88 43 97 43 C114 44 109 59 92 57 C81 55 82 65 90 74 C101 89 85 99 76 81 C70 69 64 77 64 91 C64 109 48 108 49 89 C49 77 40 77 33 89 C23 105 10 92 23 78 C33 66 23 65 12 68 C-6 73 -9 56 11 53 C26 51 21 42 9 36 C-7 27 4 12 20 25 C34 36 37 28 31 17 C23 0 40 -6 44 14 C45 20 47 18 48 13 Z",
+    "fill": "#8AD6A2",
+    "shade": "#4AA77C",
+    "shine": "#CEF2AD",
+    "outline": "#EC4899",
+    "pixel": false
+   },
+   "growth": [
+    0.15,
+    0.09
+   ]
   },
   "shark": {
    "label": "Shark",
@@ -3562,7 +4391,8 @@
      "group": "body",
      "fill": "#0F172A",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -3574,7 +4404,8 @@
      "group": "body",
      "fill": "#FFFFFF",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -3599,12 +4430,22 @@
      "path": "M96 46 q6 4 12 0",
      "group": "body",
      "stroke": "#0F172A",
-     "sw": 1.4
+     "sw": 1.4,
+     "when": [
+      "eyesOpen",
+      "eyesClosed",
+      "eyesHappy"
+     ]
     },
     {
      "path": "M99 47.2 l1.5 2.2 l1.5 -2 M103 47.8 l1.5 2.2 l1.5 -2",
      "group": "body",
-     "fill": "#FFFFFF"
+     "fill": "#FFFFFF",
+     "when": [
+      "eyesOpen",
+      "eyesClosed",
+      "eyesHappy"
+     ]
     },
     {
      "path": "M95 30.5 l8 2",
@@ -3659,6 +4500,78 @@
      "when": [
       "debugging"
      ]
+    },
+    {
+     "path": "M96.02 32.83 L101.40 34.56",
+     "group": "body",
+     "stroke": "#0F172A",
+     "sw": 1.8,
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M96 50 q6 -4 12 -0",
+     "group": "body",
+     "stroke": "#0F172A",
+     "sw": 1.4,
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M99 48.8 l1.5 -2.2 l1.5 2 M103 48.2 l1.5 -2.2 l1.5 2",
+     "group": "body",
+     "fill": "#FFFFFF",
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M95.15 24.50 q-2.75 -1.65 0 -3.85 q2.75 -1.65 0 -3.85",
+     "group": "body",
+     "stroke": "#FFF7E2",
+     "sw": 1.49,
+     "pivot": [
+      95.15,
+      24.5
+     ],
+     "rot": [
+      9,
+      0.45,
+      0.0
+     ],
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M100.65 24.50 q-2.75 -1.65 0 -3.85 q2.75 -1.65 0 -3.85",
+     "group": "body",
+     "stroke": "#FFF7E2",
+     "sw": 1.49,
+     "pivot": [
+      100.65,
+      24.5
+     ],
+     "rot": [
+      9,
+      0.45,
+      0.5
+     ],
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M93.27 27.33 Q93.71 29.97 91.07 29.53 L91.07 28.93 Q92.45 28.71 92.67 27.33Z M93.27 32.83 Q93.71 30.19 91.07 30.63 L91.07 31.24 Q92.45 31.46 92.67 32.83Z M94.37 27.33 Q93.93 29.97 96.57 29.53 L96.57 28.93 Q95.20 28.71 94.98 27.33Z M94.37 32.83 Q93.93 30.19 96.57 30.63 L96.57 31.24 Q95.20 31.46 94.98 32.83Z",
+     "group": "body",
+     "fill": "#E44954",
+     "stroke": "#0F172A",
+     "sw": 0.5,
+     "when": [
+      "angry"
+     ]
     }
    ],
    "poses": {
@@ -3705,6 +4618,19 @@
     }
    },
    "lines": {
+    "angry": [
+     "Back off, barnacle brain!",
+     "I'll ink your whole keyboard.",
+     "You soggy sea cucumber!",
+     "Holy mackerel, #@$%! ENOUGH!",
+     "Go poke a jellyfish instead!",
+     "Shiver me fins, hands OFF!",
+     "Kelp! Get this human off me!"
+    ],
+    "overfed": [
+     "I'm turning into a beach ball...",
+     "Too many bytes in my belly!"
+    ],
     "anticZoomies": [
      "Full speed ahead!",
      "Riding the current!",
@@ -3734,7 +4660,19 @@
      "Mmm, crunchy braces."
     ]
    },
-   "set": "tide"
+   "set": "tide",
+   "splatter": {
+    "path": "M48 13 C56 -6 66 3 64 21 C64 29 76 23 85 16 C99 7 105 22 89 33 C79 40 88 43 97 43 C114 44 109 59 92 57 C81 55 82 65 90 74 C101 89 85 99 76 81 C70 69 64 77 64 91 C64 109 48 108 49 89 C49 77 40 77 33 89 C23 105 10 92 23 78 C33 66 23 65 12 68 C-6 73 -9 56 11 53 C26 51 21 42 9 36 C-7 27 4 12 20 25 C34 36 37 28 31 17 C23 0 40 -6 44 14 C45 20 47 18 48 13 Z",
+    "fill": "#8AD6A2",
+    "shade": "#4AA77C",
+    "shine": "#CEF2AD",
+    "outline": "#64748B",
+    "pixel": false
+   },
+   "growth": [
+    0.09,
+    0.15
+   ]
   },
   "dolphin": {
    "label": "Dolphin",
@@ -3794,7 +4732,8 @@
      "group": "body",
      "fill": "#0F172A",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -3806,7 +4745,8 @@
      "group": "body",
      "fill": "#FFFFFF",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -3831,7 +4771,12 @@
      "path": "M101 45 q6 2.5 12 -0.5",
      "group": "body",
      "stroke": "#0F172A",
-     "sw": 1.3
+     "sw": 1.3,
+     "when": [
+      "eyesOpen",
+      "eyesClosed",
+      "eyesHappy"
+     ]
     },
     {
      "circle": [
@@ -3896,6 +4841,70 @@
      "when": [
       "debugging"
      ]
+    },
+    {
+     "path": "M89.02 34.83 L94.40 36.56",
+     "group": "body",
+     "stroke": "#0F172A",
+     "sw": 1.8,
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M101 47 q6 -2.5 12 0.5",
+     "group": "body",
+     "stroke": "#0F172A",
+     "sw": 1.3,
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M88.15 24.50 q-2.75 -1.65 0 -3.85 q2.75 -1.65 0 -3.85",
+     "group": "body",
+     "stroke": "#FFF7E2",
+     "sw": 1.49,
+     "pivot": [
+      88.15,
+      24.5
+     ],
+     "rot": [
+      9,
+      0.45,
+      0.0
+     ],
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M93.65 24.50 q-2.75 -1.65 0 -3.85 q2.75 -1.65 0 -3.85",
+     "group": "body",
+     "stroke": "#FFF7E2",
+     "sw": 1.49,
+     "pivot": [
+      93.65,
+      24.5
+     ],
+     "rot": [
+      9,
+      0.45,
+      0.5
+     ],
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M86.27 29.33 Q86.71 31.97 84.07 31.53 L84.07 30.93 Q85.45 30.71 85.67 29.33Z M86.27 34.83 Q86.71 32.19 84.07 32.63 L84.07 33.24 Q85.45 33.46 85.67 34.83Z M87.37 29.33 Q86.93 31.97 89.57 31.53 L89.57 30.93 Q88.20 30.71 87.98 29.33Z M87.37 34.83 Q86.93 32.19 89.57 32.63 L89.57 33.24 Q88.20 33.46 87.98 34.83Z",
+     "group": "body",
+     "fill": "#E44954",
+     "stroke": "#0F172A",
+     "sw": 0.5,
+     "when": [
+      "angry"
+     ]
     }
    ],
    "poses": {
@@ -3942,6 +4951,19 @@
     }
    },
    "lines": {
+    "angry": [
+     "Back off, barnacle brain!",
+     "I'll ink your whole keyboard.",
+     "You soggy sea cucumber!",
+     "Holy mackerel, #@$%! ENOUGH!",
+     "Go poke a jellyfish instead!",
+     "Shiver me fins, hands OFF!",
+     "Kelp! Get this human off me!"
+    ],
+    "overfed": [
+     "I'm turning into a beach ball...",
+     "Too many bytes in my belly!"
+    ],
     "anticZoomies": [
      "Full speed ahead!",
      "Riding the current!",
@@ -3971,7 +4993,19 @@
      "It's alive! Ee-ee!"
     ]
    },
-   "set": "tide"
+   "set": "tide",
+   "splatter": {
+    "path": "M48 13 C56 -6 66 3 64 21 C64 29 76 23 85 16 C99 7 105 22 89 33 C79 40 88 43 97 43 C114 44 109 59 92 57 C81 55 82 65 90 74 C101 89 85 99 76 81 C70 69 64 77 64 91 C64 109 48 108 49 89 C49 77 40 77 33 89 C23 105 10 92 23 78 C33 66 23 65 12 68 C-6 73 -9 56 11 53 C26 51 21 42 9 36 C-7 27 4 12 20 25 C34 36 37 28 31 17 C23 0 40 -6 44 14 C45 20 47 18 48 13 Z",
+    "fill": "#8AD6A2",
+    "shade": "#4AA77C",
+    "shine": "#CEF2AD",
+    "outline": "#0F172A",
+    "pixel": false
+   },
+   "growth": [
+    0.09,
+    0.15
+   ]
   },
   "angelfish": {
    "label": "Angelfish",
@@ -4067,7 +5101,8 @@
      "group": "body",
      "fill": "#FFFFFF",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -4079,7 +5114,8 @@
      "group": "body",
      "fill": "#0F172A",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -4091,7 +5127,8 @@
      "group": "body",
      "fill": "#FFFFFF",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -4116,7 +5153,12 @@
      "path": "M84 40.5 q2 1.4 3.4 0",
      "group": "body",
      "stroke": "#0F172A",
-     "sw": 1.2
+     "sw": 1.2,
+     "when": [
+      "eyesOpen",
+      "eyesClosed",
+      "eyesHappy"
+     ]
     },
     {
      "path": "M73 29.5 l7 2",
@@ -4171,6 +5213,70 @@
      "when": [
       "debugging"
      ]
+    },
+    {
+     "path": "M70.05 29.14 L81.70 32.88",
+     "group": "body",
+     "stroke": "#0F172A",
+     "sw": 2.91,
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M84 41.9 q2 -1.4 3.4 -0",
+     "group": "body",
+     "stroke": "#0F172A",
+     "sw": 1.2,
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M69.50 4.50 q-5.00 -3.00 0 -7.00 q5.00 -3.00 0 -7.00",
+     "group": "body",
+     "stroke": "#FFF7E2",
+     "sw": 2.7,
+     "pivot": [
+      69.5,
+      4.5
+     ],
+     "rot": [
+      9,
+      0.45,
+      0.0
+     ],
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M79.50 4.50 q-5.00 -3.00 0 -7.00 q5.00 -3.00 0 -7.00",
+     "group": "body",
+     "stroke": "#FFF7E2",
+     "sw": 2.7,
+     "pivot": [
+      79.5,
+      4.5
+     ],
+     "rot": [
+      9,
+      0.45,
+      0.5
+     ],
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M65.05 19.14 Q65.85 23.94 61.05 23.14 L61.05 22.04 Q63.55 21.64 63.95 19.14Z M65.05 29.14 Q65.85 24.34 61.05 25.14 L61.05 26.24 Q63.55 26.64 63.95 29.14Z M67.05 19.14 Q66.25 23.94 71.05 23.14 L71.05 22.04 Q68.55 21.64 68.15 19.14Z M67.05 29.14 Q66.25 24.34 71.05 25.14 L71.05 26.24 Q68.55 26.64 68.15 29.14Z",
+     "group": "body",
+     "fill": "#E44954",
+     "stroke": "#0F172A",
+     "sw": 0.6,
+     "when": [
+      "angry"
+     ]
     }
    ],
    "poses": {
@@ -4219,6 +5325,19 @@
     }
    },
    "lines": {
+    "angry": [
+     "Back off, barnacle brain!",
+     "I'll ink your whole keyboard.",
+     "You soggy sea cucumber!",
+     "Holy mackerel, #@$%! ENOUGH!",
+     "Go poke a jellyfish instead!",
+     "Shiver me fins, hands OFF!",
+     "Kelp! Get this human off me!"
+    ],
+    "overfed": [
+     "I'm turning into a beach ball...",
+     "Too many bytes in my belly!"
+    ],
     "anticZoomies": [
      "Full speed ahead!",
      "Riding the current!",
@@ -4239,7 +5358,19 @@
      "You're an angel too."
     ]
    },
-   "set": "tide"
+   "set": "tide",
+   "splatter": {
+    "path": "M48 13 C56 -6 66 3 64 21 C64 29 76 23 85 16 C99 7 105 22 89 33 C79 40 88 43 97 43 C114 44 109 59 92 57 C81 55 82 65 90 74 C101 89 85 99 76 81 C70 69 64 77 64 91 C64 109 48 108 49 89 C49 77 40 77 33 89 C23 105 10 92 23 78 C33 66 23 65 12 68 C-6 73 -9 56 11 53 C26 51 21 42 9 36 C-7 27 4 12 20 25 C34 36 37 28 31 17 C23 0 40 -6 44 14 C45 20 47 18 48 13 Z",
+    "fill": "#8AD6A2",
+    "shade": "#4AA77C",
+    "shine": "#CEF2AD",
+    "outline": "#FBBF24",
+    "pixel": false
+   },
+   "growth": [
+    0.09,
+    0.15
+   ]
   },
   "tang": {
    "label": "Blue tang",
@@ -4307,7 +5438,8 @@
      "group": "body",
      "fill": "#FFFFFF",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -4319,7 +5451,8 @@
      "group": "body",
      "fill": "#0F172A",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -4331,7 +5464,8 @@
      "group": "body",
      "fill": "#FFFFFF",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -4356,7 +5490,12 @@
      "path": "M85 42 q2 1.5 3.5 0",
      "group": "body",
      "stroke": "#0F172A",
-     "sw": 1.2
+     "sw": 1.2,
+     "when": [
+      "eyesOpen",
+      "eyesClosed",
+      "eyesHappy"
+     ]
     },
     {
      "path": "M74 29.5 l7 2",
@@ -4411,6 +5550,70 @@
      "when": [
       "debugging"
      ]
+    },
+    {
+     "path": "M71.30 29.40 L82.50 33.00",
+     "group": "body",
+     "stroke": "#0F172A",
+     "sw": 2.8,
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M85 43.5 q2 -1.5 3.5 -0",
+     "group": "body",
+     "stroke": "#0F172A",
+     "sw": 1.2,
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M70.50 22.50 q-5.00 -3.00 0 -7.00 q5.00 -3.00 0 -7.00",
+     "group": "body",
+     "stroke": "#FFF7E2",
+     "sw": 2.7,
+     "pivot": [
+      70.5,
+      22.5
+     ],
+     "rot": [
+      9,
+      0.45,
+      0.0
+     ],
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M80.50 22.50 q-5.00 -3.00 0 -7.00 q5.00 -3.00 0 -7.00",
+     "group": "body",
+     "stroke": "#FFF7E2",
+     "sw": 2.7,
+     "pivot": [
+      80.5,
+      22.5
+     ],
+     "rot": [
+      9,
+      0.45,
+      0.5
+     ],
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M66.30 24.50 Q67.10 29.30 62.30 28.50 L62.30 27.40 Q64.80 27.00 65.20 24.50Z M66.30 34.50 Q67.10 29.70 62.30 30.50 L62.30 31.60 Q64.80 32.00 65.20 34.50Z M68.30 24.50 Q67.50 29.30 72.30 28.50 L72.30 27.40 Q69.80 27.00 69.40 24.50Z M68.30 34.50 Q67.50 29.70 72.30 30.50 L72.30 31.60 Q69.80 32.00 69.40 34.50Z",
+     "group": "body",
+     "fill": "#E44954",
+     "stroke": "#0F172A",
+     "sw": 0.6,
+     "when": [
+      "angry"
+     ]
     }
    ],
    "poses": {
@@ -4451,6 +5654,19 @@
     }
    },
    "lines": {
+    "angry": [
+     "Back off, barnacle brain!",
+     "I'll ink your whole keyboard.",
+     "You soggy sea cucumber!",
+     "Holy mackerel, #@$%! ENOUGH!",
+     "Go poke a jellyfish instead!",
+     "Shiver me fins, hands OFF!",
+     "Kelp! Get this human off me!"
+    ],
+    "overfed": [
+     "I'm turning into a beach ball...",
+     "Too many bytes in my belly!"
+    ],
     "anticZoomies": [
      "Full speed ahead!",
      "Riding the current!",
@@ -4475,7 +5691,19 @@
      "Where are we again?"
     ]
    },
-   "set": "tide"
+   "set": "tide",
+   "splatter": {
+    "path": "M48 13 C56 -6 66 3 64 21 C64 29 76 23 85 16 C99 7 105 22 89 33 C79 40 88 43 97 43 C114 44 109 59 92 57 C81 55 82 65 90 74 C101 89 85 99 76 81 C70 69 64 77 64 91 C64 109 48 108 49 89 C49 77 40 77 33 89 C23 105 10 92 23 78 C33 66 23 65 12 68 C-6 73 -9 56 11 53 C26 51 21 42 9 36 C-7 27 4 12 20 25 C34 36 37 28 31 17 C23 0 40 -6 44 14 C45 20 47 18 48 13 Z",
+    "fill": "#8AD6A2",
+    "shade": "#4AA77C",
+    "shine": "#CEF2AD",
+    "outline": "#1E3A8A",
+    "pixel": false
+   },
+   "growth": [
+    0.09,
+    0.15
+   ]
   },
   "retriever": {
    "label": "Golden retriever",
@@ -4639,7 +5867,8 @@
      "group": "face",
      "fill": "#2B1B10",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -4651,7 +5880,8 @@
      "group": "face",
      "fill": "#FFFFFF",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -4676,7 +5906,12 @@
      "path": "M104 39.5 q3.5 2.5 7 -0.5",
      "group": "face",
      "stroke": "#2B1B10",
-     "sw": 1.3
+     "sw": 1.3,
+     "when": [
+      "eyesOpen",
+      "eyesClosed",
+      "eyesHappy"
+     ]
     },
     {
      "path": "M106 40.5 q1 6 4 5 q2 -2 0 -5.5z",
@@ -4724,6 +5959,70 @@
      "sw": 2.2,
      "when": [
       "debugging"
+     ]
+    },
+    {
+     "path": "M93.15 23.96 L98.30 25.62",
+     "group": "face",
+     "stroke": "#2B1B10",
+     "sw": 1.8,
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M104 41.5 q3.5 -2.5 7 0.5",
+     "group": "face",
+     "stroke": "#2B1B10",
+     "sw": 1.3,
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M92.15 15.50 q-2.75 -1.65 0 -3.85 q2.75 -1.65 0 -3.85",
+     "group": "face",
+     "stroke": "#FFF7E2",
+     "sw": 1.49,
+     "pivot": [
+      92.15,
+      15.5
+     ],
+     "rot": [
+      9,
+      0.45,
+      0.0
+     ],
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M97.65 15.50 q-2.75 -1.65 0 -3.85 q2.75 -1.65 0 -3.85",
+     "group": "face",
+     "stroke": "#FFF7E2",
+     "sw": 1.49,
+     "pivot": [
+      97.65,
+      15.5
+     ],
+     "rot": [
+      9,
+      0.45,
+      0.5
+     ],
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M90.40 18.46 Q90.84 21.10 88.20 20.66 L88.20 20.06 Q89.57 19.84 89.79 18.46Z M90.40 23.96 Q90.84 21.32 88.20 21.76 L88.20 22.37 Q89.57 22.59 89.79 23.96Z M91.50 18.46 Q91.06 21.10 93.70 20.66 L93.70 20.06 Q92.32 19.84 92.10 18.46Z M91.50 23.96 Q91.06 21.32 93.70 21.76 L93.70 22.37 Q92.32 22.59 92.10 23.96Z",
+     "group": "face",
+     "fill": "#E44954",
+     "stroke": "#2B1B10",
+     "sw": 0.5,
+     "when": [
+      "angry"
      ]
     }
    ],
@@ -4844,7 +6143,19 @@
      "Crunchy! Like kibble.",
      "Mmm, curly braces!"
     ]
-   }
+   },
+   "splatter": {
+    "path": "M48 13 C56 -6 66 3 64 21 C64 29 76 23 85 16 C99 7 105 22 89 33 C79 40 88 43 97 43 C114 44 109 59 92 57 C81 55 82 65 90 74 C101 89 85 99 76 81 C70 69 64 77 64 91 C64 109 48 108 49 89 C49 77 40 77 33 89 C23 105 10 92 23 78 C33 66 23 65 12 68 C-6 73 -9 56 11 53 C26 51 21 42 9 36 C-7 27 4 12 20 25 C34 36 37 28 31 17 C23 0 40 -6 44 14 C45 20 47 18 48 13 Z",
+    "fill": "#B7D76B",
+    "shade": "#7AA544",
+    "shine": "#E4F3A3",
+    "outline": "#C98A2B",
+    "pixel": false
+   },
+   "growth": [
+    0.09,
+    0.15
+   ]
   },
   "spitz": {
    "label": "German Spitz",
@@ -5073,7 +6384,8 @@
      "group": "face",
      "fill": "#2B1A12",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -5085,7 +6397,8 @@
      "group": "face",
      "fill": "#FFFFFF",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -5115,7 +6428,8 @@
      "group": "face",
      "fill": "#2B1A12",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -5127,7 +6441,8 @@
      "group": "face",
      "fill": "#FFFFFF",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -5152,7 +6467,12 @@
      "path": "M99 41 q2 2 4 0",
      "group": "face",
      "stroke": "#B77B7B",
-     "sw": 1.1
+     "sw": 1.1,
+     "when": [
+      "eyesOpen",
+      "eyesClosed",
+      "eyesHappy"
+     ]
     },
     {
      "path": "M100 43 q1 5 3 4 q1.5 -2 0 -4.5z",
@@ -5210,6 +6530,79 @@
      "sw": 2.2,
      "when": [
       "debugging"
+     ]
+    },
+    {
+     "path": "M83.02 26.83 L88.40 28.56",
+     "group": "face",
+     "stroke": "#2B1A12",
+     "sw": 1.8,
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M97.73 27.10 L92.80 28.68",
+     "group": "face",
+     "stroke": "#2B1A12",
+     "sw": 1.8,
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M99 43 q2 -2 4 -0",
+     "group": "face",
+     "stroke": "#B77B7B",
+     "sw": 1.1,
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M83.50 9.50 q-2.75 -1.65 0 -3.85 q2.75 -1.65 0 -3.85",
+     "group": "face",
+     "stroke": "#FFF7E2",
+     "sw": 1.49,
+     "pivot": [
+      83.5,
+      9.5
+     ],
+     "rot": [
+      9,
+      0.45,
+      0.0
+     ],
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M97.50 8.50 q-2.75 -1.65 0 -3.85 q2.75 -1.65 0 -3.85",
+     "group": "face",
+     "stroke": "#FFF7E2",
+     "sw": 1.49,
+     "pivot": [
+      97.5,
+      8.5
+     ],
+     "rot": [
+      9,
+      0.45,
+      0.5
+     ],
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M99.38 21.60 Q99.82 24.24 97.18 23.80 L97.18 23.19 Q98.55 22.97 98.77 21.60Z M99.38 27.10 Q99.82 24.46 97.18 24.90 L97.18 25.50 Q98.55 25.72 98.77 27.10Z M100.48 21.60 Q100.04 24.24 102.68 23.80 L102.68 23.19 Q101.30 22.97 101.08 21.60Z M100.48 27.10 Q100.04 24.46 102.68 24.90 L102.68 25.50 Q101.30 25.72 101.08 27.10Z",
+     "group": "face",
+     "fill": "#E44954",
+     "stroke": "#2B1A12",
+     "sw": 0.5,
+     "when": [
+      "angry"
      ]
     }
    ],
@@ -5342,7 +6735,19 @@
      "*puppy eyes* Snack?",
      "I'm small, but I'm hungry."
     ]
-   }
+   },
+   "splatter": {
+    "path": "M48 13 C56 -6 66 3 64 21 C64 29 76 23 85 16 C99 7 105 22 89 33 C79 40 88 43 97 43 C114 44 109 59 92 57 C81 55 82 65 90 74 C101 89 85 99 76 81 C70 69 64 77 64 91 C64 109 48 108 49 89 C49 77 40 77 33 89 C23 105 10 92 23 78 C33 66 23 65 12 68 C-6 73 -9 56 11 53 C26 51 21 42 9 36 C-7 27 4 12 20 25 C34 36 37 28 31 17 C23 0 40 -6 44 14 C45 20 47 18 48 13 Z",
+    "fill": "#B7D76B",
+    "shade": "#7AA544",
+    "shine": "#E4F3A3",
+    "outline": "#CBD5E1",
+    "pixel": false
+   },
+   "growth": [
+    0.09,
+    0.15
+   ]
   },
   "cat": {
    "label": "Cat",
@@ -5501,7 +6906,8 @@
      "group": "face",
      "fill": "#BEF264",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -5513,7 +6919,8 @@
      "group": "face",
      "fill": "#1F2937",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -5525,7 +6932,8 @@
      "group": "face",
      "fill": "#FFFFFF",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -5555,7 +6963,8 @@
      "group": "face",
      "fill": "#BEF264",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -5567,7 +6976,8 @@
      "group": "face",
      "fill": "#1F2937",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -5579,7 +6989,8 @@
      "group": "face",
      "fill": "#FFFFFF",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -5609,7 +7020,12 @@
      "path": "M92.25 37.5 q-1.5 2 -3 1 M92.25 37.5 q1.5 2 3 1",
      "group": "face",
      "stroke": "#1F2937",
-     "sw": 1
+     "sw": 1,
+     "when": [
+      "eyesOpen",
+      "eyesClosed",
+      "eyesHappy"
+     ]
     },
     {
      "path": "M84 36 l-9 -1.5 M84 38.5 l-9 2 M100 36 l9 -1.5 M100 38.5 l9 2",
@@ -5655,6 +7071,79 @@
      "sw": 2.2,
      "when": [
       "debugging"
+     ]
+    },
+    {
+     "path": "M84.27 28.10 L89.20 29.68",
+     "group": "face",
+     "stroke": "#1F2937",
+     "sw": 1.8,
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M98.73 28.10 L93.80 29.68",
+     "group": "face",
+     "stroke": "#1F2937",
+     "sw": 1.8,
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M92.25 39.5 q-1.5 -2 -3 -1 M92.25 39.5 q1.5 -2 3 -1",
+     "group": "face",
+     "stroke": "#1F2937",
+     "sw": 1,
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M84.50 11.50 q-2.75 -1.65 0 -3.85 q2.75 -1.65 0 -3.85",
+     "group": "face",
+     "stroke": "#FFF7E2",
+     "sw": 1.49,
+     "pivot": [
+      84.5,
+      11.5
+     ],
+     "rot": [
+      9,
+      0.45,
+      0.0
+     ],
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M98.50 9.50 q-2.75 -1.65 0 -3.85 q2.75 -1.65 0 -3.85",
+     "group": "face",
+     "stroke": "#FFF7E2",
+     "sw": 1.49,
+     "pivot": [
+      98.5,
+      9.5
+     ],
+     "rot": [
+      9,
+      0.45,
+      0.5
+     ],
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M100.38 22.60 Q100.82 25.24 98.18 24.80 L98.18 24.19 Q99.55 23.97 99.77 22.60Z M100.38 28.10 Q100.82 25.46 98.18 25.90 L98.18 26.50 Q99.55 26.72 99.77 28.10Z M101.48 22.60 Q101.04 25.24 103.68 24.80 L103.68 24.19 Q102.30 23.97 102.08 22.60Z M101.48 28.10 Q101.04 25.46 103.68 25.90 L103.68 26.50 Q102.30 26.72 102.08 28.10Z",
+     "group": "face",
+     "fill": "#E44954",
+     "stroke": "#1F2937",
+     "sw": 0.5,
+     "when": [
+      "angry"
      ]
     }
    ],
@@ -5796,7 +7285,19 @@
      "Type faster, human.",
      "Ooh, typing!"
     ]
-   }
+   },
+   "splatter": {
+    "path": "M48 13 C56 -6 66 3 64 21 C64 29 76 23 85 16 C99 7 105 22 89 33 C79 40 88 43 97 43 C114 44 109 59 92 57 C81 55 82 65 90 74 C101 89 85 99 76 81 C70 69 64 77 64 91 C64 109 48 108 49 89 C49 77 40 77 33 89 C23 105 10 92 23 78 C33 66 23 65 12 68 C-6 73 -9 56 11 53 C26 51 21 42 9 36 C-7 27 4 12 20 25 C34 36 37 28 31 17 C23 0 40 -6 44 14 C45 20 47 18 48 13 Z",
+    "fill": "#B7D76B",
+    "shade": "#7AA544",
+    "shine": "#E4F3A3",
+    "outline": "#6B7280",
+    "pixel": false
+   },
+   "growth": [
+    0.09,
+    0.15
+   ]
   },
   "bunny": {
    "label": "Bunny",
@@ -5958,7 +7459,8 @@
      "group": "face",
      "fill": "#292524",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -5970,7 +7472,8 @@
      "group": "face",
      "fill": "#FFFFFF",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -6004,7 +7507,12 @@
      "path": "M86 45 q1.5 1.5 3 0",
      "group": "face",
      "stroke": "#292524",
-     "sw": 1
+     "sw": 1,
+     "when": [
+      "eyesOpen",
+      "eyesClosed",
+      "eyesHappy"
+     ]
     },
     {
      "circle": [
@@ -6054,6 +7562,70 @@
      "sw": 2.2,
      "when": [
       "debugging"
+     ]
+    },
+    {
+     "path": "M79.27 35.10 L84.20 36.68",
+     "group": "face",
+     "stroke": "#292524",
+     "sw": 1.8,
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M86 46.5 q1.5 -1.5 3 -0",
+     "group": "face",
+     "stroke": "#292524",
+     "sw": 1,
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M78.15 5.50 q-2.75 -1.65 0 -3.85 q2.75 -1.65 0 -3.85",
+     "group": "face",
+     "stroke": "#FFF7E2",
+     "sw": 1.49,
+     "pivot": [
+      78.15,
+      5.5
+     ],
+     "rot": [
+      9,
+      0.45,
+      0.0
+     ],
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M83.65 7.50 q-2.75 -1.65 0 -3.85 q2.75 -1.65 0 -3.85",
+     "group": "face",
+     "stroke": "#FFF7E2",
+     "sw": 1.49,
+     "pivot": [
+      83.65,
+      7.5
+     ],
+     "rot": [
+      9,
+      0.45,
+      0.5
+     ],
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M76.52 29.60 Q76.96 32.24 74.32 31.80 L74.32 31.19 Q75.70 30.97 75.92 29.60Z M76.52 35.10 Q76.96 32.46 74.32 32.90 L74.32 33.50 Q75.70 33.72 75.92 35.10Z M77.62 29.60 Q77.18 32.24 79.82 31.80 L79.82 31.19 Q78.45 30.97 78.23 29.60Z M77.62 35.10 Q77.18 32.46 79.82 32.90 L79.82 33.50 Q78.45 33.72 78.23 35.10Z",
+     "group": "face",
+     "fill": "#E44954",
+     "stroke": "#292524",
+     "sw": 0.5,
+     "when": [
+      "angry"
      ]
     }
    ],
@@ -6181,7 +7753,19 @@
      "Parentheses! Like little carrots.",
      "(Crunch.)"
     ]
-   }
+   },
+   "splatter": {
+    "path": "M48 13 C56 -6 66 3 64 21 C64 29 76 23 85 16 C99 7 105 22 89 33 C79 40 88 43 97 43 C114 44 109 59 92 57 C81 55 82 65 90 74 C101 89 85 99 76 81 C70 69 64 77 64 91 C64 109 48 108 49 89 C49 77 40 77 33 89 C23 105 10 92 23 78 C33 66 23 65 12 68 C-6 73 -9 56 11 53 C26 51 21 42 9 36 C-7 27 4 12 20 25 C34 36 37 28 31 17 C23 0 40 -6 44 14 C45 20 47 18 48 13 Z",
+    "fill": "#B7D76B",
+    "shade": "#7AA544",
+    "shine": "#E4F3A3",
+    "outline": "#D6D3D1",
+    "pixel": false
+   },
+   "growth": [
+    0.15,
+    0.09
+   ]
   },
   "hamster": {
    "label": "Hamster",
@@ -6314,7 +7898,8 @@
      "group": "face",
      "fill": "#1C1917",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -6326,7 +7911,8 @@
      "group": "face",
      "fill": "#FFFFFF",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -6373,7 +7959,12 @@
      "path": "M79.5 52.5 q2 1.5 4 0",
      "group": "face",
      "stroke": "#1C1917",
-     "sw": 1
+     "sw": 1,
+     "when": [
+      "eyesOpen",
+      "eyesClosed",
+      "eyesHappy"
+     ]
     },
     {
      "path": "M84 50 l7 -1.5 M84 52 l7 1.5",
@@ -6419,6 +8010,70 @@
      "sw": 2.2,
      "when": [
       "debugging"
+     ]
+    },
+    {
+     "path": "M72.15 42.96 L77.30 44.62",
+     "group": "face",
+     "stroke": "#1C1917",
+     "sw": 1.8,
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M79.5 54 q2 -1.5 4 -0",
+     "group": "face",
+     "stroke": "#1C1917",
+     "sw": 1,
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M71.15 31.50 q-2.75 -1.65 0 -3.85 q2.75 -1.65 0 -3.85",
+     "group": "face",
+     "stroke": "#FFF7E2",
+     "sw": 1.49,
+     "pivot": [
+      71.15,
+      31.5
+     ],
+     "rot": [
+      9,
+      0.45,
+      0.0
+     ],
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M76.65 31.00 q-2.75 -1.65 0 -3.85 q2.75 -1.65 0 -3.85",
+     "group": "face",
+     "stroke": "#FFF7E2",
+     "sw": 1.49,
+     "pivot": [
+      76.65,
+      31.0
+     ],
+     "rot": [
+      9,
+      0.45,
+      0.5
+     ],
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M69.40 37.46 Q69.84 40.10 67.20 39.66 L67.20 39.06 Q68.57 38.84 68.79 37.46Z M69.40 42.96 Q69.84 40.32 67.20 40.76 L67.20 41.37 Q68.57 41.59 68.79 42.96Z M70.50 37.46 Q70.06 40.10 72.70 39.66 L72.70 39.06 Q71.32 38.84 71.10 37.46Z M70.50 42.96 Q70.06 40.32 72.70 40.76 L72.70 41.37 Q71.32 41.59 71.10 42.96Z",
+     "group": "face",
+     "fill": "#E44954",
+     "stroke": "#1C1917",
+     "sw": 0.5,
+     "when": [
+      "angry"
      ]
     }
    ],
@@ -6542,7 +8197,19 @@
      "Go go go!",
      "Full speed ahead."
     ]
-   }
+   },
+   "splatter": {
+    "path": "M48 13 C56 -6 66 3 64 21 C64 29 76 23 85 16 C99 7 105 22 89 33 C79 40 88 43 97 43 C114 44 109 59 92 57 C81 55 82 65 90 74 C101 89 85 99 76 81 C70 69 64 77 64 91 C64 109 48 108 49 89 C49 77 40 77 33 89 C23 105 10 92 23 78 C33 66 23 65 12 68 C-6 73 -9 56 11 53 C26 51 21 42 9 36 C-7 27 4 12 20 25 C34 36 37 28 31 17 C23 0 40 -6 44 14 C45 20 47 18 48 13 Z",
+    "fill": "#B7D76B",
+    "shade": "#7AA544",
+    "shine": "#E4F3A3",
+    "outline": "#C77E3A",
+    "pixel": false
+   },
+   "growth": [
+    0.09,
+    0.15
+   ]
   },
   "burger": {
    "label": "Burger",
@@ -6725,7 +8392,8 @@
      "group": "top",
      "fill": "#FFFFFF",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -6737,7 +8405,8 @@
      "group": "top",
      "fill": "#2B1D12",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -6749,7 +8418,8 @@
      "group": "top",
      "fill": "#FFFFFF",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -6779,7 +8449,8 @@
      "group": "top",
      "fill": "#FFFFFF",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -6791,7 +8462,8 @@
      "group": "top",
      "fill": "#2B1D12",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -6803,7 +8475,8 @@
      "group": "top",
      "fill": "#FFFFFF",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -6828,7 +8501,12 @@
      "path": "M63 34 q4 3.5 8 0",
      "group": "top",
      "stroke": "#2B1D12",
-     "sw": 1.5
+     "sw": 1.5,
+     "when": [
+      "eyesOpen",
+      "eyesClosed",
+      "eyesHappy"
+     ]
     },
     {
      "path": "M53 21 l6 1.5 M74 21 l-6 1.5",
@@ -6925,6 +8603,79 @@
      "when": [
       "debugging"
      ]
+    },
+    {
+     "path": "M49.05 20.14 L60.70 23.88",
+     "group": "top",
+     "stroke": "#2B1D12",
+     "sw": 2.91,
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M74.95 20.14 L63.30 23.88",
+     "group": "top",
+     "stroke": "#2B1D12",
+     "sw": 2.91,
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M63 37.5 q4 -3.5 8 -0",
+     "group": "top",
+     "stroke": "#2B1D12",
+     "sw": 1.5,
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M52.25 8.50 q-5.00 -3.00 0 -7.00 q5.00 -3.00 0 -7.00",
+     "group": "top",
+     "stroke": "#FFF7E2",
+     "sw": 2.7,
+     "pivot": [
+      52.25,
+      8.5
+     ],
+     "rot": [
+      9,
+      0.45,
+      0.0
+     ],
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M71.75 8.50 q-5.00 -3.00 0 -7.00 q5.00 -3.00 0 -7.00",
+     "group": "top",
+     "stroke": "#FFF7E2",
+     "sw": 2.7,
+     "pivot": [
+      71.75,
+      8.5
+     ],
+     "rot": [
+      9,
+      0.45,
+      0.5
+     ],
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M77.95 10.50 Q78.75 15.30 73.95 14.50 L73.95 13.40 Q76.45 13.00 76.85 10.50Z M77.95 20.50 Q78.75 15.70 73.95 16.50 L73.95 17.60 Q76.45 18.00 76.85 20.50Z M79.95 10.50 Q79.15 15.30 83.95 14.50 L83.95 13.40 Q81.45 13.00 81.05 10.50Z M79.95 20.50 Q79.15 15.70 83.95 16.50 L83.95 17.60 Q81.45 18.00 81.05 20.50Z",
+     "group": "top",
+     "fill": "#E44954",
+     "stroke": "#2B1D12",
+     "sw": 0.6,
+     "when": [
+      "angry"
+     ]
     }
    ],
    "groupMotion": {
@@ -7001,6 +8752,19 @@
     }
    },
    "lines": {
+    "angry": [
+     "You half-baked crouton!",
+     "I'm not a free sample, pal!",
+     "I'll go stale out of spite.",
+     "#@$%! Crumbs EVERYWHERE now!",
+     "Manners of a soggy fry!",
+     "Rude. Supersize rude.",
+     "Go poke a vending machine!"
+    ],
+    "overfed": [
+     "Stuffed. And I'm already food!",
+     "Extra filling was a mistake..."
+    ],
     "anticThink": [
      "Do I need more salt?",
      "Am I a sandwich?",
@@ -7083,7 +8847,19 @@
      "I'm stuffed.",
      "No room, I'm a single patty."
     ]
-   }
+   },
+   "splatter": {
+    "path": "M48 13 C56 -6 66 3 64 21 C64 29 76 23 85 16 C99 7 105 22 89 33 C79 40 88 43 97 43 C114 44 109 59 92 57 C81 55 82 65 90 74 C101 89 85 99 76 81 C70 69 64 77 64 91 C64 109 48 108 49 89 C49 77 40 77 33 89 C23 105 10 92 23 78 C33 66 23 65 12 68 C-6 73 -9 56 11 53 C26 51 21 42 9 36 C-7 27 4 12 20 25 C34 36 37 28 31 17 C23 0 40 -6 44 14 C45 20 47 18 48 13 Z",
+    "fill": "#EAC66B",
+    "shade": "#BF8B43",
+    "shine": "#FFF0AC",
+    "outline": "#D9861A",
+    "pixel": false
+   },
+   "growth": [
+    0.15,
+    0.09
+   ]
   },
   "sushi": {
    "label": "Sushi",
@@ -7189,7 +8965,8 @@
      "group": "face",
      "fill": "#FFFFFF",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -7201,7 +8978,8 @@
      "group": "face",
      "fill": "#2B1D12",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -7213,7 +8991,8 @@
      "group": "face",
      "fill": "#FFFFFF",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -7243,7 +9022,8 @@
      "group": "face",
      "fill": "#FFFFFF",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -7255,7 +9035,8 @@
      "group": "face",
      "fill": "#2B1D12",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -7267,7 +9048,8 @@
      "group": "face",
      "fill": "#FFFFFF",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -7292,7 +9074,12 @@
      "path": "M70.0 55 q4 3.5 8 0",
      "group": "face",
      "stroke": "#2B1D12",
-     "sw": 1.5
+     "sw": 1.5,
+     "when": [
+      "eyesOpen",
+      "eyesClosed",
+      "eyesHappy"
+     ]
     },
     {
      "path": "M64 42 l6 1.5 M84 42 l-6 1.5",
@@ -7373,6 +9160,79 @@
      "when": [
       "debugging"
      ]
+    },
+    {
+     "path": "M60.18 41.27 L71.60 44.94",
+     "group": "face",
+     "stroke": "#2B1D12",
+     "sw": 2.86,
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M84.82 41.27 L73.40 44.94",
+     "group": "face",
+     "stroke": "#2B1D12",
+     "sw": 2.86,
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M70 58.5 q4 -3.5 8 -0",
+     "group": "face",
+     "stroke": "#2B1D12",
+     "sw": 1.5,
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M63.50 18.50 q-5.00 -3.00 0 -7.00 q5.00 -3.00 0 -7.00",
+     "group": "face",
+     "stroke": "#FFF7E2",
+     "sw": 2.7,
+     "pivot": [
+      63.5,
+      18.5
+     ],
+     "rot": [
+      9,
+      0.45,
+      0.0
+     ],
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M81.50 18.50 q-5.00 -3.00 0 -7.00 q5.00 -3.00 0 -7.00",
+     "group": "face",
+     "stroke": "#FFF7E2",
+     "sw": 2.7,
+     "pivot": [
+      81.5,
+      18.5
+     ],
+     "rot": [
+      9,
+      0.45,
+      0.5
+     ],
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M87.82 31.27 Q88.62 36.07 83.82 35.27 L83.82 34.17 Q86.32 33.77 86.72 31.27Z M87.82 41.27 Q88.62 36.47 83.82 37.27 L83.82 38.37 Q86.32 38.77 86.72 41.27Z M89.82 31.27 Q89.02 36.07 93.82 35.27 L93.82 34.17 Q91.32 33.77 90.92 31.27Z M89.82 41.27 Q89.02 36.47 93.82 37.27 L93.82 38.37 Q91.32 38.77 90.92 41.27Z",
+     "group": "face",
+     "fill": "#E44954",
+     "stroke": "#2B1D12",
+     "sw": 0.6,
+     "when": [
+      "angry"
+     ]
     }
    ],
    "poses": {
@@ -7431,6 +9291,19 @@
     }
    },
    "lines": {
+    "angry": [
+     "You half-baked crouton!",
+     "I'm not a free sample, pal!",
+     "I'll go stale out of spite.",
+     "#@$%! Crumbs EVERYWHERE now!",
+     "Manners of a soggy fry!",
+     "Rude. Supersize rude.",
+     "Go poke a vending machine!"
+    ],
+    "overfed": [
+     "Stuffed. And I'm already food!",
+     "Extra filling was a mistake..."
+    ],
     "anticThink": [
      "Do I need more salt?",
      "Am I a sandwich?",
@@ -7502,7 +9375,19 @@
      "Braces? I was expecting chopsticks.",
      "Crunchy!"
     ]
-   }
+   },
+   "splatter": {
+    "path": "M48 13 C56 -6 66 3 64 21 C64 29 76 23 85 16 C99 7 105 22 89 33 C79 40 88 43 97 43 C114 44 109 59 92 57 C81 55 82 65 90 74 C101 89 85 99 76 81 C70 69 64 77 64 91 C64 109 48 108 49 89 C49 77 40 77 33 89 C23 105 10 92 23 78 C33 66 23 65 12 68 C-6 73 -9 56 11 53 C26 51 21 42 9 36 C-7 27 4 12 20 25 C34 36 37 28 31 17 C23 0 40 -6 44 14 C45 20 47 18 48 13 Z",
+    "fill": "#EAC66B",
+    "shade": "#BF8B43",
+    "shine": "#FFF0AC",
+    "outline": "#CBD5E1",
+    "pixel": false
+   },
+   "growth": [
+    0.15,
+    0.09
+   ]
   },
   "pizza": {
    "label": "Pizza",
@@ -7623,7 +9508,8 @@
      "group": "face",
      "fill": "#FFFFFF",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -7635,7 +9521,8 @@
      "group": "face",
      "fill": "#2B1D12",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -7647,7 +9534,8 @@
      "group": "face",
      "fill": "#FFFFFF",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -7677,7 +9565,8 @@
      "group": "face",
      "fill": "#FFFFFF",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -7689,7 +9578,8 @@
      "group": "face",
      "fill": "#2B1D12",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -7701,7 +9591,8 @@
      "group": "face",
      "fill": "#FFFFFF",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -7726,7 +9617,12 @@
      "path": "M62.0 45 q4 3.5 8 0",
      "group": "face",
      "stroke": "#2B1D12",
-     "sw": 1.5
+     "sw": 1.5,
+     "when": [
+      "eyesOpen",
+      "eyesClosed",
+      "eyesHappy"
+     ]
     },
     {
      "path": "M56 32 l6 1.5 M76 32 l-6 1.5",
@@ -7787,6 +9683,79 @@
      "when": [
       "debugging"
      ]
+    },
+    {
+     "path": "M52.18 31.27 L63.60 34.94",
+     "group": "face",
+     "stroke": "#2B1D12",
+     "sw": 2.86,
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M76.82 31.27 L65.40 34.94",
+     "group": "face",
+     "stroke": "#2B1D12",
+     "sw": 2.86,
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M62 48.5 q4 -3.5 8 -0",
+     "group": "face",
+     "stroke": "#2B1D12",
+     "sw": 1.5,
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M55.50 14.50 q-5.00 -3.00 0 -7.00 q5.00 -3.00 0 -7.00",
+     "group": "face",
+     "stroke": "#FFF7E2",
+     "sw": 2.7,
+     "pivot": [
+      55.5,
+      14.5
+     ],
+     "rot": [
+      9,
+      0.45,
+      0.0
+     ],
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M73.50 14.50 q-5.00 -3.00 0 -7.00 q5.00 -3.00 0 -7.00",
+     "group": "face",
+     "stroke": "#FFF7E2",
+     "sw": 2.7,
+     "pivot": [
+      73.5,
+      14.5
+     ],
+     "rot": [
+      9,
+      0.45,
+      0.5
+     ],
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M79.82 21.27 Q80.62 26.07 75.82 25.27 L75.82 24.17 Q78.32 23.77 78.72 21.27Z M79.82 31.27 Q80.62 26.47 75.82 27.27 L75.82 28.37 Q78.32 28.77 78.72 31.27Z M81.82 21.27 Q81.02 26.07 85.82 25.27 L85.82 24.17 Q83.32 23.77 82.92 21.27Z M81.82 31.27 Q81.02 26.47 85.82 27.27 L85.82 28.37 Q83.32 28.77 82.92 31.27Z",
+     "group": "face",
+     "fill": "#E44954",
+     "stroke": "#2B1D12",
+     "sw": 0.6,
+     "when": [
+      "angry"
+     ]
     }
    ],
    "poses": {
@@ -7841,6 +9810,19 @@
     }
    },
    "lines": {
+    "angry": [
+     "You half-baked crouton!",
+     "I'm not a free sample, pal!",
+     "I'll go stale out of spite.",
+     "#@$%! Crumbs EVERYWHERE now!",
+     "Manners of a soggy fry!",
+     "Rude. Supersize rude.",
+     "Go poke a vending machine!"
+    ],
+    "overfed": [
+     "Stuffed. And I'm already food!",
+     "Extra filling was a mistake..."
+    ],
     "anticThink": [
      "Do I need more salt?",
      "Am I a sandwich?",
@@ -7912,7 +9894,19 @@
      "I'm hungry. Weird for a pizza.",
      "Snack break?"
     ]
-   }
+   },
+   "splatter": {
+    "path": "M48 13 C56 -6 66 3 64 21 C64 29 76 23 85 16 C99 7 105 22 89 33 C79 40 88 43 97 43 C114 44 109 59 92 57 C81 55 82 65 90 74 C101 89 85 99 76 81 C70 69 64 77 64 91 C64 109 48 108 49 89 C49 77 40 77 33 89 C23 105 10 92 23 78 C33 66 23 65 12 68 C-6 73 -9 56 11 53 C26 51 21 42 9 36 C-7 27 4 12 20 25 C34 36 37 28 31 17 C23 0 40 -6 44 14 C45 20 47 18 48 13 Z",
+    "fill": "#EAC66B",
+    "shade": "#BF8B43",
+    "shine": "#FFF0AC",
+    "outline": "#D97706",
+    "pixel": false
+   },
+   "growth": [
+    0.15,
+    0.09
+   ]
   },
   "donut": {
    "label": "Donut",
@@ -8029,7 +10023,8 @@
      "group": "face",
      "fill": "#FFFFFF",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -8041,7 +10036,8 @@
      "group": "face",
      "fill": "#2B1D12",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -8053,7 +10049,8 @@
      "group": "face",
      "fill": "#FFFFFF",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -8083,7 +10080,8 @@
      "group": "face",
      "fill": "#FFFFFF",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -8095,7 +10093,8 @@
      "group": "face",
      "fill": "#2B1D12",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -8107,7 +10106,8 @@
      "group": "face",
      "fill": "#FFFFFF",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -8132,7 +10132,12 @@
      "path": "M56.0 56 q4 3.5 8 0",
      "group": "face",
      "stroke": "#2B1D12",
-     "sw": 1.5
+     "sw": 1.5,
+     "when": [
+      "eyesOpen",
+      "eyesClosed",
+      "eyesHappy"
+     ]
     },
     {
      "path": "M50 44 l6 1.5 M70 44 l-6 1.5",
@@ -8172,6 +10177,79 @@
      "sw": 2.2,
      "when": [
       "debugging"
+     ]
+    },
+    {
+     "path": "M46.18 43.27 L57.60 46.94",
+     "group": "face",
+     "stroke": "#2B1D12",
+     "sw": 2.86,
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M70.82 43.27 L59.40 46.94",
+     "group": "face",
+     "stroke": "#2B1D12",
+     "sw": 2.86,
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M56 59.5 q4 -3.5 8 -0",
+     "group": "face",
+     "stroke": "#2B1D12",
+     "sw": 1.5,
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M49.50 15.50 q-5.00 -3.00 0 -7.00 q5.00 -3.00 0 -7.00",
+     "group": "face",
+     "stroke": "#FFF7E2",
+     "sw": 2.7,
+     "pivot": [
+      49.5,
+      15.5
+     ],
+     "rot": [
+      9,
+      0.45,
+      0.0
+     ],
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M67.50 15.50 q-5.00 -3.00 0 -7.00 q5.00 -3.00 0 -7.00",
+     "group": "face",
+     "stroke": "#FFF7E2",
+     "sw": 2.7,
+     "pivot": [
+      67.5,
+      15.5
+     ],
+     "rot": [
+      9,
+      0.45,
+      0.5
+     ],
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M73.82 33.27 Q74.62 38.07 69.82 37.27 L69.82 36.17 Q72.32 35.77 72.72 33.27Z M73.82 43.27 Q74.62 38.47 69.82 39.27 L69.82 40.37 Q72.32 40.77 72.72 43.27Z M75.82 33.27 Q75.02 38.07 79.82 37.27 L79.82 36.17 Q77.32 35.77 76.92 33.27Z M75.82 43.27 Q75.02 38.47 79.82 39.27 L79.82 40.37 Q77.32 40.77 76.92 43.27Z",
+     "group": "face",
+     "fill": "#E44954",
+     "stroke": "#2B1D12",
+     "sw": 0.6,
+     "when": [
+      "angry"
      ]
     }
    ],
@@ -8243,6 +10321,19 @@
     }
    },
    "lines": {
+    "angry": [
+     "You half-baked crouton!",
+     "I'm not a free sample, pal!",
+     "I'll go stale out of spite.",
+     "#@$%! Crumbs EVERYWHERE now!",
+     "Manners of a soggy fry!",
+     "Rude. Supersize rude.",
+     "Go poke a vending machine!"
+    ],
+    "overfed": [
+     "Stuffed. And I'm already food!",
+     "Extra filling was a mistake..."
+    ],
     "anticThink": [
      "Do I need more salt?",
      "Am I a sandwich?",
@@ -8314,7 +10405,19 @@
      "Saved! Sweet.",
      "Saved!"
     ]
-   }
+   },
+   "splatter": {
+    "path": "M48 13 C56 -6 66 3 64 21 C64 29 76 23 85 16 C99 7 105 22 89 33 C79 40 88 43 97 43 C114 44 109 59 92 57 C81 55 82 65 90 74 C101 89 85 99 76 81 C70 69 64 77 64 91 C64 109 48 108 49 89 C49 77 40 77 33 89 C23 105 10 92 23 78 C33 66 23 65 12 68 C-6 73 -9 56 11 53 C26 51 21 42 9 36 C-7 27 4 12 20 25 C34 36 37 28 31 17 C23 0 40 -6 44 14 C45 20 47 18 48 13 Z",
+    "fill": "#EAC66B",
+    "shade": "#BF8B43",
+    "shine": "#FFF0AC",
+    "outline": "#C2783A",
+    "pixel": false
+   },
+   "growth": [
+    0.15,
+    0.09
+   ]
   },
   "taco": {
    "label": "Taco",
@@ -8470,7 +10573,8 @@
      "group": "face",
      "fill": "#FFFFFF",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -8482,7 +10586,8 @@
      "group": "face",
      "fill": "#2B1D12",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -8494,7 +10599,8 @@
      "group": "face",
      "fill": "#FFFFFF",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -8524,7 +10630,8 @@
      "group": "face",
      "fill": "#FFFFFF",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -8536,7 +10643,8 @@
      "group": "face",
      "fill": "#2B1D12",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -8548,7 +10656,8 @@
      "group": "face",
      "fill": "#FFFFFF",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -8573,7 +10682,12 @@
      "path": "M56.0 53 q4 3.5 8 0",
      "group": "face",
      "stroke": "#2B1D12",
-     "sw": 1.5
+     "sw": 1.5,
+     "when": [
+      "eyesOpen",
+      "eyesClosed",
+      "eyesHappy"
+     ]
     },
     {
      "path": "M50 40 l6 1.5 M70 40 l-6 1.5",
@@ -8633,6 +10747,79 @@
      "sw": 2.2,
      "when": [
       "debugging"
+     ]
+    },
+    {
+     "path": "M46.18 39.27 L57.60 42.94",
+     "group": "face",
+     "stroke": "#2B1D12",
+     "sw": 2.86,
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M70.82 39.27 L59.40 42.94",
+     "group": "face",
+     "stroke": "#2B1D12",
+     "sw": 2.86,
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M56 56.5 q4 -3.5 8 -0",
+     "group": "face",
+     "stroke": "#2B1D12",
+     "sw": 1.5,
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M49.50 24.50 q-5.00 -3.00 0 -7.00 q5.00 -3.00 0 -7.00",
+     "group": "face",
+     "stroke": "#FFF7E2",
+     "sw": 2.7,
+     "pivot": [
+      49.5,
+      24.5
+     ],
+     "rot": [
+      9,
+      0.45,
+      0.0
+     ],
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M67.50 24.50 q-5.00 -3.00 0 -7.00 q5.00 -3.00 0 -7.00",
+     "group": "face",
+     "stroke": "#FFF7E2",
+     "sw": 2.7,
+     "pivot": [
+      67.5,
+      24.5
+     ],
+     "rot": [
+      9,
+      0.45,
+      0.5
+     ],
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M73.82 29.27 Q74.62 34.07 69.82 33.27 L69.82 32.17 Q72.32 31.77 72.72 29.27Z M73.82 39.27 Q74.62 34.47 69.82 35.27 L69.82 36.37 Q72.32 36.77 72.72 39.27Z M75.82 29.27 Q75.02 34.07 79.82 33.27 L79.82 32.17 Q77.32 31.77 76.92 29.27Z M75.82 39.27 Q75.02 34.47 79.82 35.27 L79.82 36.37 Q77.32 36.77 76.92 39.27Z",
+     "group": "face",
+     "fill": "#E44954",
+     "stroke": "#2B1D12",
+     "sw": 0.6,
+     "when": [
+      "angry"
      ]
     }
    ],
@@ -8702,6 +10889,19 @@
     }
    },
    "lines": {
+    "angry": [
+     "You half-baked crouton!",
+     "I'm not a free sample, pal!",
+     "I'll go stale out of spite.",
+     "#@$%! Crumbs EVERYWHERE now!",
+     "Manners of a soggy fry!",
+     "Rude. Supersize rude.",
+     "Go poke a vending machine!"
+    ],
+    "overfed": [
+     "Stuffed. And I'm already food!",
+     "Extra filling was a mistake..."
+    ],
     "anticThink": [
      "Do I need more salt?",
      "Am I a sandwich?",
@@ -8769,7 +10969,19 @@
      "Saved! All wrapped up.",
      "Saved!"
     ]
-   }
+   },
+   "splatter": {
+    "path": "M48 13 C56 -6 66 3 64 21 C64 29 76 23 85 16 C99 7 105 22 89 33 C79 40 88 43 97 43 C114 44 109 59 92 57 C81 55 82 65 90 74 C101 89 85 99 76 81 C70 69 64 77 64 91 C64 109 48 108 49 89 C49 77 40 77 33 89 C23 105 10 92 23 78 C33 66 23 65 12 68 C-6 73 -9 56 11 53 C26 51 21 42 9 36 C-7 27 4 12 20 25 C34 36 37 28 31 17 C23 0 40 -6 44 14 C45 20 47 18 48 13 Z",
+    "fill": "#EAC66B",
+    "shade": "#BF8B43",
+    "shine": "#FFF0AC",
+    "outline": "#D97706",
+    "pixel": false
+   },
+   "growth": [
+    0.15,
+    0.09
+   ]
   },
   "slime": {
    "label": "Slime",
@@ -8810,14 +11022,20 @@
     {
      "path": "M56 60h8v4h-8z",
      "group": "body",
-     "fill": "#14532D"
+     "fill": "#14532D",
+     "when": [
+      "eyesOpen",
+      "eyesClosed",
+      "eyesHappy"
+     ]
     },
     {
      "path": "M44 48h8v8h-8z",
      "group": "face",
      "fill": "#FFFFFF",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -8825,7 +11043,8 @@
      "group": "face",
      "fill": "#0E1012",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -8849,7 +11068,8 @@
      "group": "face",
      "fill": "#FFFFFF",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -8857,7 +11077,8 @@
      "group": "face",
      "fill": "#0E1012",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -8905,6 +11126,62 @@
      "sw": 2.2,
      "when": [
       "debugging"
+     ]
+    },
+    {
+     "path": "M42 45h5v2h-5z M47 47h5v2h-5z",
+     "group": "face",
+     "fill": "#0E1012",
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M73 45h5v2h-5z M68 47h5v2h-5z",
+     "group": "face",
+     "fill": "#0E1012",
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M56 60h8v4h-8z",
+     "group": "body",
+     "fill": "#4ADE80",
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M58 60h4v2h2v2h-2v-2h-4v2h-2v-2h2z",
+     "group": "body",
+     "fill": "#14532D",
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M45 26.5h4v-4h-4z M49 22.5h4v-4h-4z M45 18.5h4v-4h-4z",
+     "group": "face",
+     "fill": "#FFF7E2",
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M71 26.5h4v-4h-4z M75 22.5h4v-4h-4z M71 18.5h4v-4h-4z",
+     "group": "face",
+     "fill": "#FFF7E2",
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M77 37h2v2h-2z M77 39h2v2h-2z M75 39h2v2h-2z M81 37h2v2h-2z M81 39h2v2h-2z M83 39h2v2h-2z M75 43h2v2h-2z M77 43h2v2h-2z M77 45h2v2h-2z M83 43h2v2h-2z M81 43h2v2h-2z M81 45h2v2h-2z",
+     "group": "face",
+     "fill": "#E44954",
+     "when": [
+      "angry"
      ]
     }
    ],
@@ -8993,6 +11270,26 @@
     }
    },
    "lines": {
+    "angry": [
+     "Reported for griefing!",
+     "Touch me again: instant ban.",
+     "Skill issue. YOURS.",
+     "#@!$ Rage quit loading... 99%",
+     "I will camp your spawn. Forever.",
+     "That's not lag. That's my FURY.",
+     "Git gud at NOT poking me!"
+    ],
+    "burstWarning": [
+     "CRITICAL SNACK OVERFLOW!",
+     "Belly capacity exceeded!"
+    ],
+    "burstRecovered": [
+     "Respawned! Fewer snacks this time?"
+    ],
+    "overfed": [
+     "Belly level up!",
+     "Inventory: too many snacks."
+    ],
     "anticSpin": [
      "Combo!",
      "*double jump*",
@@ -9100,7 +11397,19 @@
      "*happy wobble*",
      "Sticky hugs!"
     ]
-   }
+   },
+   "splatter": {
+    "path": "M40 0 H60 V20 H70 V10 H90 V30 H80 V40 H100 V60 H80 V70 H90 V90 H70 V80 H60 V100 H40 V80 H30 V90 H10 V70 H20 V60 H0 V40 H20 V30 H10 V10 H30 V20 H40 Z",
+    "fill": "#A3D94D",
+    "shade": "#5C982E",
+    "shine": "#E0F6A0",
+    "outline": "#FACC15",
+    "pixel": true
+   },
+   "growth": [
+    0.15,
+    0.09
+   ]
   },
   "ghost": {
    "label": "Ghost",
@@ -9177,6 +11486,11 @@
       3,
       2.6,
       0
+     ],
+     "when": [
+      "eyesOpen",
+      "eyesClosed",
+      "eyesHappy"
      ]
     },
     {
@@ -9184,7 +11498,8 @@
      "group": "face",
      "fill": "#334155",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -9192,7 +11507,8 @@
      "group": "face",
      "fill": "#0E1012",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -9216,7 +11532,8 @@
      "group": "face",
      "fill": "#334155",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -9224,7 +11541,8 @@
      "group": "face",
      "fill": "#0E1012",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -9273,6 +11591,80 @@
      "when": [
       "debugging"
      ]
+    },
+    {
+     "path": "M42 27h5v2h-5z M47 29h5v2h-5z",
+     "group": "face",
+     "fill": "#0E1012",
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M73 27h5v2h-5z M68 29h5v2h-5z",
+     "group": "face",
+     "fill": "#0E1012",
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M56 46h8v4h-8z",
+     "group": "body",
+     "fill": "#F1F5F9",
+     "pivot": [
+      60,
+      66
+     ],
+     "rot": [
+      3,
+      2.6,
+      0
+     ],
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M58 46h4v2h2v2h-2v-2h-4v2h-2v-2h2z",
+     "group": "body",
+     "fill": "#334155",
+     "pivot": [
+      60,
+      66
+     ],
+     "rot": [
+      3,
+      2.6,
+      0
+     ],
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M45 12.5h4v-4h-4z M49 8.5h4v-4h-4z M45 4.5h4v-4h-4z",
+     "group": "face",
+     "fill": "#FFF7E2",
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M71 12.5h4v-4h-4z M75 8.5h4v-4h-4z M71 4.5h4v-4h-4z",
+     "group": "face",
+     "fill": "#FFF7E2",
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M77 19h2v2h-2z M77 21h2v2h-2z M75 21h2v2h-2z M81 19h2v2h-2z M81 21h2v2h-2z M83 21h2v2h-2z M75 25h2v2h-2z M77 25h2v2h-2z M77 27h2v2h-2z M83 25h2v2h-2z M81 25h2v2h-2z M81 27h2v2h-2z",
+     "group": "face",
+     "fill": "#E44954",
+     "when": [
+      "angry"
+     ]
     }
    ],
    "poses": {
@@ -9320,6 +11712,26 @@
     }
    },
    "lines": {
+    "angry": [
+     "Reported for griefing!",
+     "Touch me again: instant ban.",
+     "Skill issue. YOURS.",
+     "#@!$ Rage quit loading... 99%",
+     "I will camp your spawn. Forever.",
+     "That's not lag. That's my FURY.",
+     "Git gud at NOT poking me!"
+    ],
+    "burstWarning": [
+     "CRITICAL SNACK OVERFLOW!",
+     "Belly capacity exceeded!"
+    ],
+    "burstRecovered": [
+     "Respawned! Fewer snacks this time?"
+    ],
+    "overfed": [
+     "Belly level up!",
+     "Inventory: too many snacks."
+    ],
     "anticSpin": [
      "Combo!",
      "*double jump*",
@@ -9427,7 +11839,19 @@
      "*blushes*",
      "Your hand went right through me. Hehe."
     ]
-   }
+   },
+   "splatter": {
+    "path": "M40 0 H60 V20 H70 V10 H90 V30 H80 V40 H100 V60 H80 V70 H90 V90 H70 V80 H60 V100 H40 V80 H30 V90 H10 V70 H20 V60 H0 V40 H20 V30 H10 V10 H30 V20 H40 Z",
+    "fill": "#A3D94D",
+    "shade": "#5C982E",
+    "shine": "#E0F6A0",
+    "outline": "#FACC15",
+    "pixel": true
+   },
+   "growth": [
+    0.15,
+    0.09
+   ]
   },
   "knight": {
    "label": "Knight",
@@ -9523,7 +11947,8 @@
      "fill": "#FDE047",
      "when": [
       "eyesOpen",
-      "eyesHappy"
+      "eyesHappy",
+      "angry"
      ]
     },
     {
@@ -9555,6 +11980,46 @@
      "sw": 2.2,
      "when": [
       "debugging"
+     ]
+    },
+    {
+     "path": "M46 25h3v2h-3z M49 27h3v2h-3z",
+     "group": "face",
+     "fill": "#2B1D12",
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M67 25h3v2h-3z M64 27h3v2h-3z",
+     "group": "face",
+     "fill": "#2B1D12",
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M45 18.5h2v-2h-2z M47 16.5h2v-2h-2z M45 14.5h2v-2h-2z",
+     "group": "face",
+     "fill": "#FFF7E2",
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M69 18.5h2v-2h-2z M71 16.5h2v-2h-2z M69 14.5h2v-2h-2z",
+     "group": "face",
+     "fill": "#FFF7E2",
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M67 19h2v2h-2z M67 21h2v2h-2z M65 21h2v2h-2z M71 19h2v2h-2z M71 21h2v2h-2z M73 21h2v2h-2z M65 25h2v2h-2z M67 25h2v2h-2z M67 27h2v2h-2z M73 25h2v2h-2z M71 25h2v2h-2z M71 27h2v2h-2z",
+     "group": "face",
+     "fill": "#E44954",
+     "when": [
+      "angry"
      ]
     }
    ],
@@ -9624,6 +12089,26 @@
     }
    },
    "lines": {
+    "angry": [
+     "Reported for griefing!",
+     "Touch me again: instant ban.",
+     "Skill issue. YOURS.",
+     "#@!$ Rage quit loading... 99%",
+     "I will camp your spawn. Forever.",
+     "That's not lag. That's my FURY.",
+     "Git gud at NOT poking me!"
+    ],
+    "burstWarning": [
+     "CRITICAL SNACK OVERFLOW!",
+     "Belly capacity exceeded!"
+    ],
+    "burstRecovered": [
+     "Respawned! Fewer snacks this time?"
+    ],
+    "overfed": [
+     "Belly level up!",
+     "Inventory: too many snacks."
+    ],
     "anticSpin": [
      "Combo!",
      "*double jump*",
@@ -9730,7 +12215,19 @@
      "*clank of joy*",
      "Thou art kind."
     ]
-   }
+   },
+   "splatter": {
+    "path": "M40 0 H60 V20 H70 V10 H90 V30 H80 V40 H100 V60 H80 V70 H90 V90 H70 V80 H60 V100 H40 V80 H30 V90 H10 V70 H20 V60 H0 V40 H20 V30 H10 V10 H30 V20 H40 Z",
+    "fill": "#A3D94D",
+    "shade": "#5C982E",
+    "shine": "#E0F6A0",
+    "outline": "#FACC15",
+    "pixel": true
+   },
+   "growth": [
+    0.15,
+    0.09
+   ]
   },
   "robot": {
    "label": "Robot",
@@ -9804,7 +12301,12 @@
     {
      "path": "M54 50h12v4h-12z",
      "group": "body",
-     "fill": "#EF4444"
+     "fill": "#EF4444",
+     "when": [
+      "eyesOpen",
+      "eyesClosed",
+      "eyesHappy"
+     ]
     },
     {
      "path": "M58 10h4v4h-4z",
@@ -9816,7 +12318,8 @@
      "group": "face",
      "fill": "#67E8F9",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -9824,7 +12327,8 @@
      "group": "face",
      "fill": "#083344",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -9848,7 +12352,8 @@
      "group": "face",
      "fill": "#67E8F9",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -9856,7 +12361,8 @@
      "group": "face",
      "fill": "#083344",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -9881,7 +12387,8 @@
      "fill": "#67E8F9",
      "when": [
       "eyesOpen",
-      "eyesHappy"
+      "eyesHappy",
+      "angry"
      ]
     },
     {
@@ -9913,6 +12420,62 @@
      "sw": 2.2,
      "when": [
       "debugging"
+     ]
+    },
+    {
+     "path": "M46 24h10v4h-10z M56 28h10v4h-10z",
+     "group": "face",
+     "fill": "#083344",
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M71 27h5v2h-5z M66 29h5v2h-5z",
+     "group": "face",
+     "fill": "#083344",
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M54 50h12v4h-12z",
+     "group": "body",
+     "fill": "#94A3B8",
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M56 50h8v2h2v2h-2v-2h-8v2h-2v-2h2z",
+     "group": "body",
+     "fill": "#EF4444",
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M50 20.5h4v-4h-4z M54 16.5h4v-4h-4z M50 12.5h4v-4h-4z",
+     "group": "face",
+     "fill": "#FFF7E2",
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M74 20.5h4v-4h-4z M78 16.5h4v-4h-4z M74 12.5h4v-4h-4z",
+     "group": "face",
+     "fill": "#FFF7E2",
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M75 23h2v2h-2z M75 25h2v2h-2z M73 25h2v2h-2z M79 23h2v2h-2z M79 25h2v2h-2z M81 25h2v2h-2z M73 29h2v2h-2z M75 29h2v2h-2z M75 31h2v2h-2z M81 29h2v2h-2z M79 29h2v2h-2z M79 31h2v2h-2z",
+     "group": "face",
+     "fill": "#E44954",
+     "when": [
+      "angry"
      ]
     }
    ],
@@ -9966,6 +12529,26 @@
     }
    },
    "lines": {
+    "angry": [
+     "Reported for griefing!",
+     "Touch me again: instant ban.",
+     "Skill issue. YOURS.",
+     "#@!$ Rage quit loading... 99%",
+     "I will camp your spawn. Forever.",
+     "That's not lag. That's my FURY.",
+     "Git gud at NOT poking me!"
+    ],
+    "burstWarning": [
+     "CRITICAL SNACK OVERFLOW!",
+     "Belly capacity exceeded!"
+    ],
+    "burstRecovered": [
+     "Respawned! Fewer snacks this time?"
+    ],
+    "overfed": [
+     "Belly level up!",
+     "Inventory: too many snacks."
+    ],
     "anticSpin": [
      "Combo!",
      "*double jump*",
@@ -10077,7 +12660,19 @@
      "A fellow AI! Beep!",
      "Hello, colleague."
     ]
-   }
+   },
+   "splatter": {
+    "path": "M40 0 H60 V20 H70 V10 H90 V30 H80 V40 H100 V60 H80 V70 H90 V90 H70 V80 H60 V100 H40 V80 H30 V90 H10 V70 H20 V60 H0 V40 H20 V30 H10 V10 H30 V20 H40 Z",
+    "fill": "#A3D94D",
+    "shade": "#5C982E",
+    "shine": "#E0F6A0",
+    "outline": "#FACC15",
+    "pixel": true
+   },
+   "growth": [
+    0.15,
+    0.09
+   ]
   },
   "laptop": {
    "label": "Laptop",
@@ -10179,7 +12774,8 @@
      "group": "lid",
      "fill": "#FFFFFF",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -10191,7 +12787,8 @@
      "group": "lid",
      "fill": "#2B1D12",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -10203,7 +12800,8 @@
      "group": "lid",
      "fill": "#FFFFFF",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -10233,7 +12831,8 @@
      "group": "lid",
      "fill": "#FFFFFF",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -10245,7 +12844,8 @@
      "group": "lid",
      "fill": "#2B1D12",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -10257,7 +12857,8 @@
      "group": "lid",
      "fill": "#FFFFFF",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -10282,7 +12883,12 @@
      "path": "M56.0 40 q4 3.5 8 0",
      "group": "lid",
      "stroke": "#2B1D12",
-     "sw": 1.5
+     "sw": 1.5,
+     "when": [
+      "eyesOpen",
+      "eyesClosed",
+      "eyesHappy"
+     ]
     },
     {
      "path": "M50 27 l6 1.5 M70 27 l-6 1.5",
@@ -10322,6 +12928,79 @@
      "sw": 2.2,
      "when": [
       "debugging"
+     ]
+    },
+    {
+     "path": "M46.18 26.27 L57.60 29.94",
+     "group": "lid",
+     "stroke": "#2B1D12",
+     "sw": 2.86,
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M70.82 26.27 L59.40 29.94",
+     "group": "lid",
+     "stroke": "#2B1D12",
+     "sw": 2.86,
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M56 43.5 q4 -3.5 8 -0",
+     "group": "lid",
+     "stroke": "#2B1D12",
+     "sw": 1.5,
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M49.50 12.50 q-5.00 -3.00 0 -7.00 q5.00 -3.00 0 -7.00",
+     "group": "lid",
+     "stroke": "#FFF7E2",
+     "sw": 2.7,
+     "pivot": [
+      49.5,
+      12.5
+     ],
+     "rot": [
+      9,
+      0.45,
+      0.0
+     ],
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M67.50 12.50 q-5.00 -3.00 0 -7.00 q5.00 -3.00 0 -7.00",
+     "group": "lid",
+     "stroke": "#FFF7E2",
+     "sw": 2.7,
+     "pivot": [
+      67.5,
+      12.5
+     ],
+     "rot": [
+      9,
+      0.45,
+      0.5
+     ],
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M73.82 16.27 Q74.62 21.07 69.82 20.27 L69.82 19.17 Q72.32 18.77 72.72 16.27Z M73.82 26.27 Q74.62 21.47 69.82 22.27 L69.82 23.37 Q72.32 23.77 72.72 26.27Z M75.82 16.27 Q75.02 21.07 79.82 20.27 L79.82 19.17 Q77.32 18.77 76.92 16.27Z M75.82 26.27 Q75.02 21.47 79.82 22.27 L79.82 23.37 Q77.32 23.77 76.92 26.27Z",
+     "group": "lid",
+     "fill": "#E44954",
+     "stroke": "#2B1D12",
+     "sw": 0.6,
+     "when": [
+      "angry"
      ]
     }
    ],
@@ -10364,6 +13043,23 @@
     }
    },
    "lines": {
+    "angry": [
+     "Error 403: poking forbidden.",
+     "sudo leave me alone",
+     "I'll delete your node_modules.",
+     "Kernel panic! #@$%&!",
+     "Force-pushing to main. Watch me.",
+     "Reticulating my rage... done.",
+     "Your next merge conflict? Me."
+    ],
+    "burstWarning": [
+     "Snack buffer overflow!",
+     "Capacity exceeded. Uh-oh..."
+    ],
+    "overfed": [
+     "Storage almost full...",
+     "Too many bytes!"
+    ],
     "anticThink": [
      "Have you tried turning it off and on again?",
      "Running diagnostics... all good!",
@@ -10440,7 +13136,19 @@
      "Ahh, power.",
      "Charging! Thank you."
     ]
-   }
+   },
+   "splatter": {
+    "path": "M48 13 C56 -6 66 3 64 21 C64 29 76 23 85 16 C99 7 105 22 89 33 C79 40 88 43 97 43 C114 44 109 59 92 57 C81 55 82 65 90 74 C101 89 85 99 76 81 C70 69 64 77 64 91 C64 109 48 108 49 89 C49 77 40 77 33 89 C23 105 10 92 23 78 C33 66 23 65 12 68 C-6 73 -9 56 11 53 C26 51 21 42 9 36 C-7 27 4 12 20 25 C34 36 37 28 31 17 C23 0 40 -6 44 14 C45 20 47 18 48 13 Z",
+    "fill": "#9DD18B",
+    "shade": "#5A9A72",
+    "shine": "#DDF0AD",
+    "outline": "#6B7280",
+    "pixel": false
+   },
+   "growth": [
+    0.15,
+    0.09
+   ]
   },
   "controller": {
    "label": "Controller",
@@ -10558,7 +13266,8 @@
      "group": "face",
      "fill": "#FFFFFF",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -10570,7 +13279,8 @@
      "group": "face",
      "fill": "#2B1D12",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -10582,7 +13292,8 @@
      "group": "face",
      "fill": "#FFFFFF",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -10612,7 +13323,8 @@
      "group": "face",
      "fill": "#FFFFFF",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -10624,7 +13336,8 @@
      "group": "face",
      "fill": "#2B1D12",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -10636,7 +13349,8 @@
      "group": "face",
      "fill": "#FFFFFF",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -10661,7 +13375,12 @@
      "path": "M56.0 43 q4 3.5 8 0",
      "group": "face",
      "stroke": "#2B1D12",
-     "sw": 1.5
+     "sw": 1.5,
+     "when": [
+      "eyesOpen",
+      "eyesClosed",
+      "eyesHappy"
+     ]
     },
     {
      "path": "M50 30 l6 1.5 M70 30 l-6 1.5",
@@ -10701,6 +13420,79 @@
      "sw": 2.2,
      "when": [
       "debugging"
+     ]
+    },
+    {
+     "path": "M46.18 29.27 L57.60 32.94",
+     "group": "face",
+     "stroke": "#FFFFFF",
+     "sw": 2.86,
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M70.82 29.27 L59.40 32.94",
+     "group": "face",
+     "stroke": "#2B1D12",
+     "sw": 2.86,
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M56 46.5 q4 -3.5 8 -0",
+     "group": "face",
+     "stroke": "#2B1D12",
+     "sw": 1.5,
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M49.50 20.50 q-5.00 -3.00 0 -7.00 q5.00 -3.00 0 -7.00",
+     "group": "face",
+     "stroke": "#FFF7E2",
+     "sw": 2.7,
+     "pivot": [
+      49.5,
+      20.5
+     ],
+     "rot": [
+      9,
+      0.45,
+      0.0
+     ],
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M67.50 20.50 q-5.00 -3.00 0 -7.00 q5.00 -3.00 0 -7.00",
+     "group": "face",
+     "stroke": "#FFF7E2",
+     "sw": 2.7,
+     "pivot": [
+      67.5,
+      20.5
+     ],
+     "rot": [
+      9,
+      0.45,
+      0.5
+     ],
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M73.82 22.50 Q74.62 27.30 69.82 26.50 L69.82 25.40 Q72.32 25.00 72.72 22.50Z M73.82 32.50 Q74.62 27.70 69.82 28.50 L69.82 29.60 Q72.32 30.00 72.72 32.50Z M75.82 22.50 Q75.02 27.30 79.82 26.50 L79.82 25.40 Q77.32 25.00 76.92 22.50Z M75.82 32.50 Q75.02 27.70 79.82 28.50 L79.82 29.60 Q77.32 30.00 76.92 32.50Z",
+     "group": "face",
+     "fill": "#E44954",
+     "stroke": "#2B1D12",
+     "sw": 0.6,
+     "when": [
+      "angry"
      ]
     }
    ],
@@ -10778,6 +13570,23 @@
     }
    },
    "lines": {
+    "angry": [
+     "Error 403: poking forbidden.",
+     "sudo leave me alone",
+     "I'll delete your node_modules.",
+     "Kernel panic! #@$%&!",
+     "Force-pushing to main. Watch me.",
+     "Reticulating my rage... done.",
+     "Your next merge conflict? Me."
+    ],
+    "burstWarning": [
+     "Snack buffer overflow!",
+     "Capacity exceeded. Uh-oh..."
+    ],
+    "overfed": [
+     "Storage almost full...",
+     "Too many bytes!"
+    ],
     "anticThink": [
      "Have you tried turning it off and on again?",
      "Running diagnostics... all good!",
@@ -10849,7 +13658,19 @@
      "Game time! Pick me!",
      "Let's play!"
     ]
-   }
+   },
+   "splatter": {
+    "path": "M48 13 C56 -6 66 3 64 21 C64 29 76 23 85 16 C99 7 105 22 89 33 C79 40 88 43 97 43 C114 44 109 59 92 57 C81 55 82 65 90 74 C101 89 85 99 76 81 C70 69 64 77 64 91 C64 109 48 108 49 89 C49 77 40 77 33 89 C23 105 10 92 23 78 C33 66 23 65 12 68 C-6 73 -9 56 11 53 C26 51 21 42 9 36 C-7 27 4 12 20 25 C34 36 37 28 31 17 C23 0 40 -6 44 14 C45 20 47 18 48 13 Z",
+    "fill": "#9DD18B",
+    "shade": "#5A9A72",
+    "shine": "#DDF0AD",
+    "outline": "#4F46E5",
+    "pixel": false
+   },
+   "growth": [
+    0.15,
+    0.09
+   ]
   },
   "mug": {
    "label": "Coffee mug",
@@ -10947,6 +13768,11 @@
       8,
       1.6,
       0
+     ],
+     "when": [
+      "eyesOpen",
+      "eyesClosed",
+      "eyesHappy"
      ]
     },
     {
@@ -10963,6 +13789,11 @@
       8,
       1.6,
       0.4
+     ],
+     "when": [
+      "eyesOpen",
+      "eyesClosed",
+      "eyesHappy"
      ]
     },
     {
@@ -10993,7 +13824,8 @@
      "group": "face",
      "fill": "#FFFFFF",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -11005,7 +13837,8 @@
      "group": "face",
      "fill": "#2B1D12",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -11017,7 +13850,8 @@
      "group": "face",
      "fill": "#FFFFFF",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -11047,7 +13881,8 @@
      "group": "face",
      "fill": "#FFFFFF",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -11059,7 +13894,8 @@
      "group": "face",
      "fill": "#2B1D12",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -11071,7 +13907,8 @@
      "group": "face",
      "fill": "#FFFFFF",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -11096,7 +13933,12 @@
      "path": "M53.0 47 q4 3.5 8 0",
      "group": "face",
      "stroke": "#2B1D12",
-     "sw": 1.5
+     "sw": 1.5,
+     "when": [
+      "eyesOpen",
+      "eyesClosed",
+      "eyesHappy"
+     ]
     },
     {
      "path": "M47 34 l6 1.5 M67 34 l-6 1.5",
@@ -11157,6 +13999,79 @@
      "when": [
       "debugging"
      ]
+    },
+    {
+     "path": "M43.18 33.27 L54.60 36.94",
+     "group": "face",
+     "stroke": "#2B1D12",
+     "sw": 2.86,
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M67.82 33.27 L56.40 36.94",
+     "group": "face",
+     "stroke": "#2B1D12",
+     "sw": 2.86,
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M53 50.5 q4 -3.5 8 -0",
+     "group": "face",
+     "stroke": "#2B1D12",
+     "sw": 1.5,
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M46.50 18.50 q-5.00 -3.00 0 -7.00 q5.00 -3.00 0 -7.00",
+     "group": "face",
+     "stroke": "#FFF7E2",
+     "sw": 2.7,
+     "pivot": [
+      46.5,
+      18.5
+     ],
+     "rot": [
+      9,
+      0.45,
+      0.0
+     ],
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M64.50 18.50 q-5.00 -3.00 0 -7.00 q5.00 -3.00 0 -7.00",
+     "group": "face",
+     "stroke": "#FFF7E2",
+     "sw": 2.7,
+     "pivot": [
+      64.5,
+      18.5
+     ],
+     "rot": [
+      9,
+      0.45,
+      0.5
+     ],
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M70.82 23.27 Q71.62 28.07 66.82 27.27 L66.82 26.17 Q69.32 25.77 69.72 23.27Z M70.82 33.27 Q71.62 28.47 66.82 29.27 L66.82 30.37 Q69.32 30.77 69.72 33.27Z M72.82 23.27 Q72.02 28.07 76.82 27.27 L76.82 26.17 Q74.32 25.77 73.92 23.27Z M72.82 33.27 Q72.02 28.47 76.82 29.27 L76.82 30.37 Q74.32 30.77 73.92 33.27Z",
+     "group": "face",
+     "fill": "#E44954",
+     "stroke": "#2B1D12",
+     "sw": 0.6,
+     "when": [
+      "angry"
+     ]
     }
    ],
    "poses": {
@@ -11204,6 +14119,23 @@
     }
    },
    "lines": {
+    "angry": [
+     "Error 403: poking forbidden.",
+     "sudo leave me alone",
+     "I'll delete your node_modules.",
+     "Kernel panic! #@$%&!",
+     "Force-pushing to main. Watch me.",
+     "Reticulating my rage... done.",
+     "Your next merge conflict? Me."
+    ],
+    "burstWarning": [
+     "Snack buffer overflow!",
+     "Capacity exceeded. Uh-oh..."
+    ],
+    "overfed": [
+     "Storage almost full...",
+     "Too many bytes!"
+    ],
     "anticThink": [
      "Have you tried turning it off and on again?",
      "Running diagnostics... all good!",
@@ -11270,7 +14202,19 @@
      "Saved! Fresh brew.",
      "Saved!"
     ]
-   }
+   },
+   "splatter": {
+    "path": "M48 13 C56 -6 66 3 64 21 C64 29 76 23 85 16 C99 7 105 22 89 33 C79 40 88 43 97 43 C114 44 109 59 92 57 C81 55 82 65 90 74 C101 89 85 99 76 81 C70 69 64 77 64 91 C64 109 48 108 49 89 C49 77 40 77 33 89 C23 105 10 92 23 78 C33 66 23 65 12 68 C-6 73 -9 56 11 53 C26 51 21 42 9 36 C-7 27 4 12 20 25 C34 36 37 28 31 17 C23 0 40 -6 44 14 C45 20 47 18 48 13 Z",
+    "fill": "#9DD18B",
+    "shade": "#5A9A72",
+    "shine": "#DDF0AD",
+    "outline": "#DC2626",
+    "pixel": false
+   },
+   "growth": [
+    0.15,
+    0.09
+   ]
   },
   "duck": {
    "label": "Rubber duck",
@@ -11368,7 +14312,8 @@
      "group": "head",
      "fill": "#FFFFFF",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -11380,7 +14325,8 @@
      "group": "head",
      "fill": "#2B1D12",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -11392,7 +14338,8 @@
      "group": "head",
      "fill": "#FFFFFF",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -11462,6 +14409,61 @@
      "when": [
       "debugging"
      ]
+    },
+    {
+     "path": "M75.18 19.27 L86.60 22.94",
+     "group": "head",
+     "stroke": "#2B1D12",
+     "sw": 2.86,
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M74.50 15.50 q-5.00 -3.00 0 -7.00 q5.00 -3.00 0 -7.00",
+     "group": "head",
+     "stroke": "#FFF7E2",
+     "sw": 2.7,
+     "pivot": [
+      74.5,
+      15.5
+     ],
+     "rot": [
+      9,
+      0.45,
+      0.0
+     ],
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M84.50 15.50 q-5.00 -3.00 0 -7.00 q5.00 -3.00 0 -7.00",
+     "group": "head",
+     "stroke": "#FFF7E2",
+     "sw": 2.7,
+     "pivot": [
+      84.5,
+      15.5
+     ],
+     "rot": [
+      9,
+      0.45,
+      0.5
+     ],
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M70.18 17.50 Q70.98 22.30 66.18 21.50 L66.18 20.40 Q68.68 20.00 69.08 17.50Z M70.18 27.50 Q70.98 22.70 66.18 23.50 L66.18 24.60 Q68.68 25.00 69.08 27.50Z M72.18 17.50 Q71.38 22.30 76.18 21.50 L76.18 20.40 Q73.68 20.00 73.28 17.50Z M72.18 27.50 Q71.38 22.70 76.18 23.50 L76.18 24.60 Q73.68 25.00 73.28 27.50Z",
+     "group": "head",
+     "fill": "#E44954",
+     "stroke": "#2B1D12",
+     "sw": 0.6,
+     "when": [
+      "angry"
+     ]
     }
    ],
    "poses": {
@@ -11498,6 +14500,23 @@
     }
    },
    "lines": {
+    "angry": [
+     "Error 403: poking forbidden.",
+     "sudo leave me alone",
+     "I'll delete your node_modules.",
+     "Kernel panic! #@$%&!",
+     "Force-pushing to main. Watch me.",
+     "Reticulating my rage... done.",
+     "Your next merge conflict? Me."
+    ],
+    "burstWarning": [
+     "Snack buffer overflow!",
+     "Capacity exceeded. Uh-oh..."
+    ],
+    "overfed": [
+     "Storage almost full...",
+     "Too many bytes!"
+    ],
     "anticThink": [
      "Have you tried turning it off and on again?",
      "Running diagnostics... all good!",
@@ -11573,7 +14592,19 @@
      "Quack quack quack!",
      "Ooh, typing!"
     ]
-   }
+   },
+   "splatter": {
+    "path": "M48 13 C56 -6 66 3 64 21 C64 29 76 23 85 16 C99 7 105 22 89 33 C79 40 88 43 97 43 C114 44 109 59 92 57 C81 55 82 65 90 74 C101 89 85 99 76 81 C70 69 64 77 64 91 C64 109 48 108 49 89 C49 77 40 77 33 89 C23 105 10 92 23 78 C33 66 23 65 12 68 C-6 73 -9 56 11 53 C26 51 21 42 9 36 C-7 27 4 12 20 25 C34 36 37 28 31 17 C23 0 40 -6 44 14 C45 20 47 18 48 13 Z",
+    "fill": "#9DD18B",
+    "shade": "#5A9A72",
+    "shine": "#DDF0AD",
+    "outline": "#2B1D12",
+    "pixel": false
+   },
+   "growth": [
+    0.15,
+    0.09
+   ]
   },
   "cactus": {
    "label": "Cactus",
@@ -11724,7 +14755,8 @@
      "group": "face",
      "fill": "#FFFFFF",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -11736,7 +14768,8 @@
      "group": "face",
      "fill": "#2B1D12",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -11748,7 +14781,8 @@
      "group": "face",
      "fill": "#FFFFFF",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -11778,7 +14812,8 @@
      "group": "face",
      "fill": "#FFFFFF",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -11790,7 +14825,8 @@
      "group": "face",
      "fill": "#2B1D12",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -11802,7 +14838,8 @@
      "group": "face",
      "fill": "#FFFFFF",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -11827,7 +14864,12 @@
      "path": "M56.0 37 q4 3.5 8 0",
      "group": "face",
      "stroke": "#2B1D12",
-     "sw": 1.5
+     "sw": 1.5,
+     "when": [
+      "eyesOpen",
+      "eyesClosed",
+      "eyesHappy"
+     ]
     },
     {
      "path": "M51 24 l6 1.5 M69 24 l-6 1.5",
@@ -11888,6 +14930,79 @@
      "when": [
       "debugging"
      ]
+    },
+    {
+     "path": "M51.90 26.70 L57.50 28.50",
+     "group": "face",
+     "stroke": "#2B1D12",
+     "sw": 1.8,
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M68.10 26.70 L62.50 28.50",
+     "group": "face",
+     "stroke": "#2B1D12",
+     "sw": 1.8,
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M56 40.5 q4 -3.5 8 -0",
+     "group": "face",
+     "stroke": "#2B1D12",
+     "sw": 1.5,
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M52.50 10.50 q-2.75 -1.65 0 -3.85 q2.75 -1.65 0 -3.85",
+     "group": "face",
+     "stroke": "#FFF7E2",
+     "sw": 1.49,
+     "pivot": [
+      52.5,
+      10.5
+     ],
+     "rot": [
+      9,
+      0.45,
+      0.0
+     ],
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M67.50 10.50 q-2.75 -1.65 0 -3.85 q2.75 -1.65 0 -3.85",
+     "group": "face",
+     "stroke": "#FFF7E2",
+     "sw": 1.49,
+     "pivot": [
+      67.5,
+      10.5
+     ],
+     "rot": [
+      9,
+      0.45,
+      0.5
+     ],
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M69.75 21.20 Q70.19 23.84 67.55 23.40 L67.55 22.79 Q68.92 22.57 69.14 21.20Z M69.75 26.70 Q70.19 24.06 67.55 24.50 L67.55 25.11 Q68.92 25.32 69.14 26.70Z M70.85 21.20 Q70.41 23.84 73.05 23.40 L73.05 22.79 Q71.67 22.57 71.45 21.20Z M70.85 26.70 Q70.41 24.06 73.05 24.50 L73.05 25.11 Q71.67 25.32 71.45 26.70Z",
+     "group": "face",
+     "fill": "#E44954",
+     "stroke": "#2B1D12",
+     "sw": 0.5,
+     "when": [
+      "angry"
+     ]
     }
    ],
    "poses": {
@@ -11945,6 +15060,23 @@
     }
    },
    "lines": {
+    "angry": [
+     "Error 403: poking forbidden.",
+     "sudo leave me alone",
+     "I'll delete your node_modules.",
+     "Kernel panic! #@$%&!",
+     "Force-pushing to main. Watch me.",
+     "Reticulating my rage... done.",
+     "Your next merge conflict? Me."
+    ],
+    "burstWarning": [
+     "Snack buffer overflow!",
+     "Capacity exceeded. Uh-oh..."
+    ],
+    "overfed": [
+     "Storage almost full...",
+     "Too many bytes!"
+    ],
     "anticThink": [
      "Have you tried turning it off and on again?",
      "Running diagnostics... all good!",
@@ -12015,7 +15147,19 @@
      "Growing with every line!",
      "Ooh, typing!"
     ]
-   }
+   },
+   "splatter": {
+    "path": "M48 13 C56 -6 66 3 64 21 C64 29 76 23 85 16 C99 7 105 22 89 33 C79 40 88 43 97 43 C114 44 109 59 92 57 C81 55 82 65 90 74 C101 89 85 99 76 81 C70 69 64 77 64 91 C64 109 48 108 49 89 C49 77 40 77 33 89 C23 105 10 92 23 78 C33 66 23 65 12 68 C-6 73 -9 56 11 53 C26 51 21 42 9 36 C-7 27 4 12 20 25 C34 36 37 28 31 17 C23 0 40 -6 44 14 C45 20 47 18 48 13 Z",
+    "fill": "#9DD18B",
+    "shade": "#5A9A72",
+    "shine": "#DDF0AD",
+    "outline": "#2B1D12",
+    "pixel": false
+   },
+   "growth": [
+    0.15,
+    0.09
+   ]
   },
   "floppy": {
    "label": "Floppy disk",
@@ -12109,7 +15253,8 @@
      "group": "face",
      "fill": "#FFFFFF",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -12121,7 +15266,8 @@
      "group": "face",
      "fill": "#2B1D12",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -12133,7 +15279,8 @@
      "group": "face",
      "fill": "#FFFFFF",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -12163,7 +15310,8 @@
      "group": "face",
      "fill": "#FFFFFF",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -12175,7 +15323,8 @@
      "group": "face",
      "fill": "#2B1D12",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -12187,7 +15336,8 @@
      "group": "face",
      "fill": "#FFFFFF",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -12212,7 +15362,12 @@
      "path": "M57.0 52 q4 3.5 8 0",
      "group": "face",
      "stroke": "#2B1D12",
-     "sw": 1.5
+     "sw": 1.5,
+     "when": [
+      "eyesOpen",
+      "eyesClosed",
+      "eyesHappy"
+     ]
     },
     {
      "path": "M51 40 l6 1.5 M71 40 l-6 1.5",
@@ -12252,6 +15407,79 @@
      "sw": 2.2,
      "when": [
       "debugging"
+     ]
+    },
+    {
+     "path": "M47.18 39.27 L58.60 42.94",
+     "group": "face",
+     "stroke": "#2B1D12",
+     "sw": 2.86,
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M71.82 39.27 L60.40 42.94",
+     "group": "face",
+     "stroke": "#2B1D12",
+     "sw": 2.86,
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M57 55.5 q4 -3.5 8 -0",
+     "group": "face",
+     "stroke": "#2B1D12",
+     "sw": 1.5,
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M50.50 14.50 q-5.00 -3.00 0 -7.00 q5.00 -3.00 0 -7.00",
+     "group": "face",
+     "stroke": "#FFF7E2",
+     "sw": 2.7,
+     "pivot": [
+      50.5,
+      14.5
+     ],
+     "rot": [
+      9,
+      0.45,
+      0.0
+     ],
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M68.50 14.50 q-5.00 -3.00 0 -7.00 q5.00 -3.00 0 -7.00",
+     "group": "face",
+     "stroke": "#FFF7E2",
+     "sw": 2.7,
+     "pivot": [
+      68.5,
+      14.5
+     ],
+     "rot": [
+      9,
+      0.45,
+      0.5
+     ],
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M74.82 29.27 Q75.62 34.07 70.82 33.27 L70.82 32.17 Q73.32 31.77 73.72 29.27Z M74.82 39.27 Q75.62 34.47 70.82 35.27 L70.82 36.37 Q73.32 36.77 73.72 39.27Z M76.82 29.27 Q76.02 34.07 80.82 33.27 L80.82 32.17 Q78.32 31.77 77.92 29.27Z M76.82 39.27 Q76.02 34.47 80.82 35.27 L80.82 36.37 Q78.32 36.77 77.92 39.27Z",
+     "group": "face",
+     "fill": "#E44954",
+     "stroke": "#2B1D12",
+     "sw": 0.6,
+     "when": [
+      "angry"
      ]
     }
    ],
@@ -12305,6 +15533,23 @@
     }
    },
    "lines": {
+    "angry": [
+     "Error 403: poking forbidden.",
+     "sudo leave me alone",
+     "I'll delete your node_modules.",
+     "Kernel panic! #@$%&!",
+     "Force-pushing to main. Watch me.",
+     "Reticulating my rage... done.",
+     "Your next merge conflict? Me."
+    ],
+    "burstWarning": [
+     "Snack buffer overflow!",
+     "Capacity exceeded. Uh-oh..."
+    ],
+    "overfed": [
+     "Storage almost full...",
+     "Too many bytes!"
+    ],
     "anticThink": [
      "Have you tried turning it off and on again?",
      "Running diagnostics... all good!",
@@ -12372,7 +15617,19 @@
      "Writing to disk!",
      "Ooh, typing!"
     ]
-   }
+   },
+   "splatter": {
+    "path": "M48 13 C56 -6 66 3 64 21 C64 29 76 23 85 16 C99 7 105 22 89 33 C79 40 88 43 97 43 C114 44 109 59 92 57 C81 55 82 65 90 74 C101 89 85 99 76 81 C70 69 64 77 64 91 C64 109 48 108 49 89 C49 77 40 77 33 89 C23 105 10 92 23 78 C33 66 23 65 12 68 C-6 73 -9 56 11 53 C26 51 21 42 9 36 C-7 27 4 12 20 25 C34 36 37 28 31 17 C23 0 40 -6 44 14 C45 20 47 18 48 13 Z",
+    "fill": "#9DD18B",
+    "shade": "#5A9A72",
+    "shine": "#DDF0AD",
+    "outline": "#1E40AF",
+    "pixel": false
+   },
+   "growth": [
+    0.15,
+    0.09
+   ]
   },
   "mouse": {
    "label": "Mouse",
@@ -12467,7 +15724,8 @@
      "group": "face",
      "fill": "#FFFFFF",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -12479,7 +15737,8 @@
      "group": "face",
      "fill": "#2B1D12",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -12491,7 +15750,8 @@
      "group": "face",
      "fill": "#FFFFFF",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -12521,7 +15781,8 @@
      "group": "face",
      "fill": "#FFFFFF",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -12533,7 +15794,8 @@
      "group": "face",
      "fill": "#2B1D12",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -12545,7 +15807,8 @@
      "group": "face",
      "fill": "#FFFFFF",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -12570,7 +15833,12 @@
      "path": "M63.0 52 q4 3.5 8 0",
      "group": "face",
      "stroke": "#2B1D12",
-     "sw": 1.5
+     "sw": 1.5,
+     "when": [
+      "eyesOpen",
+      "eyesClosed",
+      "eyesHappy"
+     ]
     },
     {
      "path": "M56 40 l6 1.5 M78 40 l-6 1.5",
@@ -12631,6 +15899,79 @@
      "when": [
       "debugging"
      ]
+    },
+    {
+     "path": "M52.18 39.27 L63.60 42.94",
+     "group": "face",
+     "stroke": "#2B1D12",
+     "sw": 2.86,
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M78.82 39.27 L67.40 42.94",
+     "group": "face",
+     "stroke": "#2B1D12",
+     "sw": 2.86,
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M63 55.5 q4 -3.5 8 -0",
+     "group": "face",
+     "stroke": "#2B1D12",
+     "sw": 1.5,
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M55.00 22.50 q-5.00 -3.00 0 -7.00 q5.00 -3.00 0 -7.00",
+     "group": "face",
+     "stroke": "#FFF7E2",
+     "sw": 2.7,
+     "pivot": [
+      55.0,
+      22.5
+     ],
+     "rot": [
+      9,
+      0.45,
+      0.0
+     ],
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M76.00 22.50 q-5.00 -3.00 0 -7.00 q5.00 -3.00 0 -7.00",
+     "group": "face",
+     "stroke": "#FFF7E2",
+     "sw": 2.7,
+     "pivot": [
+      76.0,
+      22.5
+     ],
+     "rot": [
+      9,
+      0.45,
+      0.5
+     ],
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M81.82 29.27 Q82.62 34.07 77.82 33.27 L77.82 32.17 Q80.32 31.77 80.72 29.27Z M81.82 39.27 Q82.62 34.47 77.82 35.27 L77.82 36.37 Q80.32 36.77 80.72 39.27Z M83.82 29.27 Q83.02 34.07 87.82 33.27 L87.82 32.17 Q85.32 31.77 84.92 29.27Z M83.82 39.27 Q83.02 34.47 87.82 35.27 L87.82 36.37 Q85.32 36.77 84.92 39.27Z",
+     "group": "face",
+     "fill": "#E44954",
+     "stroke": "#2B1D12",
+     "sw": 0.6,
+     "when": [
+      "angry"
+     ]
     }
    ],
    "poses": {
@@ -12683,6 +16024,23 @@
     }
    },
    "lines": {
+    "angry": [
+     "Error 403: poking forbidden.",
+     "sudo leave me alone",
+     "I'll delete your node_modules.",
+     "Kernel panic! #@$%&!",
+     "Force-pushing to main. Watch me.",
+     "Reticulating my rage... done.",
+     "Your next merge conflict? Me."
+    ],
+    "burstWarning": [
+     "Snack buffer overflow!",
+     "Capacity exceeded. Uh-oh..."
+    ],
+    "overfed": [
+     "Storage almost full...",
+     "Too many bytes!"
+    ],
     "anticThink": [
      "Have you tried turning it off and on again?",
      "Running diagnostics... all good!",
@@ -12745,7 +16103,19 @@
      "Keyboard shortcuts? I see how it is.",
      "Ooh, typing!"
     ]
-   }
+   },
+   "splatter": {
+    "path": "M48 13 C56 -6 66 3 64 21 C64 29 76 23 85 16 C99 7 105 22 89 33 C79 40 88 43 97 43 C114 44 109 59 92 57 C81 55 82 65 90 74 C101 89 85 99 76 81 C70 69 64 77 64 91 C64 109 48 108 49 89 C49 77 40 77 33 89 C23 105 10 92 23 78 C33 66 23 65 12 68 C-6 73 -9 56 11 53 C26 51 21 42 9 36 C-7 27 4 12 20 25 C34 36 37 28 31 17 C23 0 40 -6 44 14 C45 20 47 18 48 13 Z",
+    "fill": "#9DD18B",
+    "shade": "#5A9A72",
+    "shine": "#DDF0AD",
+    "outline": "#6B7280",
+    "pixel": false
+   },
+   "growth": [
+    0.15,
+    0.09
+   ]
   },
   "headphones": {
    "label": "Headphones",
@@ -12833,7 +16203,8 @@
      "group": "face",
      "fill": "#FFFFFF",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -12845,7 +16216,8 @@
      "group": "face",
      "fill": "#2B1D12",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -12857,7 +16229,8 @@
      "group": "face",
      "fill": "#FFFFFF",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -12887,7 +16260,8 @@
      "group": "face",
      "fill": "#FFFFFF",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -12899,7 +16273,8 @@
      "group": "face",
      "fill": "#2B1D12",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -12911,7 +16286,8 @@
      "group": "face",
      "fill": "#FFFFFF",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -13004,6 +16380,70 @@
      "when": [
       "debugging"
      ]
+    },
+    {
+     "path": "M24.56 36.61 L37.10 40.64",
+     "group": "face",
+     "stroke": "#2B1D12",
+     "sw": 3.14,
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M92.44 36.61 L79.90 40.64",
+     "group": "face",
+     "stroke": "#2B1D12",
+     "sw": 3.14,
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M31.50 30.50 q-5.00 -3.00 0 -7.00 q5.00 -3.00 0 -7.00",
+     "group": "face",
+     "stroke": "#FFF7E2",
+     "sw": 2.7,
+     "pivot": [
+      31.5,
+      30.5
+     ],
+     "rot": [
+      9,
+      0.45,
+      0.0
+     ],
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M85.50 30.50 q-5.00 -3.00 0 -7.00 q5.00 -3.00 0 -7.00",
+     "group": "face",
+     "stroke": "#FFF7E2",
+     "sw": 2.7,
+     "pivot": [
+      85.5,
+      30.5
+     ],
+     "rot": [
+      9,
+      0.45,
+      0.5
+     ],
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M95.44 30.90 Q96.24 35.70 91.44 34.90 L91.44 33.80 Q93.94 33.40 94.34 30.90Z M95.44 40.90 Q96.24 36.10 91.44 36.90 L91.44 38.00 Q93.94 38.40 94.34 40.90Z M97.44 30.90 Q96.64 35.70 101.44 34.90 L101.44 33.80 Q98.94 33.40 98.54 30.90Z M97.44 40.90 Q96.64 36.10 101.44 36.90 L101.44 38.00 Q98.94 38.40 98.54 40.90Z",
+     "group": "face",
+     "fill": "#E44954",
+     "stroke": "#2B1D12",
+     "sw": 0.6,
+     "when": [
+      "angry"
+     ]
     }
    ],
    "groupMotion": {
@@ -13069,6 +16509,23 @@
     }
    },
    "lines": {
+    "angry": [
+     "Error 403: poking forbidden.",
+     "sudo leave me alone",
+     "I'll delete your node_modules.",
+     "Kernel panic! #@$%&!",
+     "Force-pushing to main. Watch me.",
+     "Reticulating my rage... done.",
+     "Your next merge conflict? Me."
+    ],
+    "burstWarning": [
+     "Snack buffer overflow!",
+     "Capacity exceeded. Uh-oh..."
+    ],
+    "overfed": [
+     "Storage almost full...",
+     "Too many bytes!"
+    ],
     "anticThink": [
      "Have you tried turning it off and on again?",
      "Running diagnostics... all good!",
@@ -13137,7 +16594,19 @@
      "Typing to the beat!",
      "Ooh, typing!"
     ]
-   }
+   },
+   "splatter": {
+    "path": "M48 13 C56 -6 66 3 64 21 C64 29 76 23 85 16 C99 7 105 22 89 33 C79 40 88 43 97 43 C114 44 109 59 92 57 C81 55 82 65 90 74 C101 89 85 99 76 81 C70 69 64 77 64 91 C64 109 48 108 49 89 C49 77 40 77 33 89 C23 105 10 92 23 78 C33 66 23 65 12 68 C-6 73 -9 56 11 53 C26 51 21 42 9 36 C-7 27 4 12 20 25 C34 36 37 28 31 17 C23 0 40 -6 44 14 C45 20 47 18 48 13 Z",
+    "fill": "#9DD18B",
+    "shade": "#5A9A72",
+    "shine": "#DDF0AD",
+    "outline": "#BE185D",
+    "pixel": false
+   },
+   "growth": [
+    0.15,
+    0.09
+   ]
   },
   "sticky": {
    "label": "Sticky note",
@@ -13234,7 +16703,8 @@
      "group": "face",
      "fill": "#FFFFFF",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -13246,7 +16716,8 @@
      "group": "face",
      "fill": "#2B1D12",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -13258,7 +16729,8 @@
      "group": "face",
      "fill": "#FFFFFF",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -13288,7 +16760,8 @@
      "group": "face",
      "fill": "#FFFFFF",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -13300,7 +16773,8 @@
      "group": "face",
      "fill": "#2B1D12",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -13312,7 +16786,8 @@
      "group": "face",
      "fill": "#FFFFFF",
      "when": [
-      "eyesOpen"
+      "eyesOpen",
+      "angry"
      ]
     },
     {
@@ -13337,7 +16812,12 @@
      "path": "M55.0 44 q4 3.5 8 0",
      "group": "face",
      "stroke": "#2B1D12",
-     "sw": 1.5
+     "sw": 1.5,
+     "when": [
+      "eyesOpen",
+      "eyesClosed",
+      "eyesHappy"
+     ]
     },
     {
      "path": "M49 32 l6 1.5 M69 32 l-6 1.5",
@@ -13377,6 +16857,79 @@
      "sw": 2.2,
      "when": [
       "debugging"
+     ]
+    },
+    {
+     "path": "M45.18 31.27 L56.60 34.94",
+     "group": "face",
+     "stroke": "#2B1D12",
+     "sw": 2.86,
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M69.82 31.27 L58.40 34.94",
+     "group": "face",
+     "stroke": "#2B1D12",
+     "sw": 2.86,
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M55 47.5 q4 -3.5 8 -0",
+     "group": "face",
+     "stroke": "#2B1D12",
+     "sw": 1.5,
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M48.50 12.50 q-5.00 -3.00 0 -7.00 q5.00 -3.00 0 -7.00",
+     "group": "face",
+     "stroke": "#FFF7E2",
+     "sw": 2.7,
+     "pivot": [
+      48.5,
+      12.5
+     ],
+     "rot": [
+      9,
+      0.45,
+      0.0
+     ],
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M66.50 8.50 q-5.00 -3.00 0 -7.00 q5.00 -3.00 0 -7.00",
+     "group": "face",
+     "stroke": "#FFF7E2",
+     "sw": 2.7,
+     "pivot": [
+      66.5,
+      8.5
+     ],
+     "rot": [
+      9,
+      0.45,
+      0.5
+     ],
+     "when": [
+      "angry"
+     ]
+    },
+    {
+     "path": "M72.82 21.27 Q73.62 26.07 68.82 25.27 L68.82 24.17 Q71.32 23.77 71.72 21.27Z M72.82 31.27 Q73.62 26.47 68.82 27.27 L68.82 28.37 Q71.32 28.77 71.72 31.27Z M74.82 21.27 Q74.02 26.07 78.82 25.27 L78.82 24.17 Q76.32 23.77 75.92 21.27Z M74.82 31.27 Q74.02 26.47 78.82 27.27 L78.82 28.37 Q76.32 28.77 75.92 31.27Z",
+     "group": "face",
+     "fill": "#E44954",
+     "stroke": "#2B1D12",
+     "sw": 0.6,
+     "when": [
+      "angry"
      ]
     }
    ],
@@ -13440,6 +16993,23 @@
     }
    },
    "lines": {
+    "angry": [
+     "Error 403: poking forbidden.",
+     "sudo leave me alone",
+     "I'll delete your node_modules.",
+     "Kernel panic! #@$%&!",
+     "Force-pushing to main. Watch me.",
+     "Reticulating my rage... done.",
+     "Your next merge conflict? Me."
+    ],
+    "burstWarning": [
+     "Snack buffer overflow!",
+     "Capacity exceeded. Uh-oh..."
+    ],
+    "overfed": [
+     "Storage almost full...",
+     "Too many bytes!"
+    ],
     "anticThink": [
      "Have you tried turning it off and on again?",
      "Running diagnostics... all good!",
@@ -13514,7 +17084,19 @@
      "Taking notes!",
      "Ooh, typing!"
     ]
-   }
+   },
+   "splatter": {
+    "path": "M48 13 C56 -6 66 3 64 21 C64 29 76 23 85 16 C99 7 105 22 89 33 C79 40 88 43 97 43 C114 44 109 59 92 57 C81 55 82 65 90 74 C101 89 85 99 76 81 C70 69 64 77 64 91 C64 109 48 108 49 89 C49 77 40 77 33 89 C23 105 10 92 23 78 C33 66 23 65 12 68 C-6 73 -9 56 11 53 C26 51 21 42 9 36 C-7 27 4 12 20 25 C34 36 37 28 31 17 C23 0 40 -6 44 14 C45 20 47 18 48 13 Z",
+    "fill": "#9DD18B",
+    "shade": "#5A9A72",
+    "shine": "#DDF0AD",
+    "outline": "#CA8A04",
+    "pixel": false
+   },
+   "growth": [
+    0.15,
+    0.09
+   ]
   }
  }
 }

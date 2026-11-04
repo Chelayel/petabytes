@@ -59,6 +59,8 @@ struct PetArt {
     let flip: Bool
     let bob: (amount: Double, period: Double)
     let accent: CGColor
+    let growth: CGPoint
+    let head: CGPoint
     let parts: [ArtPart]
     /** mood → group → pose */
     let poses: [String: [String: Pose]]
@@ -70,6 +72,7 @@ struct PetArt {
     static let reactions: [String: [String: Any]] = (root["reactions"] as? [String: [String: Any]]) ?? [:]
     /** The snacks Feed drops; each has the key of the lines the pet says eating it. */
     static let snacks: [[String: String]] = (root["snacks"] as? [[String: String]]) ?? []
+    static let careRules: [String: Any] = root["care"] as? [String: Any] ?? [:]
     /** Reaction keys the pet picks from to do something on its own now and then, and how often (seconds). */
     static let antics: [String] = (root["antics"] as? [String]) ?? []
     static let anticEvery: ClosedRange<Double> = {
@@ -93,6 +96,10 @@ struct PetArt {
         label = m["label"] as? String ?? id
         lines = m["lines"] as? [String: [String]] ?? [:]
         flip = m["flip"] as? Bool ?? false
+        let growth = numbers(m["growth"]) ?? [0.15, 0.09]
+        self.growth = CGPoint(x: growth[0], y: growth[1])
+        let head = numbers(m["head"]) ?? [60, 30]
+        self.head = CGPoint(x: head[0], y: head[1])
         let b = numbers(m["bob"]) ?? [4, 3]
         bob = (b[0], b[1])
         parts = (m["parts"] as? [[String: Any]] ?? []).map(Self.part)

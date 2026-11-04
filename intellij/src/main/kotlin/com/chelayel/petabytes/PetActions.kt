@@ -14,7 +14,7 @@ import com.intellij.openapi.project.DumbAwareToggleAction
 class PetMenu : ActionGroup() {
     private val children: Array<AnAction> by lazy {
         arrayOf(
-            FeedPet(), ChoosePet(), ShowPet(), Roam(),
+            FeedPet(), PokePet(), ChoosePet(), ShowPet(), Roam(),
             Separator.create("Where"), Position("right", "Right Edge (Up and Down)"), Position("bottom", "Bottom Edge"),
             Separator.create(), OpenSettings(),
         )
@@ -28,6 +28,12 @@ class FeedPet : DumbAwareAction("Feed Pet") {
     override fun getActionUpdateThread() = ActionUpdateThread.BGT
     override fun update(e: AnActionEvent) { e.presentation.isEnabled = e.project != null && PetSettings.get().state.enabled }
     override fun actionPerformed(e: AnActionEvent) { e.project?.service<PetService>()?.feed() }
+}
+
+class PokePet : DumbAwareAction("Poke Pet") {
+    override fun getActionUpdateThread() = ActionUpdateThread.BGT
+    override fun update(e: AnActionEvent) { e.presentation.isEnabled = e.project != null && PetSettings.get().state.enabled }
+    override fun actionPerformed(e: AnActionEvent) { e.project?.service<PetService>()?.poke() }
 }
 
 class ShowPet : DumbAwareToggleAction("Show Pet") {
