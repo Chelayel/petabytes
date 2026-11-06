@@ -70,7 +70,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
 
     func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
         if !Settings.showInDock && !Settings.visible { setVisible(true) }
-        feed()
+        // With the pet in the icon, a click pokes it (or feeds it, as chosen); otherwise it brings the pet back fed.
+        if Settings.showInDock && Settings.dockClick == "poke" { poke() } else { feed() }
         return false
     }
 
@@ -118,6 +119,18 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         menu.addItem(item("Choose Pet…", #selector(showPicker)))
 
         menu.addItem(.separator())
+        if Settings.showInDock {
+            let clicks = NSMenu()
+            for (title, choice) in [("Poke \(petName())", "poke"), ("Feed \(petName())", "feed")] {
+                let entry = item(title, #selector(chooseDockClick(_:)))
+                entry.representedObject = choice
+                entry.state = Settings.dockClick == choice ? .on : .off
+                clicks.addItem(entry)
+            }
+            let clickItem = NSMenuItem(title: "Click the Icon To", action: nil, keyEquivalent: "")
+            clickItem.submenu = clicks
+            menu.addItem(clickItem)
+        }
         if !Settings.showInDock {
             let dock = item("Swim Along the Dock", #selector(swimAlongDock))
             dock.state = Settings.place == .dock ? .on : .off
@@ -187,6 +200,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
 
     @objc private func poke() {
         send(["type": "poke"])
+    }
+
+    @objc private func chooseDockClick(_ sender: NSMenuItem) {
+        if let choice = sender.representedObject as? String { Settings.dockClick = choice }
     }
 
     @objc private func showPicker() { picker.show() }

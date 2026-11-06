@@ -31,6 +31,12 @@ enum Settings {
         set { defaults.set(newValue, forKey: "showInDock") }
     }
 
+    /** What clicking the Dock icon does: "poke" (the default) or "feed". */
+    static var dockClick: String {
+        get { defaults.string(forKey: "dockClick") == "feed" ? "feed" : "poke" }
+        set { defaults.set(newValue, forKey: "dockClick") }
+    }
+
     /** Whether the pet in the Dock icon talks in a bubble above it (needs Accessibility to find the icon). */
     static var talkInDock: Bool {
         get { defaults.object(forKey: "talkInDock") as? Bool ?? true }

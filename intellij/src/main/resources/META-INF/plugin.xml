@@ -52,6 +52,7 @@
     ]]></description>
 
     <change-notes><![CDATA[
+        <p><b>2.0.1</b> — The pet stays beside your code: it no longer swims over Copilot's panel, or any tool window that's undocked or floating over the editor.</p>
         <p><b>2.0.0</b> — Don't overdo the snacks: each extra one in a meal makes your pet rounder, until it can't keep it down. Poke it too often and it throws a tantrum, with steam and cartoon swears (<b>Tools → Petabytes → Poke Pet</b>). Smoother movement, too. Thanks to Anthony Badran.</p>
         <p><b>1.8.1</b> — No changes in the editor: on the Mac, the pet in the Dock icon talks right above it again, even with a Dock that spans the screen.</p>
         <p><b>1.8.0</b> — No changes in the editor: Petabytes now has a Windows app, whose pet walks along your taskbar, and the Mac app installs with Homebrew. The Claude Code add-on now works on Windows too.</p>

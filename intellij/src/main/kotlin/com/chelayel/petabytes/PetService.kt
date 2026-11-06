@@ -136,7 +136,7 @@ class PetService(private val project: Project) : Disposable {
             layer = target
         }
         // A strip along the editor's right edge or its bottom edge, clear of the scrollbars.
-        val r = SwingUtilities.convertRectangle(editor.component.parent, editor.component.bounds, target)
+        val r = clearOfToolWindows(SwingUtilities.convertRectangle(editor.component.parent, editor.component.bounds, target), target)
         val gap = JBUI.scale(14)
         val vertical = o.brain.vertical
         o.painter.sync(o.brain)
@@ -189,8 +189,38 @@ class PetService(private val project: Project) : Disposable {
         return editor.takeIf { it.component.isShowing && isFileEditor(it) }
     }
 
+    /**
+     * The editor's area minus any tool window lying over it: an undocked (sliding) or floating Copilot, AI Assistant
+     * or Project panel sits on top of the editor, and the pet, drawn above everything, would swim on that panel.
+     * A panel over the right or bottom part cuts that part off; one over the left or top, that part.
+     */
+    private fun clearOfToolWindows(area: Rectangle, target: JLayeredPane): Rectangle {
+        val clear = Rectangle(area)
+        val twm = ToolWindowManager.getInstance(project)
+        for (id in twm.toolWindowIds) {
+            val window = twm.getToolWindow(id) ?: continue
+            val c = window.component
+            if (!window.isVisible || !c.isShowing || SwingUtilities.getWindowAncestor(c) !== SwingUtilities.getWindowAncestor(target)) continue
+            val b = SwingUtilities.convertRectangle(c.parent, c.bounds, target)
+            if (!b.intersects(clear)) continue
+            val overRight = b.x > clear.x + clear.width / 2
+            val overBottom = b.y > clear.y + clear.height / 2
+            val overLeft = b.x + b.width < clear.x + clear.width / 2
+            when {
+                overRight -> clear.width = b.x - clear.x
+                overBottom -> clear.height = b.y - clear.y
+                overLeft -> { val cut = b.x + b.width - clear.x; clear.x += cut; clear.width -= cut }
+                else -> { val cut = b.y + b.height - clear.y; clear.y += cut; clear.height -= cut }
+            }
+        }
+        clear.width = clear.width.coerceAtLeast(0); clear.height = clear.height.coerceAtLeast(0)
+        return clear
+    }
+
     private fun isFileEditor(editor: com.intellij.openapi.editor.Editor): Boolean {
         if (editor.editorKind != EditorKind.MAIN_EDITOR) return false
+        // An editor in a window of its own can't have the pet: it's drawn in the project window.
+        if (SwingUtilities.getWindowAncestor(editor.component) !== WindowManager.getInstance().getFrame(project)) return false
         val twm = ToolWindowManager.getInstance(project)
         return twm.toolWindowIds.none { id ->
             val window = twm.getToolWindow(id)
